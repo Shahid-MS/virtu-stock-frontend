@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./navbar.css"
 
 const Navbar = () => {
@@ -6,14 +7,14 @@ const Navbar = () => {
       <nav className="navbar navbar-expand-lg bg-body-tertiary shadow-sm">
         <div className="container-fluid mx-3">
           {/* Left: Brand */}
-          <a className="navbar-brand" href="#">
+          <Link className="navbar-brand" to="/">
             <img
-              src="./Images/logo-name.png"
+              src="/Images/logo-name.png"
               alt="Bootstrap"
               width="225"
               height="45"
             />
-          </a>
+          </Link>
 
           {/* Toggler for mobile */}
           <button
