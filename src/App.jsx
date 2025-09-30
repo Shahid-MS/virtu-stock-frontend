@@ -2,7 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import Sidebar from "./Components/Sidebar/Sidebar";
 import Navbar from "./Components/Header/Navbar";
-import Footer from "./Components/Footer/Footer";
+// import Footer from "./Components/Footer/Footer";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./Components/MainContent/Home";
 import IPO from "./Components/MainContent/IPO";
@@ -20,6 +20,7 @@ function App() {
             <div className="row">
               <Sidebar />
               <div className="col-8 col-lg-10 ">
+                HElloo
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/ipo/:id" element={<IPO />} />
@@ -30,7 +31,7 @@ function App() {
               </div>
             </div>
           </div>
-          <Footer />
+          {/* <Footer /> */}
         </div>
       </BrowserRouter>
     </>
