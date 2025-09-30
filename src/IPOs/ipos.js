@@ -33,6 +33,24 @@ const ipos = [
         value: 20,
       },
     ],
+    gmp: [
+      {
+        gmpDate: "2025-09-30",
+        ipoPrice: 120,
+        gmp: 30,
+        estimatedListingPrice: 150,
+        estimatedProfit: 30,
+        lastUpdated: "2025-09-30 10:00 AM",
+      },
+      {
+        gmpDate: "2025-09-29",
+        ipoPrice: 110,
+        gmp: 25,
+        estimatedListingPrice: 135,
+        estimatedProfit: 25,
+        lastUpdated: "2025-09-29 5:00 PM",
+      },
+    ],
     schedule: [
       {
         event: "Issue open date",
@@ -126,6 +144,24 @@ const ipos = [
         value: 20,
       },
     ],
+    gmp: [
+      {
+        gmpDate: "2025-09-30",
+        ipoPrice: 120,
+        gmp: 30,
+        estimatedListingPrice: 150,
+        estimatedProfit: 30,
+        lastUpdated: "2025-09-30 10:00 AM",
+      },
+      {
+        gmpDate: "2025-09-29",
+        ipoPrice: 110,
+        gmp: 25,
+        estimatedListingPrice: 135,
+        estimatedProfit: 25,
+        lastUpdated: "2025-09-29 5:00 PM",
+      },
+    ],
     schedule: [
       {
         event: "Issue open date",
@@ -217,6 +253,24 @@ const ipos = [
       {
         name: "Retailer",
         value: 20,
+      },
+    ],
+    gmp: [
+      {
+        gmpDate: "2025-09-30",
+        ipoPrice: 120,
+        gmp: 30,
+        estimatedListingPrice: 150,
+        estimatedProfit: 30,
+        lastUpdated: "2025-09-30 10:00 AM",
+      },
+      {
+        gmpDate: "2025-09-29",
+        ipoPrice: 110,
+        gmp: 25,
+        estimatedListingPrice: 135,
+        estimatedProfit: 25,
+        lastUpdated: "2025-09-29 5:00 PM",
       },
     ],
     schedule: [
@@ -314,6 +368,24 @@ const ipos = [
         value: 20,
       },
     ],
+    gmp: [
+      {
+        gmpDate: "2025-09-30",
+        ipoPrice: 120,
+        gmp: 30,
+        estimatedListingPrice: 150,
+        estimatedProfit: 30,
+        lastUpdated: "2025-09-30 10:00 AM",
+      },
+      {
+        gmpDate: "2025-09-29",
+        ipoPrice: 110,
+        gmp: 25,
+        estimatedListingPrice: 135,
+        estimatedProfit: 25,
+        lastUpdated: "2025-09-29 5:00 PM",
+      },
+    ],
     schedule: [
       {
         event: "Issue open date",
@@ -407,6 +479,24 @@ const ipos = [
       {
         name: "Retailer",
         value: 20,
+      },
+    ],
+    gmp: [
+      {
+        gmpDate: "2025-09-30",
+        ipoPrice: 120,
+        gmp: 30,
+        estimatedListingPrice: 150,
+        estimatedProfit: 30,
+        lastUpdated: "2025-09-30 10:00 AM",
+      },
+      {
+        gmpDate: "2025-09-29",
+        ipoPrice: 110,
+        gmp: 25,
+        estimatedListingPrice: 135,
+        estimatedProfit: 25,
+        lastUpdated: "2025-09-29 5:00 PM",
       },
     ],
     schedule: [

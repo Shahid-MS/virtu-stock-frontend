@@ -13,7 +13,7 @@ const CompareIPO = () => {
               <th scope="col">Company</th>
               <th scope="col">Issue Price</th>
               <th scope="col">GMP</th>
-              <th scope="col">Subs Rate</th>
+              <th scope="col">Retailer Subs Rate</th>
               <th scope="col">Verdict</th>
             </tr>
           </thead>

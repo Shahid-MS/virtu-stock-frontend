@@ -1,6 +1,7 @@
 import React from "react";
 import ipos from "../../IPOs/ipos";
 import { useParams } from "react-router-dom";
+import { dateandTimeConverter, dateConverter } from "./DateHelper";
 
 const GMP = () => {
   const { id } = useParams();
@@ -37,14 +38,18 @@ const GMP = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-              </tr>
+              {ipo.gmp.map((item, idx) => (
+                <tr>
+                  <th scope="row" key={idx}>
+                    {dateConverter(item.gmpDate)}
+                  </th>
+                  <td>₹ {ipo.priceRange}</td>
+                  <td>₹ {item.gmp}</td>
+                  <td>₹ {item.estimatedListingPrice}</td>
+                  <td>₹ {item.estimatedProfit}</td>
+                  <td>{dateandTimeConverter(item.lastUpdated)}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
