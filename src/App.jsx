@@ -18,7 +18,6 @@ function App() {
           <Navbar />
           <div className="container-fluid flex-grow-1">
             <div className="row">
-              Hello
               <Sidebar />
               <div className="col-8 col-lg-10 ">
                 <Routes>
