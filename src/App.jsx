@@ -2,13 +2,13 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import Sidebar from "./Components/Sidebar/Sidebar";
 import Navbar from "./Components/Header/Navbar";
-import Main from "./Components/MainContent/Main";
 import Footer from "./Components/Footer/Footer";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./Components/MainContent/Home";
 import IPO from "./Components/MainContent/IPO";
 import NotFound from "./Components/Error/NotFound";
-
+import CompareIPO from "./Components/MainContent/CompareIPO";
+import GMP from "./Components/MainContent/GMP";
 
 function App() {
   return (
@@ -23,7 +23,9 @@ function App() {
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/ipo/:id" element={<IPO />} />
-                   <Route path="*" element={<NotFound />} />
+                  <Route path="/ipo/gmp/:id" element={<GMP />} />
+                  <Route path="/ipo/compare" element={<CompareIPO />} />
+                  <Route path="*" element={<NotFound />} />
                 </Routes>
               </div>
             </div>

@@ -33,9 +33,9 @@ const Sidebar = () => {
                 <hr class="dropdown-divider" />
               </li>
               <li>
-                <a class="dropdown-item" href="#">
+                <Link class="dropdown-item" to="/ipo/compare">
                   Comparison
-                </a>
+                </Link>
               </li>
             </ul>
           </li>
