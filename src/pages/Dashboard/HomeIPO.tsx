@@ -8,7 +8,7 @@ import {
 
 import Badge from "../../components/ui/badge/Badge";
 import ipos from "../../Data/ipos";
-import { dateConverter } from "../../Helper/dateHelper";
+import { dateFormat } from "../../Helper/dateHelper";
 import { Link } from "react-router";
 
 export default function HomeIPO() {
@@ -79,10 +79,10 @@ export default function HomeIPO() {
                   </Badge>
                 </TableCell>
                 <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                  {dateConverter(ipo.startDate)}
+                  {dateFormat(ipo.startDate)}
                 </TableCell>
                 <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                  {dateConverter(ipo.endDate)}
+                  {dateFormat(ipo.endDate)}
                 </TableCell>
               </TableRow>
             ))}

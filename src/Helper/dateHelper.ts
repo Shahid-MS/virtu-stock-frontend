@@ -1,4 +1,6 @@
-export function dateConverter(d: string | number | Date): string {
+export function dateFormat(d?: string | number | Date | null): string {
+  if (d === undefined || d === null) return "Invalid date";
+
   const date = new Date(d);
   return isNaN(date.getTime())
     ? "Invalid date"
@@ -9,7 +11,7 @@ export function dateConverter(d: string | number | Date): string {
       });
 }
 
-export function dateandTimeConverter(d: string | number | Date): string {
+export function dateandTimeFormat(d: string | number | Date): string {
   const date = new Date(d);
   return isNaN(date.getTime())
     ? "Invalid date"

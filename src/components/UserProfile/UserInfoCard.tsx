@@ -65,6 +65,7 @@ export default function UserInfoCard() {
               </p>
             </div>
           </div>
+          
         </div>
 
         <button
