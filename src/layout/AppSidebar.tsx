@@ -9,7 +9,7 @@ import {
   ChevronDownIcon,
   GridIcon,
   HorizontaLDots,
-  // ListIcon,
+  ListIcon,
   // PageIcon,
   // PieChartIcon,
   // PlugInIcon,
@@ -35,6 +35,12 @@ const navItems: NavItem[] = [
       path: `/ipo/${ipo.id}`,
       pro: false,
     })),
+  },
+
+  {
+    name: "Comparison",
+    icon: <ListIcon />,
+    path: "/ipo/compare",
   },
   // {
   //   icon: <CalenderIcon />,

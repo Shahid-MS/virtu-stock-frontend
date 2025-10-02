@@ -11,7 +11,9 @@ export function dateFormat(d?: string | number | Date | null): string {
       });
 }
 
-export function dateandTimeFormat(d: string | number | Date): string {
+export function dateandTimeFormat(d?: string | number | Date | null): string {
+  if (d === undefined || d === null) return "Invalid date";
+
   const date = new Date(d);
   return isNaN(date.getTime())
     ? "Invalid date"
@@ -21,7 +23,6 @@ export function dateandTimeFormat(d: string | number | Date): string {
         year: "numeric",
         hour: "2-digit",
         minute: "2-digit",
-        second: "2-digit",
         hour12: true,
       });
 }

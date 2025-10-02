@@ -53,8 +53,6 @@ export default function HomeIPO() {
                     <div className="flex items-center gap-3">
                       <div className="w-15 h-10 overflow-hidden">
                         <img
-                          // width={50}
-                          // height={12}
                           src={ipo.logo}
                           alt={ipo.name}
                         />

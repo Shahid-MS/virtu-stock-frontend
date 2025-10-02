@@ -83,7 +83,7 @@ const AppHeader: React.FC = () => {
             {/* Cross Icon */}
           </button>
 
-          <Link to="/" className="lg:hidden w-[50vw] h-[5vh]">
+          <Link to="/" className="lg:hidden w-40 sm:w-48">
             <img
               className="dark:hidden"
               src="/images/logo/logo-name.png"
@@ -93,8 +93,6 @@ const AppHeader: React.FC = () => {
               className="hidden dark:block"
               src="/images/logo/logo-name-dark.png"
               alt="Logo"
-              height="10"
-              width="50"
             />
           </Link>
 

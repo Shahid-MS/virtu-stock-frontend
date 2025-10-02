@@ -1,8 +1,9 @@
 import { useParams } from "react-router";
 import ipos from "../../Data/ipos";
 import { INRFormat } from "../../Helper/INRHelper";
+import { dateandTimeFormat } from "../../Helper/dateHelper";
 
-export default function IPOHeader() {
+export default function GMPHeader() {
   const { id } = useParams();
   const ipo = ipos.find((item) => item.id === id);
 
@@ -32,16 +33,13 @@ export default function IPOHeader() {
                 </p>
               </div>
             </div>
-            <div className="hidden lg:flex items-center order-3 gap-2 grow justify-end">
+            <div className="lg:flex items-center order-3 gap-2 grow justify-end">
               <div>
-                <p className="text-2xl font-medium text-gray-800 dark:text-white/90">
-                  {INRFormat(ipo?.minAmount)}
-                  <span className="text-xs text-gray-500 dark:text-gray-400">
-                    / {ipo?.minQty} shares
-                  </span>
+                <p className="text-sm lg:text-2xl font-medium text-gray-800 dark:text-white/90">
+                  GMP: {INRFormat(ipo?.gmp[0].gmp)}
                 </p>
                 <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                  Minimum Investment
+                  Last Updated : {dateandTimeFormat(ipo?.gmp[0].lastUpdated)}
                 </p>
               </div>
             </div>
