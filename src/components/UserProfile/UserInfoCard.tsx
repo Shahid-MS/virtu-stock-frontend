@@ -64,7 +64,9 @@ export default function UserInfoCard() {
                 Team Manager
               </p>
             </div>
+
           </div>
+          
           
         </div>
 

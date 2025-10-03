@@ -1,4 +1,4 @@
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import ipos from "../../Data/ipos";
 import { INRFormat } from "../../Helper/INRHelper";
 import { dateandTimeFormat } from "../../Helper/dateHelper";
@@ -13,11 +13,13 @@ export default function GMPHeader() {
         <div className="flex flex-col lg:gap-5 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex flex-col items-center w-full lg:gap-6 lg:flex-row">
             <div className=" w-15 h-10 lg:w-20 lg:h-20 overflow-hidden lg:border lg:border-gray-200 lg:rounded-full dark:border-gray-800">
-              <img
-                className="w-full h-full object-contain"
-                src={ipo?.logo}
-                alt={ipo?.name}
-              />
+              <Link to={`/ipo/${ipo?.id}`}>
+                <img
+                  className="w-full h-full object-contain"
+                  src={ipo?.logo}
+                  alt={ipo?.name}
+                />
+              </Link>
             </div>
             <div className="order-2">
               <h4 className="lg:mb-2 lg:text-lg font-semibold text-center text-gray-800 dark:text-white/90 lg:text-left">

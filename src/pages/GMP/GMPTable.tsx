@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router";
+import { useParams } from "react-router";
 import {
   Table,
   TableBody,
@@ -7,7 +7,6 @@ import {
   TableRow,
 } from "../../components/ui/table";
 import ipos from "../../Data/ipos";
-import Badge from "../../components/ui/badge/Badge";
 import { dateandTimeFormat, dateFormat } from "../../Helper/dateHelper";
 
 export default function GMPTable() {
