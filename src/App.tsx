@@ -34,7 +34,7 @@ export default function App() {
             <Route path="/ipo/compare" element={<CompareIPO />} />
             <Route path="/ipo/:id" element={<IPO />} />
             <Route path="/ipo/gmp/:id" element={<GMPIPO />} />
-
+            
             {/* Others Page */}
             <Route path="/profile" element={<UserProfiles />} />
             <Route path="/calendar" element={<Calendar />} />

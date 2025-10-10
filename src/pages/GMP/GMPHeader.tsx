@@ -1,12 +1,10 @@
-import { Link, useParams } from "react-router";
-import ipos from "../../Data/ipos";
+import { Link } from "react-router";
+
 import { INRFormat } from "../../Helper/INRHelper";
 import { dateandTimeFormat } from "../../Helper/dateHelper";
+import { IPOProps } from "../../Interface/IPO";
 
-export default function GMPHeader() {
-  const { id } = useParams();
-  const ipo = ipos.find((item) => item.id === id);
-
+export default function GMPHeader({ ipo }: IPOProps) {
   return (
     <>
       <div className="p-3 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">

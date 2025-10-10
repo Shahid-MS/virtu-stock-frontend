@@ -1,11 +1,9 @@
-import { Link, useParams } from "react-router";
-import ipos from "../../Data/ipos";
 import { dateFormat } from "../../Helper/dateHelper";
 import SubscriptionRateTable from "./SubscriptionRateTable";
+import { IPOProps } from "../../Interface/IPO";
+import { Link } from "react-router";
 
-export default function IPODetails() {
-  const { id } = useParams();
-  const ipo = ipos.find((item) => item.id === id);
+export default function IPODetails({ ipo }: IPOProps) {
   return (
     <>
       <div className="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
@@ -29,7 +27,7 @@ export default function IPODetails() {
                   Price Range
                 </p>
                 <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                  ₹ {ipo?.priceRange}
+                  ₹ {ipo?.minPrice} - {ipo?.maxPrice}
                 </p>
               </div>
               <div>
@@ -37,7 +35,7 @@ export default function IPODetails() {
                   Minimum Investment
                 </p>
                 <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                  ₹ {ipo?.minAmount}
+                  ₹ {ipo?.minPrice * ipo?.minQty}
                 </p>
               </div>
               <div>
