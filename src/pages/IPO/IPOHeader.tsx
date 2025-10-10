@@ -1,11 +1,7 @@
-import { useParams } from "react-router";
-import ipos from "../../Data/ipos";
 import { INRFormat } from "../../Helper/INRHelper";
+import { IPOProps } from "../../Interface/IPO";
 
-export default function IPOHeader() {
-  const { id } = useParams();
-  const ipo = ipos.find((item) => item.id === id);
-
+export default function IPOHeader({ ipo }: IPOProps) {
   return (
     <>
       <div className="p-3 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
@@ -35,7 +31,7 @@ export default function IPOHeader() {
             <div className="hidden lg:flex items-center order-3 gap-2 grow justify-end">
               <div>
                 <p className="text-2xl font-medium text-gray-800 dark:text-white/90">
-                  {INRFormat(ipo?.minAmount)}
+                  {INRFormat(ipo?.maxPrice * ipo?.minQty)}
                   <span className="text-xs text-gray-500 dark:text-gray-400">
                     / {ipo?.minQty} shares
                   </span>

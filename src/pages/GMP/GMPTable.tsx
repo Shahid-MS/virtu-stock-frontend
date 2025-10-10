@@ -1,4 +1,3 @@
-import { useParams } from "react-router";
 import {
   Table,
   TableBody,
@@ -6,12 +5,10 @@ import {
   TableHeader,
   TableRow,
 } from "../../components/ui/table";
-import ipos from "../../Data/ipos";
 import { dateandTimeFormat, dateFormat } from "../../Helper/dateHelper";
+import { IPOProps } from "../../Interface/IPO";
 
-export default function GMPTable() {
-  const { id } = useParams();
-  const ipo = ipos.find((item) => item.id === id);
+export default function GMPTable({ ipo }: IPOProps) {
   return (
     <>
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
@@ -65,16 +62,16 @@ export default function GMPTable() {
                     {dateFormat(gmp.gmpDate)}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                    ₹{ipo?.priceRange}
+                    ₹{ipo?.minPrice} - {ipo.maxPrice}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                     ₹{gmp.gmp}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
-                    ₹{gmp.estimatedListingPrice}
+                    ₹{ipo.maxPrice + gmp.gmp}
                   </TableCell>
                   <TableCell className="px-4 py-3  text-center text-gray-500 text-theme-sm dark:text-gray-400">
-                    ₹{gmp.estimatedProfit}
+                    ₹{(gmp.gmp) * ipo.minQty}
                   </TableCell>
                   <TableCell className="px-4 py-3  text-gray-500 text-theme-sm dark:text-gray-400">
                     ₹{dateandTimeFormat(gmp.lastUpdated)}

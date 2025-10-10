@@ -1,9 +1,6 @@
-import { useParams } from "react-router";
-import ipos from "../../Data/ipos";
+import { IPOProps } from "../../Interface/IPO";
 
-export default function StrengthRisks() {
-  const { id } = useParams();
-  const ipo = ipos.find((item) => item.id === id);
+export default function StrengthRisks({ ipo }: IPOProps) {
   return (
     <>
       <div className="p-6 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
@@ -13,8 +10,11 @@ export default function StrengthRisks() {
               Strengths
             </h4>
             <div>
-              {ipo?.strengths.map((strength,idx) => (
-                <div className="flex items-start gap-2 text-xs mb-1 leading-normal text-gray-500 dark:text-gray-400" key={idx}>
+              {ipo?.strengths.map((strength, idx) => (
+                <div
+                  className="flex items-start gap-2 text-xs mb-1 leading-normal text-gray-500 dark:text-gray-400"
+                  key={idx}
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
@@ -34,7 +34,10 @@ export default function StrengthRisks() {
             </h4>
             <div>
               {ipo?.risks.map((risk, idx) => (
-                <div className="flex items-start gap-2 text-xs mb-1 leading-normal text-gray-500 dark:text-gray-400" key={idx}>
+                <div
+                  className="flex items-start gap-2 text-xs mb-1 leading-normal text-gray-500 dark:text-gray-400"
+                  key={idx}
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"

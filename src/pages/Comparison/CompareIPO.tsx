@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link} from "react-router";
 import {
   Table,
   TableBody,
@@ -6,10 +6,28 @@ import {
   TableHeader,
   TableRow,
 } from "../../components/ui/table";
-import ipos from "../../Data/ipos";
 import Badge from "../../components/ui/badge/Badge";
+import { useEffect, useState } from "react";
+import { apiClient } from "../../API/ApiClient";
+import { IPOInterface } from "../../Interface/IPO";
+import Loading from "../OtherPage/Loading";
 
 export default function CompareIPO() {
+  const [ipos, setIpos] = useState<IPOInterface[]>([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const fetchIpos = async () => {
+      const res = await apiClient.get("/ipo");
+      setIpos(res.data);
+      setTimeout(() => {
+        setLoading(false);
+      }, 250);
+    };
+    fetchIpos();
+  }, []);
+  if (loading) {
+    return <Loading />;
+  }
   return (
     <>
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
@@ -70,15 +88,13 @@ export default function CompareIPO() {
                         </Link>
                       </TableCell>
                       <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                        ₹{ipo?.priceRange}
+                        ₹{ipo?.minPrice} - {ipo?.maxPrice}
                       </TableCell>
                       <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                        <Link to={`/ipo/gmp/${ipo.id}`}>
-                          ₹{ipo.gmp[0].gmp} (50%)
-                        </Link>
+                        <Link to={`/ipo/gmp/${ipo.id}`}>₹{ipo.gmp[0].gmp}</Link>
                       </TableCell>
                       <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
-                        {ipo.subsrciption[ipo.subsrciption.length - 1].value}x
+                        {ipo.subscriptions[1].subsvalue}
                       </TableCell>
                       <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                         <Badge
