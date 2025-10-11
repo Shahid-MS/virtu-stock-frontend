@@ -16,11 +16,16 @@ export default function IPO() {
 
   useEffect(() => {
     const fetchIpo = async () => {
-      const res = await apiClient.get(`/ipo/${id}`);
-      setIpo(res.data);
-      setTimeout(() => {
-        setLoading(false);
-      }, 250);
+      try {
+        const res = await apiClient.get(`/ipo/${id}`);
+        setIpo(res.data);
+      } catch {
+        setIpo(undefined);
+      } finally {
+        setTimeout(() => {
+          setLoading(false);
+        }, 250);
+      }
     };
     fetchIpo();
   }, [id]);

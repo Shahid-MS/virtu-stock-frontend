@@ -65,13 +65,13 @@ export default function GMPTable({ ipo }: IPOProps) {
                     ₹{ipo?.minPrice} - {ipo.maxPrice}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                    ₹{gmp.gmp}
+                    ₹{gmp.gmp} ( {((gmp.gmp / ipo.maxPrice) * 100).toFixed(2)}%)
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
                     ₹{ipo.maxPrice + gmp.gmp}
                   </TableCell>
                   <TableCell className="px-4 py-3  text-center text-gray-500 text-theme-sm dark:text-gray-400">
-                    ₹{(gmp.gmp) * ipo.minQty}
+                    ₹{gmp.gmp * ipo.minQty}
                   </TableCell>
                   <TableCell className="px-4 py-3  text-gray-500 text-theme-sm dark:text-gray-400">
                     ₹{dateandTimeFormat(gmp.lastUpdated)}

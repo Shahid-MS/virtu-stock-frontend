@@ -94,7 +94,7 @@ export default function IPODetails({ ipo }: IPOProps) {
                 <p className="text-sm font-medium text-gray-800 dark:text-white/90 mb-2">
                   Subscription Rate
                 </p>
-                <SubscriptionRateTable />
+                <SubscriptionRateTable subscription={ipo.subscriptions} />
               </div>
 
               <div className="col-span-2 lg:col-span-4">
