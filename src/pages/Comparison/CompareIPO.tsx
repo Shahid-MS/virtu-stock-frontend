@@ -1,4 +1,4 @@
-import { Link} from "react-router";
+import { Link } from "react-router";
 import {
   Table,
   TableBody,
@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { apiClient } from "../../API/ApiClient";
 import { IPOInterface } from "../../Interface/IPO";
 import Loading from "../OtherPage/Loading";
+import { verdictColorMap } from "../../Enum/Verdict";
 
 export default function CompareIPO() {
   const [ipos, setIpos] = useState<IPOInterface[]>([]);
@@ -25,6 +26,7 @@ export default function CompareIPO() {
     };
     fetchIpos();
   }, []);
+  
   if (loading) {
     return <Loading />;
   }
@@ -94,14 +96,14 @@ export default function CompareIPO() {
                         <Link to={`/ipo/gmp/${ipo.id}`}>₹{ipo.gmp[0].gmp}</Link>
                       </TableCell>
                       <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
-                        {ipo.subscriptions[1].subsvalue}
+                        {ipo.subscriptions[1].subsvalue}x
                       </TableCell>
                       <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                         <Badge
                           size="sm"
-                          color={ipo.type === "EQ" ? "success" : "error"}
+                          color={verdictColorMap[ipo.verdict] || "light"}
                         >
-                          {ipo.type === "EQ" ? "YES" : "NO"}
+                          {ipo.verdict}
                         </Badge>
                       </TableCell>
                     </TableRow>

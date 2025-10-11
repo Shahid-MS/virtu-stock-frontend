@@ -1,5 +1,3 @@
-// src/interfaces/ipo.ts
-
 export interface Subscription {
   name: string;
   subsvalue: number;
@@ -34,6 +32,7 @@ export interface IPOInterface {
   risks: string[];
   subscriptions: Subscription[];
   gmp: GMP[];
+  verdict: string;
 }
 
 export interface IPOsProps {
@@ -42,4 +41,8 @@ export interface IPOsProps {
 
 export interface IPOProps {
   ipo: IPOInterface;
+}
+
+export interface SubscriptionProps {
+  subscription: Subscription[];
 }
