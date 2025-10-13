@@ -6,6 +6,7 @@ import {
   TableRow,
 } from "../../components/ui/table";
 import { dateandTimeFormat, dateFormat } from "../../Helper/dateHelper";
+import { INRFormat } from "../../Helper/INRHelper";
 import { IPOProps } from "../../Interface/IPO";
 
 export default function GMPTable({ ipo }: IPOProps) {
@@ -56,25 +57,26 @@ export default function GMPTable({ ipo }: IPOProps) {
             </TableHeader>
 
             <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-              {ipo?.gmp.map((gmp) => (
-                <TableRow key={gmp.lastUpdated}>
+              {ipo?.gmp.map((g) => (
+                <TableRow key={g.lastUpdated}>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                    {dateFormat(gmp.gmpDate)}
+                    {dateFormat(g.gmpDate)}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                    ₹{ipo?.minPrice} - {ipo.maxPrice}
+                    {INRFormat(ipo?.minPrice)} - {INRFormat(ipo.maxPrice)}
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                    ₹{gmp.gmp} ( {((gmp.gmp / ipo.maxPrice) * 100).toFixed(2)}%)
+                    {INRFormat(g.gmp)} (
+                    {((g.gmp / ipo.maxPrice) * 100).toFixed(2)}%)
                   </TableCell>
                   <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
-                    ₹{ipo.maxPrice + gmp.gmp}
+                    {INRFormat(ipo.maxPrice + g.gmp)}
                   </TableCell>
                   <TableCell className="px-4 py-3  text-center text-gray-500 text-theme-sm dark:text-gray-400">
-                    ₹{gmp.gmp * ipo.minQty}
+                    {INRFormat(g.gmp * ipo.minQty)}
                   </TableCell>
                   <TableCell className="px-4 py-3  text-gray-500 text-theme-sm dark:text-gray-400">
-                    ₹{dateandTimeFormat(gmp.lastUpdated)}
+                    ₹{dateandTimeFormat(g.lastUpdated)}
                   </TableCell>
                 </TableRow>
               ))}

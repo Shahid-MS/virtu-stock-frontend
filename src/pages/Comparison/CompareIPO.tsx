@@ -12,6 +12,7 @@ import { apiClient } from "../../API/ApiClient";
 import { IPOInterface } from "../../Interface/IPO";
 import Loading from "../OtherPage/Loading";
 import { verdictColorMap } from "../../Enum/Verdict";
+import { INRFormat } from "../../Helper/INRHelper";
 
 export default function CompareIPO() {
   const [ipos, setIpos] = useState<IPOInterface[]>([]);
@@ -26,7 +27,7 @@ export default function CompareIPO() {
     };
     fetchIpos();
   }, []);
-  
+
   if (loading) {
     return <Loading />;
   }
@@ -90,10 +91,14 @@ export default function CompareIPO() {
                         </Link>
                       </TableCell>
                       <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                        ₹{ipo?.minPrice} - {ipo?.maxPrice}
+                        {INRFormat(ipo?.minPrice)} - {ipo?.maxPrice}
                       </TableCell>
                       <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                        <Link to={`/ipo/gmp/${ipo.id}`}>₹{ipo.gmp[0].gmp}</Link>
+                        <Link to={`/ipo/gmp/${ipo.id}`}>
+                          {INRFormat(ipo.gmp[0].gmp)} (
+                          {((ipo.gmp[0].gmp / ipo.maxPrice) * 100).toFixed(2)}%
+                          )
+                        </Link>
                       </TableCell>
                       <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
                         {ipo.subscriptions[1].subsvalue}x
