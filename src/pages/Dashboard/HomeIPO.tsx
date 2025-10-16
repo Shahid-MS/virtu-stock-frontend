@@ -10,6 +10,7 @@ import Badge from "../../components/ui/badge/Badge";
 import { dateFormat } from "../../Helper/dateHelper";
 import { Link } from "react-router";
 import { IPOsProps } from "../../Interface/IPO";
+import { IPOStatusColorMap } from "../../Enum/IPOStatus";
 
 const HomeIPO: React.FC<IPOsProps> = ({ ipos = [] }) => {
   return (
@@ -41,6 +42,12 @@ const HomeIPO: React.FC<IPOsProps> = ({ ipos = [] }) => {
                 className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
               >
                 Close Date
+              </TableCell>
+              <TableCell
+                isHeader
+                className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
+                Status
               </TableCell>
             </TableRow>
           </TableHeader>
@@ -78,6 +85,14 @@ const HomeIPO: React.FC<IPOsProps> = ({ ipos = [] }) => {
                 </TableCell>
                 <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                   {dateFormat(ipo.endDate)}
+                </TableCell>
+                <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                  <Badge
+                    size="sm"
+                    color={IPOStatusColorMap[ipo.status] || "light"}
+                  >
+                    {ipo.status}
+                  </Badge>
                 </TableCell>
               </TableRow>
             ))}

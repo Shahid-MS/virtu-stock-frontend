@@ -2,8 +2,10 @@ import { dateFormat } from "../../Helper/dateHelper";
 import SubscriptionRateTable from "./SubscriptionRateTable";
 import { IPOProps } from "../../Interface/IPO";
 import { Link } from "react-router";
+import { INRFormat } from "../../Helper/INRHelper";
 
 export default function IPODetails({ ipo }: IPOProps) {
+  console.log(ipo.issueSize);
   return (
     <>
       <div className="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
@@ -27,7 +29,7 @@ export default function IPODetails({ ipo }: IPOProps) {
                   Price Range
                 </p>
                 <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                  ₹ {ipo?.minPrice} - {ipo?.maxPrice}
+                  {INRFormat(ipo?.minPrice)} - {ipo?.maxPrice}
                 </p>
               </div>
               <div>
@@ -35,7 +37,7 @@ export default function IPODetails({ ipo }: IPOProps) {
                   Minimum Investment
                 </p>
                 <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                  ₹ {ipo?.minPrice * ipo?.minQty}
+                  {INRFormat(ipo?.minPrice * ipo?.minQty)}
                 </p>
               </div>
               <div>
@@ -51,7 +53,7 @@ export default function IPODetails({ ipo }: IPOProps) {
                   Issue Size
                 </p>
                 <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                  ₹ {ipo?.issueSize}
+                  ₹ {ipo.issueSize.totalIssueSize}
                 </p>
               </div>
               <div>

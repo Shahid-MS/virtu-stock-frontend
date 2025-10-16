@@ -25,7 +25,7 @@ const AppSidebar: React.FC = () => {
   const [ipos, setIpos] = useState<IPOInterface[]>([]);
   useEffect(() => {
     const fetchIpos = async () => {
-      const res = await apiClient.get("/ipo");
+      const res = await apiClient.get("/ipo?status=open");
       setIpos(res.data);
     };
     fetchIpos();

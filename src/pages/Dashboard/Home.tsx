@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { apiClient } from "../../API/ApiClient";
 import { IPOInterface } from "../../Interface/IPO";
 import Loading from "../OtherPage/Loading";
+import NotFound from "../OtherPage/NotFound";
 
 export default function Home() {
   const [ipos, setIpos] = useState<IPOInterface[]>([]);
@@ -21,6 +22,11 @@ export default function Home() {
   if (loading) {
     return <Loading />;
   }
+
+  if (ipos === undefined || ipos === null) {
+    return <NotFound />;
+  }
+
   return (
     <>
       <div className="space-y-6">
