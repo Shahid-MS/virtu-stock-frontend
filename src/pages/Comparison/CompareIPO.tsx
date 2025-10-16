@@ -46,32 +46,65 @@ export default function CompareIPO() {
                     <TableCell
                       isHeader
                       className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                      rowSpan={2}
                     >
                       Company
                     </TableCell>
                     <TableCell
                       isHeader
                       className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                      rowSpan={2}
                     >
                       Issue Price
                     </TableCell>
                     <TableCell
                       isHeader
+                      className="px-5 py-3 font-medium text-gray-500 text-center text-theme-xs dark:text-gray-400"
+                      colSpan={3}
+                    >
+                      IssueSize
+                    </TableCell>
+                    <TableCell
+                      isHeader
                       className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                      rowSpan={2}
                     >
                       GMP
                     </TableCell>
                     <TableCell
                       isHeader
                       className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                      rowSpan={2}
                     >
                       Retailer Subs Rate
+                    </TableCell>
+
+                    <TableCell
+                      isHeader
+                      className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                      rowSpan={2}
+                    >
+                      Verdict
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell
+                      isHeader
+                      className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                    >
+                      Fresh
                     </TableCell>
                     <TableCell
                       isHeader
                       className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                     >
-                      Verdict
+                      Offer for Sale
+                    </TableCell>
+                    <TableCell
+                      isHeader
+                      className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                    >
+                      Total
                     </TableCell>
                   </TableRow>
                 </TableHeader>
@@ -93,16 +126,32 @@ export default function CompareIPO() {
                       <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                         {INRFormat(ipo?.minPrice)} - {ipo?.maxPrice}
                       </TableCell>
+
+                      <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
+                        {ipo.issueSize.fresh}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
+                        {ipo.issueSize.offerForSale}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
+                        {ipo.issueSize.totalIssueSize}
+                      </TableCell>
                       <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                        <Link to={`/ipo/gmp/${ipo.id}`}>
-                          {INRFormat(ipo.gmp[0].gmp)} (
-                          {((ipo.gmp[0].gmp / ipo.maxPrice) * 100).toFixed(2)}%
-                          )
+                        <Link
+                          to={`/ipo/gmp/${ipo.id}`}
+                          className="flex flex-col items-start"
+                        >
+                          <span>{INRFormat(ipo.gmp[0].gmp)}</span>
+                          <span className="text-gray-400 text-xs">
+                            {((ipo.gmp[0].gmp / ipo.maxPrice) * 100).toFixed(2)}
+                            %
+                          </span>
                         </Link>
                       </TableCell>
                       <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
                         {ipo.subscriptions[1].subsvalue}x
                       </TableCell>
+
                       <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                         <Badge
                           size="sm"

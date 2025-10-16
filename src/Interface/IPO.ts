@@ -9,6 +9,12 @@ export interface GMP {
   lastUpdated: string;
 }
 
+export interface issueSize {
+  fresh: string;
+  offerForSale: string;
+  totalIssueSize: string;
+}
+
 export interface IPOInterface {
   id: string;
   ipoAlertId: string;
@@ -25,7 +31,7 @@ export interface IPOInterface {
   maxPrice: number;
   minQty: number;
   logo?: string;
-  issueSize: string;
+  issueSize: issueSize;
   prospectusUrl: string;
   about: string;
   strengths: string[];
