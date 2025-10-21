@@ -21,6 +21,8 @@ import Home from "./pages/Dashboard/Home";
 import IPO from "./pages/IPO/IPO";
 import CompareIPO from "./pages/Comparison/CompareIPO";
 import GMPIPO from "./pages/GMP/GMPIPO";
+import AdminHome from "./pages/Admin/Dashboard/AdminHome";
+import UpdateIPO from "./pages/Admin/IPO/UpdateIpo";
 
 export default function App() {
   return (
@@ -30,13 +32,22 @@ export default function App() {
         <Routes>
           {/* Dashboard Layout */}
           <Route element={<AppLayout />}>
+            {/* Home */}
             <Route index path="/" element={<Home />} />
-            <Route path="/ipo/compare" element={<CompareIPO />} />
-            <Route path="/ipo/:id" element={<IPO />} />
-            <Route path="/ipo/gmp/:id" element={<GMPIPO />} />
-            
-            {/* Others Page */}
-            <Route path="/profile" element={<UserProfiles />} />
+
+            {/* IPO */}
+            <Route path="/ipo">
+              <Route path="compare" element={<CompareIPO />} />
+              <Route path=":id" element={<IPO />} />
+              <Route path="gmp/:id" element={<GMPIPO />} />
+            </Route>
+
+            {/* Admin */}
+            <Route path="/admin">
+              <Route path="ipo" element={<AdminHome />} />
+              <Route path="ipo/:id" element={<UpdateIPO />} />
+            </Route>
+
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/blank" element={<Blank />} />
 

@@ -1,12 +1,12 @@
-import ComponentCard from "../../components/common/ComponentCard";
-import HomeIPO from "./HomeIPO";
+import { apiClient } from "../../../API/ApiClient";
+import ComponentCard from "../../../components/common/ComponentCard";
+import { IPOInterface } from "../../../Interface/IPO";
+import Loading from "../../OtherPage/Loading";
+import NotFound from "../../OtherPage/NotFound";
+import AdminHomeIPO from "./AdminHomeIPO";
 import { useEffect, useState } from "react";
-import { apiClient } from "../../API/ApiClient";
-import { IPOInterface } from "../../Interface/IPO";
-import Loading from "../OtherPage/Loading";
-import NotFound from "../OtherPage/NotFound";
 
-export default function Home() {
+export default function AdminHome() {
   const [ipos, setIpos] = useState<IPOInterface[]>([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -31,7 +31,7 @@ export default function Home() {
     <>
       <div className="space-y-6">
         <ComponentCard title="IPOs">
-          <HomeIPO ipos={ipos} />
+          <AdminHomeIPO ipos={ipos} />
         </ComponentCard>
       </div>
     </>
