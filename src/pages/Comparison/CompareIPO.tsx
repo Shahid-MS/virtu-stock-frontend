@@ -45,43 +45,56 @@ export default function CompareIPO() {
                   <TableRow>
                     <TableCell
                       isHeader
-                      className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                      className="px-4 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                       rowSpan={2}
                     >
                       Company
                     </TableCell>
                     <TableCell
                       isHeader
-                      className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                      className="px-4 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                       rowSpan={2}
                     >
                       Issue Price
                     </TableCell>
                     <TableCell
                       isHeader
-                      className="px-5 py-3 font-medium text-gray-500 text-center text-theme-xs dark:text-gray-400"
+                      className="px-4 py-3 font-medium text-gray-500 text-center text-theme-xs dark:text-gray-400"
                       colSpan={3}
                     >
                       IssueSize
                     </TableCell>
                     <TableCell
                       isHeader
-                      className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                      className="px-4 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                       rowSpan={2}
                     >
                       GMP
                     </TableCell>
                     <TableCell
                       isHeader
-                      className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                      className="px-4 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                       rowSpan={2}
                     >
                       Retailer Subs Rate
                     </TableCell>
-
                     <TableCell
                       isHeader
-                      className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                      className="px-4 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                      rowSpan={2}
+                    >
+                      Expected Listing
+                    </TableCell>
+                    <TableCell
+                      isHeader
+                      className="px-4 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                      rowSpan={2}
+                    >
+                      Expected Profit
+                    </TableCell>
+                    <TableCell
+                      isHeader
+                      className="px-4 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                       rowSpan={2}
                     >
                       Verdict
@@ -90,19 +103,19 @@ export default function CompareIPO() {
                   <TableRow>
                     <TableCell
                       isHeader
-                      className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                      className="px-4 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                     >
                       Fresh
                     </TableCell>
                     <TableCell
                       isHeader
-                      className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                      className="px-4 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                     >
                       Offer for Sale
                     </TableCell>
                     <TableCell
                       isHeader
-                      className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                      className="px-4 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                     >
                       Total
                     </TableCell>
@@ -112,7 +125,7 @@ export default function CompareIPO() {
                 <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
                   {ipos.map((ipo) => (
                     <TableRow key={ipo.id}>
-                      <TableCell className="px-5 py-4 sm:px-6 text-start">
+                      <TableCell className="px-4 py-4 sm:px-6 text-start">
                         <Link to={`/ipo/${ipo.id}`}>
                           <div className="flex items-center gap-3">
                             <div>
@@ -149,7 +162,15 @@ export default function CompareIPO() {
                         </Link>
                       </TableCell>
                       <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
-                        {ipo.subscriptions[1].subsvalue}x
+                        {ipo.subscriptions[2].subsvalue}x
+                      </TableCell>
+
+                      <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
+                        {INRFormat(ipo.maxPrice + ipo.gmp[0].gmp)}
+                      </TableCell>
+
+                      <TableCell className="px-4 py-3  text-center text-gray-500 text-theme-sm dark:text-gray-400">
+                        {INRFormat(ipo.gmp[0].gmp * ipo.minQty)}
                       </TableCell>
 
                       <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">

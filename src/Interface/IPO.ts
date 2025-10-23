@@ -1,12 +1,12 @@
 export interface Subscription {
   name: string;
-  subsvalue: number;
+  subsvalue: number| undefined;
 }
 
 export interface GMP {
-  gmp: number;
-  gmpDate: string;
-  lastUpdated: string;
+  gmp: number | undefined;
+  gmpDate: string | undefined;
+  lastUpdated: string | undefined;
 }
 
 export interface issueSize {
