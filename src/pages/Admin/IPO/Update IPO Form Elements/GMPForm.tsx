@@ -57,12 +57,20 @@ export default function GMPForm({
   };
 
   const handleNewGMPDateChange = (selectedDates: Date[]) => {
-    if (selectedDates.length === 0) return;
+    if (!selectedDates || selectedDates.length === 0) return;
 
-    setNewGMP((prev) => ({
-      ...prev,
-      gmpDate: selectedDates[0].toISOString(),
-    }));
+    const selectedDate = selectedDates[0];
+    const localISO = new Date(
+      selectedDate.getTime() - selectedDate.getTimezoneOffset() * 60000
+    ).toISOString();
+
+    setNewGMP((prev) => {
+      const updated = {
+        ...prev,
+        gmpDate: localISO,
+      };
+      return updated;
+    });
   };
 
   const handleAddGMP = () => {
@@ -78,11 +86,15 @@ export default function GMPForm({
     if (!confirmed || !ipo) return;
 
     const formattedDate = new Date(newGMP.gmpDate).toISOString().split("T")[0];
+    console.log(newGMP.gmpDate);
+    console.log(formattedDate);
     const newEntry: GMP = {
       gmp: newGMP.gmp,
       gmpDate: formattedDate,
       lastUpdated: new Date().toISOString(),
     };
+
+    console.log(newEntry);
 
     const updatedGmp = [...ipo.gmp, newEntry];
     setUpdatedFields((prev) => ({ ...prev, gmp: updatedGmp }));

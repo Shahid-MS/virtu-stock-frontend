@@ -11,6 +11,7 @@ import Button from "../../../components/ui/button/Button";
 import GMPForm from "./Update IPO Form Elements/GMPForm";
 import SubscriptionsForm from "./Update IPO Form Elements/SubscriptionsForm";
 import IssueSizeForm from "./Update IPO Form Elements/IssueSizeForm";
+import VerdictForm from "./Update IPO Form Elements/VerdictForm";
 
 export default function UpdateIPO() {
   const { id } = useParams();
@@ -48,8 +49,9 @@ export default function UpdateIPO() {
 
     try {
       console.log(updatedFields);
-      // await apiClient.patch(`/ipo/${ipo.id}`, updatedFields);
+      await apiClient.put(`/admin/ipo/${ipo.id}`, updatedFields);
       alert("IPO updated successfully ✅");
+      setUpdatedFields({});
     } catch (error) {
       console.error("Error updating IPO:", error);
       alert("Failed to update IPO ❌");
@@ -84,6 +86,12 @@ export default function UpdateIPO() {
 
             <div className="space-y-6">
               <GMPForm
+                ipo={ipo}
+                setIpo={setIpo}
+                setUpdatedFields={setUpdatedFields}
+              />
+
+              <VerdictForm
                 ipo={ipo}
                 setIpo={setIpo}
                 setUpdatedFields={setUpdatedFields}
