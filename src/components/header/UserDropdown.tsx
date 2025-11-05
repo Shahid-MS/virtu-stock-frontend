@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { Dropdown } from "../ui/dropdown/Dropdown";
+import { DropdownItem } from "../ui/dropdown/DropdownItem";
+import { Link } from "react-router";
 // import { DropdownItem } from "../ui/dropdown/DropdownItem";
 // import { Dropdown } from "../ui/dropdown/Dropdown";
 // import { Link } from "react-router";
@@ -10,9 +13,9 @@ export default function UserDropdown() {
     setIsOpen(!isOpen);
   }
 
-  // function closeDropdown() {
-  //   setIsOpen(false);
-  // }
+  function closeDropdown() {
+    setIsOpen(false);
+  }
   return (
     <div className="relative">
       <button
@@ -44,7 +47,7 @@ export default function UserDropdown() {
         </svg>
       </button>
 
-      {/* <Dropdown
+      <Dropdown
         isOpen={isOpen}
         onClose={closeDropdown}
         className="absolute right-0 mt-[17px] flex w-[260px] flex-col rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark"
@@ -156,7 +159,7 @@ export default function UserDropdown() {
           </svg>
           Sign out
         </Link>
-      </Dropdown> */}
+      </Dropdown>
     </div>
   );
 }

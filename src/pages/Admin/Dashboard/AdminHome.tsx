@@ -1,4 +1,5 @@
-import { apiClient } from "../../../API/ApiClient";
+
+import apiClient from "../../../API/ApiClient";
 import ComponentCard from "../../../components/common/ComponentCard";
 import { IPOInterface } from "../../../Interface/IPO";
 import Loading from "../../OtherPage/Loading";

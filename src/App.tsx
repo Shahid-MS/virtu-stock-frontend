@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router";
 import SignIn from "./pages/AuthPages/SignIn";
 import SignUp from "./pages/AuthPages/SignUp";
 import NotFound from "./pages/OtherPage/NotFound";
-import UserProfiles from "./pages/IPO/IPO";
 import Videos from "./pages/UiElements/Videos";
 import Images from "./pages/UiElements/Images";
 import Alerts from "./pages/UiElements/Alerts";
@@ -23,8 +22,16 @@ import CompareIPO from "./pages/Comparison/CompareIPO";
 import GMPIPO from "./pages/GMP/GMPIPO";
 import AdminHome from "./pages/Admin/Dashboard/AdminHome";
 import UpdateIPO from "./pages/Admin/IPO/UpdateIpo";
+import { useEffect } from "react";
 
 export default function App() {
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token && isTokenExpired(token)) {
+      localStorage.removeItem("token");
+      window.location.href = "/signin";
+    }
+  }, []);
   return (
     <>
       <Router>
@@ -80,4 +87,9 @@ export default function App() {
       </Router>
     </>
   );
+
+  function isTokenExpired(token: string) {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    return Date.now() > payload.exp * 1000;
+  }
 }

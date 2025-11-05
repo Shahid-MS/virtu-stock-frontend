@@ -19,7 +19,6 @@ export default function VerdictForm({
     "BUY",
     "HOLD",
     "AVOID",
-    "UPCOMING",
     "NOT_REVIEWED",
   ];
 
