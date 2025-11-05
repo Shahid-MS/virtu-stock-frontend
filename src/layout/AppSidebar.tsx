@@ -19,7 +19,8 @@ import {
 import { useSidebar } from "../context/SidebarContext";
 import SidebarWidget from "./SidebarWidget";
 import { IPOInterface } from "../Interface/IPO";
-import { apiClient } from "../API/ApiClient";
+import apiClient from "../API/ApiClient";
+
 // import SidebarWidget from "./SidebarWidget";
 
 const AppSidebar: React.FC = () => {

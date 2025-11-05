@@ -3,9 +3,10 @@ import { useParams } from "react-router";
 import GMPHeader from "./GMPHeader";
 import GMPTable from "./GMPTable";
 import { useEffect, useState } from "react";
-import { apiClient } from "../../API/ApiClient";
+
 import { IPOInterface } from "../../Interface/IPO";
 import Loading from "../OtherPage/Loading";
+import apiClient from "../../API/ApiClient";
 
 export default function GMPIPO() {
   const { id } = useParams();

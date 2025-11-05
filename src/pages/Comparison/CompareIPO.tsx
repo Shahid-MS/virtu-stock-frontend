@@ -8,11 +8,12 @@ import {
 } from "../../components/ui/table";
 import Badge from "../../components/ui/badge/Badge";
 import { useEffect, useState } from "react";
-import { apiClient } from "../../API/ApiClient";
+
 import { IPOInterface } from "../../Interface/IPO";
 import Loading from "../OtherPage/Loading";
 import { verdictColorMap } from "../../Enum/Verdict";
 import { INRFormat } from "../../Helper/INRHelper";
+import apiClient from "../../API/ApiClient";
 
 export default function CompareIPO() {
   const [ipos, setIpos] = useState<IPOInterface[]>([]);
@@ -83,7 +84,7 @@ export default function CompareIPO() {
                       className="px-4 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                       rowSpan={2}
                     >
-                      Expected Listing
+                      Lot
                     </TableCell>
                     <TableCell
                       isHeader
@@ -97,7 +98,7 @@ export default function CompareIPO() {
                       className="px-4 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                       rowSpan={2}
                     >
-                      Verdict
+                      Review
                     </TableCell>
                   </TableRow>
                   <TableRow>
@@ -166,7 +167,7 @@ export default function CompareIPO() {
                       </TableCell>
 
                       <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
-                        {INRFormat(ipo.maxPrice + ipo.gmp[0].gmp)}
+                        {ipo.minQty}
                       </TableCell>
 
                       <TableCell className="px-4 py-3  text-center text-gray-500 text-theme-sm dark:text-gray-400">

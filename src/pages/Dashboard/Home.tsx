@@ -1,10 +1,11 @@
 import ComponentCard from "../../components/common/ComponentCard";
 import HomeIPO from "./HomeIPO";
 import { useEffect, useState } from "react";
-import { apiClient } from "../../API/ApiClient";
+
 import { IPOInterface } from "../../Interface/IPO";
 import Loading from "../OtherPage/Loading";
 import NotFound from "../OtherPage/NotFound";
+import apiClient from "../../API/ApiClient";
 
 export default function Home() {
   const [ipos, setIpos] = useState<IPOInterface[]>([]);
