@@ -23,6 +23,8 @@ import GMPIPO from "./pages/GMP/GMPIPO";
 import AdminHome from "./pages/Admin/Dashboard/AdminHome";
 import UpdateIPO from "./pages/Admin/IPO/UpdateIpo";
 import { useEffect } from "react";
+import UserHome from "./pages/User/Dashboard/UserHome";
+import UpdateAppliedIPO from "./pages/User/Dashboard/AppliedIPO/UpdateAppliedIPO";
 
 export default function App() {
   useEffect(() => {
@@ -53,6 +55,12 @@ export default function App() {
             <Route path="/admin">
               <Route path="ipo" element={<AdminHome />} />
               <Route path="ipo/:id" element={<UpdateIPO />} />
+            </Route>
+
+            {/* User */}
+            <Route path="/user">
+              <Route path="" element={<UserHome />} />
+              <Route path="applied-ipo/:id" element={<UpdateAppliedIPO/>} />
             </Route>
 
             <Route path="/calendar" element={<Calendar />} />

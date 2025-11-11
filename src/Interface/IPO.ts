@@ -1,6 +1,6 @@
 export interface Subscription {
   name: string;
-  subsvalue: number| undefined;
+  subsvalue: number | undefined;
 }
 
 export interface GMP {
@@ -51,4 +51,11 @@ export interface IPOProps {
 
 export interface SubscriptionProps {
   subscription: Subscription[];
+}
+
+export interface AppliedIPOInterface {
+  id: string;
+  ipo: IPOInterface;
+  appliedLot: number;
+  allotment: string;
 }

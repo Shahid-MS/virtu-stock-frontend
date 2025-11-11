@@ -93,7 +93,7 @@ const AppSidebar: React.FC = () => {
     // },
   ];
 
-   const Admin: NavItem[] = [
+  const Admin: NavItem[] = [
     {
       icon: <UserCircleIcon />,
       name: "Update IPO",
@@ -101,13 +101,19 @@ const AppSidebar: React.FC = () => {
     },
   ];
 
-
+  const User: NavItem[] = [
+    {
+      icon: <UserCircleIcon />,
+      name: "Dashboard",
+      path: "/user",
+    },
+  ];
 
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const location = useLocation();
 
   const [openSubmenu, setOpenSubmenu] = useState<{
-    type: "main" | "others" |"admin";
+    type: "main" | "others" | "admin" | "user";
     index: number;
   } | null>(null);
   const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>(
@@ -123,14 +129,14 @@ const AppSidebar: React.FC = () => {
 
   useEffect(() => {
     let submenuMatched = false;
-    ["main", "others",  "admin"].forEach((menuType) => {
+    ["main", "others", "admin", "user"].forEach((menuType) => {
       const items = menuType === "main" ? navItems : othersItems;
       items.forEach((nav, index) => {
         if (nav.subItems) {
           nav.subItems.forEach((subItem) => {
             if (isActive(subItem.path)) {
               setOpenSubmenu({
-                type: menuType as "main" | "others"| "admin",
+                type: menuType as "main" | "others" | "admin" | "user",
                 index,
               });
               submenuMatched = true;
@@ -157,7 +163,10 @@ const AppSidebar: React.FC = () => {
     }
   }, [openSubmenu]);
 
-  const handleSubmenuToggle = (index: number, menuType: "main" | "others"|"admin") => {
+  const handleSubmenuToggle = (
+    index: number,
+    menuType: "main" | "others" | "admin" | "user"
+  ) => {
     setOpenSubmenu((prevOpenSubmenu) => {
       if (
         prevOpenSubmenu &&
@@ -170,7 +179,10 @@ const AppSidebar: React.FC = () => {
     });
   };
 
-  const renderMenuItems = (items: NavItem[], menuType: "main" | "others"|"admin") => (
+  const renderMenuItems = (
+    items: NavItem[],
+    menuType: "main" | "others" | "admin" | "user"
+  ) => (
     <ul className="flex flex-col gap-4">
       {items.map((nav, index) => (
         <li key={nav.name}>
@@ -377,7 +389,7 @@ const AppSidebar: React.FC = () => {
               {renderMenuItems(othersItems, "others")}
             </div> */}
 
-             <div className="">
+            <div className="">
               <h2
                 className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${
                   !isExpanded && !isHovered
@@ -394,6 +406,22 @@ const AppSidebar: React.FC = () => {
               {renderMenuItems(Admin, "admin")}
             </div>
 
+               <div className="">
+              <h2
+                className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${
+                  !isExpanded && !isHovered
+                    ? "lg:justify-center"
+                    : "justify-start"
+                }`}
+              >
+                {isExpanded || isHovered || isMobileOpen ? (
+                  "user"
+                ) : (
+                  <HorizontaLDots />
+                )}
+              </h2>
+              {renderMenuItems(User, "user")}
+            </div>
           </div>
         </nav>
         {isExpanded || isHovered || isMobileOpen ? <SidebarWidget /> : null}
