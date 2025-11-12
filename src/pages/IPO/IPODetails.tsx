@@ -38,20 +38,6 @@ export default function IPODetails({ ipo }: IPOProps) {
     }
   };
 
-  const handleUnmark = async () => {
-    const confirmUnmark = window.confirm(
-      "Are you sure you want to unmark this IPO as applied?"
-    );
-
-    if (!confirmUnmark) return;
-
-    try {
-      await apiClient.delete(`/user/unmark-as-applied?ipoId=${ipo.id}`);
-      setIsApplied(false);
-    } catch (error) {
-      console.error("Error unmarking applied status:", error);
-    }
-  };
   useEffect(() => {
     const checkApplied = async () => {
       try {
@@ -182,51 +168,29 @@ export default function IPODetails({ ipo }: IPOProps) {
               <img src="\images\icons\GrowwLogo.png" className="w-4 h-4" />
               Apply Now
             </a>
-            {isApplied ? (
-              <button
-                className="flex items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
-                onClick={handleUnmark}
+
+            <button
+              onClick={isApplied ? undefined : openModal}
+              disabled={isApplied}
+              className="flex items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
+            >
+              <svg
+                className="fill-current"
+                width="18"
+                height="18"
+                viewBox="0 0 18 18"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <svg
-                  className="fill-current"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 18 18"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M6.5 9.5L8.5 11.5L12 7.5"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                Applied
-              </button>
-            ) : (
-              <button
-                onClick={openModal}
-                className="flex items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
-              >
-                <svg
-                  className="fill-current"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 18 18"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M6.5 9.5L8.5 11.5L12 7.5"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                Mark as Applied
-              </button>
-            )}
+                <path
+                  d="M6.5 9.5L8.5 11.5L12 7.5"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              {isApplied ? "Applied" : "Mark as Applied"}
+            </button>
           </div>
         </div>
         <Modal isOpen={isOpen} onClose={closeModal} showCloseButton={false}>

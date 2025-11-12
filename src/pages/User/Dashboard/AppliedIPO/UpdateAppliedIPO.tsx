@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
-import ComponentCard from "../../../../components/common/ComponentCard";
+import { useEffect, useState } from "react";
+
 import { AppliedIPOInterface } from "../../../../Interface/IPO";
 import apiClient from "../../../../API/ApiClient";
 import { useParams } from "react-router";
-import Button from "../../../../components/ui/button/Button";
+
 import IPOHeader from "@/pages/IPO/IPOHeader";
 import Loading from "@/pages/OtherPage/Loading";
+import AppliedIPODetails from "./AppliedIPODetails";
 
 const UpdateAppliedIPO = () => {
   const { id } = useParams();
@@ -30,7 +31,6 @@ const UpdateAppliedIPO = () => {
     fetchAppliedIpo();
   }, [id]);
 
-  console.log(appliedIpo);
   if (loading) {
     return <Loading />;
   }
@@ -38,9 +38,12 @@ const UpdateAppliedIPO = () => {
     <>
       <div className="space-y-6">
         <IPOHeader ipo={appliedIpo?.ipo} />
-      </div>
+        <AppliedIPODetails
+          appliedIpo={appliedIpo}
+          setAppliedIpo={setAppliedIpo}
+        />
 
-      {/* <form
+        {/* <form
         className="space-y-6"
         //    onSubmit={handleSubmit}
       >
@@ -51,7 +54,7 @@ const UpdateAppliedIPO = () => {
         >
           <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
             <div className="space-y-6"> */}
-      {/* <SubscriptionsForm
+        {/* <SubscriptionsForm
                 ipo={ipo}
                 setIpo={setIpo}
                 setUpdatedFields={setUpdatedFields}
@@ -75,7 +78,7 @@ const UpdateAppliedIPO = () => {
                 setIpo={setIpo}
                 setUpdatedFields={setUpdatedFields}
               /> */}
-      {/* </div>
+        {/* </div>
           </div>
         </ComponentCard>
         <div className="pt-4 flex justify-center">
@@ -84,6 +87,7 @@ const UpdateAppliedIPO = () => {
           </Button>
         </div>
       </form> */}
+      </div>
     </>
   );
 };

@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "../../../components/ui/table";
-import { AppliedIPOInterface} from "../../../Interface/IPO";
+import { AppliedIPOInterface } from "../../../Interface/IPO";
 import apiClient from "../../../API/ApiClient";
 import Loading from "../../OtherPage/Loading";
 import { IPOStatusColorMap } from "../../../Enum/IPOStatus";
@@ -26,7 +26,7 @@ import {
   DrawerTitle,
 } from "../../../components/ui/drawer";
 
-export default function RecentOrders() {
+export default function AppliedIPOTable() {
   const [appliedIpos, setAppliedIpos] = useState<AppliedIPOInterface[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedAppliedIpo, setSelectedAppliedIpo] =
@@ -44,7 +44,6 @@ export default function RecentOrders() {
       }, 250);
     };
     fetchIpos();
-    console.log(appliedIpos);
   }, []);
 
   if (loading) {
@@ -52,24 +51,24 @@ export default function RecentOrders() {
   }
   const handleAppliedIpo = (appliedIpo: AppliedIPOInterface) => {
     if (!appliedIpo) return;
-    if (appliedIpo.allotment === AllotmentStatus.ALLOTMENT_PENDING) {
+
+    if (appliedIpo.allotment === AllotmentStatus.ALLOTMENT || appliedIpo.allotment === AllotmentStatus.NOT_ALLOTED) {
+      setIsDrawerOpen(true);
       return;
     }
-    if (appliedIpo.allotment === AllotmentStatus.ALLOTED) {
-      navigate(`/user/applied-ipo/${appliedIpo.id}`);
-    }
-    setIsDrawerOpen(true);
+    navigate(`/user/applied-ipo/${appliedIpo.id}`);
   };
 
-  const handleAllotment = async () => {
+  const handleAllotment = async (isAlloted: boolean) => {
     if (!selectedAppliedIpo) return;
-
     try {
-      await apiClient.post(`/user/alloted/${selectedAppliedIpo.id}`);
-      navigate(`/user/applied-ipo/${selectedAppliedIpo.id}`);
+      if (isAlloted) {
+        await apiClient.post(`/user/alloted/${selectedAppliedIpo.id}`);
+      }
     } catch (error) {
       console.log(error);
     } finally {
+      navigate(`/user/applied-ipo/${selectedAppliedIpo.id}`);
       setIsDrawerOpen(false);
     }
   };
@@ -224,7 +223,7 @@ export default function RecentOrders() {
               <Button
                 className="w-full rounded-xl"
                 onClick={() => {
-                  handleAllotment();
+                  handleAllotment(true);
                 }}
               >
                 Yes, I Got Allotment
@@ -234,7 +233,7 @@ export default function RecentOrders() {
                 variant="outline"
                 className="w-full rounded-xl"
                 onClick={() => {
-                  setIsDrawerOpen(false);
+                  handleAllotment(false);
                 }}
               >
                 No, Not Allotted

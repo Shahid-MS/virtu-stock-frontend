@@ -58,4 +58,5 @@ export interface AppliedIPOInterface {
   ipo: IPOInterface;
   appliedLot: number;
   allotment: string;
+  appliedDate: Date;
 }

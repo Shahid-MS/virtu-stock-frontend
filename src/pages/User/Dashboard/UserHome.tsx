@@ -1,5 +1,5 @@
+import AppliedIPOTable from "./AppliedIPOTable";
 
-import AppliedIPO from "./AppliedIPO";
 import IPOAlloted from "./IPOAlloted";
 import MonthlyProfit from "./MonthlyProfit";
 
@@ -15,7 +15,7 @@ export default function UserHome() {
           <MonthlyProfit />
         </div>
         <div className=" col-span-12  md:col-span-6 md:order-1">
-          <AppliedIPO />
+          <AppliedIPOTable />
         </div>
       </div>
     </>
