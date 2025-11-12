@@ -46,7 +46,7 @@ export interface IPOsProps {
 }
 
 export interface IPOProps {
-  ipo: IPOInterface;
+  ipo: IPOInterface | undefined;
 }
 
 export interface SubscriptionProps {

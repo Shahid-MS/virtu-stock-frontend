@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "../../../components/ui/table";
-import { AppliedIPOInterface, IPOInterface } from "../../../Interface/IPO";
+import { AppliedIPOInterface} from "../../../Interface/IPO";
 import apiClient from "../../../API/ApiClient";
 import Loading from "../../OtherPage/Loading";
 import { IPOStatusColorMap } from "../../../Enum/IPOStatus";
