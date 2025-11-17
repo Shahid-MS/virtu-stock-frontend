@@ -1,7 +1,7 @@
 import { dateFormat } from "../../Helper/dateHelper";
 import SubscriptionRateTable from "./SubscriptionRateTable";
 import { IPOProps } from "../../Interface/IPO";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { INRFormat } from "../../Helper/INRHelper";
 import { useModal } from "../../hooks/useModal";
 import { Modal } from "../../components/ui/modal";
@@ -13,8 +13,10 @@ import apiClient from "../../API/ApiClient";
 
 export default function IPODetails({ ipo }: IPOProps) {
   const [isApplied, setIsApplied] = useState(false);
+  const [appliedIpoId, setAppliedIpoId] = useState("");
   const [lot, setLot] = useState<string>("1");
   const { isOpen, openModal, closeModal } = useModal();
+  const navigate = useNavigate();
   const handleSave = async () => {
     if (!lot || isNaN(Number(lot)) || Number(lot) < 1) {
       alert("Please enter a valid lot number");
@@ -27,7 +29,8 @@ export default function IPODetails({ ipo }: IPOProps) {
     };
 
     try {
-      await apiClient.post(`/user/apply`, req);
+      const res = await apiClient.post(`/user/apply`, req);
+      setAppliedIpoId(res.data.appliedIpoId);
       alert("Marked as Applied successfully ✅");
       setIsApplied(true);
     } catch (error) {
@@ -47,6 +50,7 @@ export default function IPODetails({ ipo }: IPOProps) {
 
         if (res.data.applied === true) {
           setIsApplied(true);
+          setAppliedIpoId(res.data.appliedIpoId);
         }
       } catch (error) {
         console.error("Error checking applied status:", error);
@@ -170,8 +174,11 @@ export default function IPODetails({ ipo }: IPOProps) {
             </a>
 
             <button
-              onClick={isApplied ? undefined : openModal}
-              disabled={isApplied}
+              onClick={
+                isApplied
+                  ? () => navigate(`/user/applied-ipo/${appliedIpoId}`)
+                  : openModal
+              }
               className="flex items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
             >
               <svg

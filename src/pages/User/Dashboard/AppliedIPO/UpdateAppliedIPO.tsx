@@ -7,13 +7,12 @@ import { useParams } from "react-router";
 import IPOHeader from "@/pages/IPO/IPOHeader";
 import Loading from "@/pages/OtherPage/Loading";
 import AppliedIPODetails from "./AppliedIPODetails";
+import NotFound from "@/pages/OtherPage/NotFound";
 
 const UpdateAppliedIPO = () => {
   const { id } = useParams();
   const [appliedIpo, setAppliedIpo] = useState<AppliedIPOInterface>();
   const [loading, setLoading] = useState(true);
-  const [updatedFields, setUpdatedFields] =
-    useState<Partial<AppliedIPOInterface>>();
 
   useEffect(() => {
     const fetchAppliedIpo = async () => {
@@ -34,59 +33,19 @@ const UpdateAppliedIPO = () => {
   if (loading) {
     return <Loading />;
   }
+
+  if (!appliedIpo || appliedIpo === null) {
+    return <NotFound />;
+  }
+
   return (
     <>
       <div className="space-y-6">
-        <IPOHeader ipo={appliedIpo?.ipo} />
+        <IPOHeader ipo={appliedIpo.ipo} />
         <AppliedIPODetails
           appliedIpo={appliedIpo}
           setAppliedIpo={setAppliedIpo}
         />
-
-        {/* <form
-        className="space-y-6"
-        //    onSubmit={handleSubmit}
-      >
-        <ComponentCard
-          title={
-            appliedIpo?.ipo.name !== undefined ? appliedIpo.ipo.name : "Hello"
-          }
-        >
-          <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-            <div className="space-y-6"> */}
-        {/* <SubscriptionsForm
-                ipo={ipo}
-                setIpo={setIpo}
-                setUpdatedFields={setUpdatedFields}
-              />
-              <IssueSizeForm
-                ipo={ipo}
-                setIpo={setIpo}
-                setUpdatedFields={setUpdatedFields}
-              />
-            </div>
-
-            <div className="space-y-6">
-              <GMPForm
-                ipo={ipo}
-                setIpo={setIpo}
-                setUpdatedFields={setUpdatedFields}
-              />
-
-              <VerdictForm
-                ipo={ipo}
-                setIpo={setIpo}
-                setUpdatedFields={setUpdatedFields}
-              /> */}
-        {/* </div>
-          </div>
-        </ComponentCard>
-        <div className="pt-4 flex justify-center">
-          <Button className="w-1/4" variant="outline" type="submit">
-            Update Applied
-          </Button>
-        </div>
-      </form> */}
       </div>
     </>
   );

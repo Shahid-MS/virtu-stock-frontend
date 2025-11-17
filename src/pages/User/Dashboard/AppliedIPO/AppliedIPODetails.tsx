@@ -2,14 +2,18 @@ import { AppliedIPOInterface } from "../../../../Interface/IPO";
 import { Dispatch, SetStateAction } from "react";
 
 import AppliedIPOdetail from "./AppliedIPOdetail";
+import AllotmentIPOdetail from "./AllotmentIPOdetail";
+import { AllotmentStatus } from "@/Enum/AllotmentStatus";
 interface AppliedIPODetailsInterface {
   appliedIpo: AppliedIPOInterface;
   setAppliedIpo: Dispatch<SetStateAction<AppliedIPOInterface | undefined>>;
 }
+
 export default function AppliedIPODetails({
   appliedIpo,
   setAppliedIpo,
 }: AppliedIPODetailsInterface) {
+
   return (
     <>
       <div className="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
@@ -20,6 +24,12 @@ export default function AppliedIPODetails({
                 appliedIpo={appliedIpo}
                 setAppliedIpo={setAppliedIpo}
               />
+              {appliedIpo.allotment === AllotmentStatus.ALLOTED && (
+                <AllotmentIPOdetail
+                  appliedIpo={appliedIpo}
+                  setAppliedIpo={setAppliedIpo}
+                />
+              )}
             </div>
           </div>
         </div>

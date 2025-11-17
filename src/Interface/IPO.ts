@@ -38,7 +38,10 @@ export interface IPOInterface {
   risks: string[];
   subscriptions: Subscription[];
   gmp: GMP[];
+  listedPrice:number;
   verdict: string;
+  listingReturn: number;
+  listingReturnPercent: number;
 }
 
 export interface IPOsProps {
@@ -46,7 +49,7 @@ export interface IPOsProps {
 }
 
 export interface IPOProps {
-  ipo: IPOInterface | undefined;
+  ipo: IPOInterface;
 }
 
 export interface SubscriptionProps {
@@ -59,4 +62,14 @@ export interface AppliedIPOInterface {
   appliedLot: number;
   allotment: string;
   appliedDate: Date;
+  allotedIpo: AllotedInterface;
+}
+
+export interface AllotedInterface {
+  id: string;
+  allotedDate: Date;
+  allotedLot: number;
+  netReturn: number;
+  netReturnPercent: number;
+  sellPrice: number;
 }

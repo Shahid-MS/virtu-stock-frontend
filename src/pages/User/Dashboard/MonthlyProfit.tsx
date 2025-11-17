@@ -1,8 +1,6 @@
 import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
 
-
-
 export default function MonthlyProfit() {
   const options: ApexOptions = {
     colors: ["#465fff"],
@@ -85,8 +83,10 @@ export default function MonthlyProfit() {
   };
   const series = [
     {
-      name: "Profit",
-      data: [1680, 3850, 2000, 2981, 1876, 1959, 2911, 7110, 2215, 4390, 1280, 500],
+      name: "P/L",
+      data: [
+        1680, 3850, 2000, 2981, 1876, 1959, 2911, -7110, 2215, 4390, 1280, 500,
+      ],
     },
   ];
 
@@ -96,7 +96,6 @@ export default function MonthlyProfit() {
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
           Monthly Profit
         </h3>
-    
       </div>
 
       <div className="max-w-full overflow-x-auto custom-scrollbar">

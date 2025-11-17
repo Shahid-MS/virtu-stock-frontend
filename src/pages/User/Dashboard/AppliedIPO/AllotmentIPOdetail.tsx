@@ -1,71 +1,76 @@
 import apiClient from "@/API/ApiClient";
 import Input from "@/components/form/input/InputField";
-import Radio from "@/components/form/input/Radio";
 import Label from "@/components/form/Label";
 import Button from "@/components/ui/button/Button";
 import { Modal } from "@/components/ui/modal";
-import { AllotmentStatus } from "@/Enum/AllotmentStatus";
 import { dateFormat } from "@/Helper/dateHelper";
+import { INRFormat } from "@/Helper/INRHelper";
 import { useModal } from "@/hooks/useModal";
 import { AppliedIPOInterface } from "@/Interface/IPO";
 import { Dispatch, SetStateAction, useState } from "react";
-import { useNavigate } from "react-router";
 
 interface AppliedIPODetailsInterface {
   appliedIpo: AppliedIPOInterface;
   setAppliedIpo: Dispatch<SetStateAction<AppliedIPOInterface | undefined>>;
 }
-
-type UpdateAppliedIpoRequest = {
+type UpdateAllotedIpoRequest = {
   lot?: number;
-  allotment?: AllotmentStatus;
+  sellPrice?: number | null;
 };
-const AppliedIPOdetail = ({
+const AllotmentIPOdetail = ({
   appliedIpo,
   setAppliedIpo,
 }: AppliedIPODetailsInterface) => {
-  const AllotmentOptions: AllotmentStatus[] = [
-    AllotmentStatus.ALLOTED,
-    AllotmentStatus.NOT_ALLOTED,
-  ];
-  const [selectedAllotmentStatus, setSelectedAllotmentStatus] =
-    useState<AllotmentStatus>(appliedIpo.allotment as AllotmentStatus);
-
   const { isOpen, openModal, closeModal } = useModal();
-  const [lot, setLot] = useState<string>(String(appliedIpo.appliedLot));
-  const navigate = useNavigate();
+  const [lot, setLot] = useState<string>(
+    String(appliedIpo.allotedIpo.allotedLot)
+  );
+  const [sellPrice, setSellPrice] = useState<string>(
+    String(
+      appliedIpo.allotedIpo.sellPrice === null
+        ? "N/A"
+        : appliedIpo.allotedIpo.sellPrice
+    )
+  );
 
   const handleSave = async () => {
     if (!lot || isNaN(Number(lot)) || Number(lot) < 1) {
       alert("Please enter a valid lot number");
       return;
     }
+    if (Number(lot) > appliedIpo.appliedLot) {
+      alert("Alloted lot can't  be greater than applied lot");
+      return;
+    }
 
-    const lotChanged = Number(lot) !== appliedIpo.appliedLot;
-    const allotmentChanged =
-      appliedIpo.allotment !== AllotmentStatus.ALLOTMENT_PENDING &&
-      selectedAllotmentStatus !== appliedIpo.allotment;
+    if (sellPrice !== "N/A" && (!sellPrice || isNaN(Number(sellPrice)))) {
+      alert("Please enter a valid sellPrice or N/A if not sold yet");
+      return;
+    }
 
-    if (!lotChanged && !allotmentChanged) {
+    const lotChanged = Number(lot) !== appliedIpo.allotedIpo.allotedLot;
+    const sellPriceChanged =
+      Number(sellPrice) !== appliedIpo.allotedIpo.sellPrice;
+
+    if (!lotChanged && !sellPriceChanged) {
       alert("No changes made.");
       return;
     }
 
-    const req: UpdateAppliedIpoRequest = {};
+    const req: UpdateAllotedIpoRequest = {};
     if (lotChanged) {
       req.lot = Number(lot);
     }
 
-    if (allotmentChanged) {
-      req.allotment = selectedAllotmentStatus;
+    if (sellPriceChanged) {
+      req.sellPrice = sellPrice == "N/A" ? null : Number(sellPrice);
     }
 
     try {
       const res = await apiClient.patch(
-        `user/applied-ipo/${appliedIpo.id}`,
+        `user/alloted-ipo/${appliedIpo.allotedIpo.id}`,
         req
       );
-      console.log(res.data.allotedIpo);
       alert("Updated successfully ✅");
       setAppliedIpo((prev) => {
         if (!prev) return prev;
@@ -73,8 +78,7 @@ const AppliedIPOdetail = ({
         return {
           ...prev,
           appliedLot: Number(lot),
-          allotment: selectedAllotmentStatus,
-          allotedIpo: res.data.allotedIpo,
+          allotedIpo: res.data,
         };
       });
     } catch (error) {
@@ -85,55 +89,107 @@ const AppliedIPOdetail = ({
     }
   };
 
-  const handleNotApplied = async () => {
-    const confirmNotApplied = window.confirm(
-      `Are you sure you have not applied to ${appliedIpo?.ipo.name} ?`
-    );
-    if (!confirmNotApplied) return;
-    try {
-      await apiClient.delete(
-        `/user/unmark-as-applied?ipoId=${appliedIpo.ipo.id}`
-      );
-      navigate(-1);
-    } catch (error) {
-      console.error("Error unmarking applied status:", error);
-    }
-  };
+  console.log(appliedIpo);
 
-  const handleAllotmentStatusChange = (value: string) => {
-    const allotmentStatus = value as AllotmentStatus;
-    setSelectedAllotmentStatus(allotmentStatus);
-  };
   return (
     <>
-      <div>
+      <div className="order-1">
         <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-          Applied Date
+          Alloted Date
         </p>
         <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-          {dateFormat(appliedIpo.appliedDate)}
+          {dateFormat(appliedIpo.allotedIpo.allotedDate)}
         </p>
       </div>
 
-      <div>
+      <div className="order-1">
         <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-          Applied Lot
+          Alloted Lot
         </p>
         <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-          {appliedIpo.appliedLot}
+          {appliedIpo.allotedIpo.allotedLot}
         </p>
       </div>
-
-      <div>
+      <div className="order-1 ">
         <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-          Allotment Status
+          Price Range
         </p>
         <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-          {appliedIpo.allotment.replace("_", " ")}
+          {INRFormat(appliedIpo.ipo.minPrice)} -
+          {INRFormat(appliedIpo.ipo.maxPrice)}
         </p>
       </div>
+      {Date.now() >= new Date(appliedIpo.ipo.listingDate).getTime() && (
+        <>
+          <div className="order-2">
+            <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+              Listed Price
+            </p>
+            <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
+              {INRFormat(appliedIpo.ipo.listedPrice)}
+            </p>
+          </div>
+          <div className="order-2">
+            <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+              Listing Return
+            </p>
+            <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
+              {INRFormat(appliedIpo.ipo.listingReturn)}
+            </p>
+          </div>
 
-      <div className="flex flex-col items-center gap-3 col-span-2 lg:col-span-1 mb-2">
+          <div className="order-2 lg:col-span-2">
+            <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+              Listing Return %
+            </p>
+            <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
+              {appliedIpo.ipo.listingReturnPercent} %
+            </p>
+          </div>
+          <div className="order-2">
+            <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+              Sell Price
+            </p>
+            <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
+              {appliedIpo.allotedIpo.sellPrice !== null
+                ? appliedIpo.allotedIpo.sellPrice
+                : "Yet Not sold"}
+            </p>
+          </div>
+          <div className="order-2">
+            <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+              Return
+            </p>
+            <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
+              {INRFormat(appliedIpo.allotedIpo.netReturn)}
+            </p>
+          </div>
+
+          <div className="order-2 lg:col-span-2">
+            <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+              Return %
+            </p>
+            <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
+              {appliedIpo.allotedIpo.netReturnPercent} %
+            </p>
+          </div>
+
+          <div className="order-2">
+            <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+              Total Return
+            </p>
+            <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
+              {INRFormat(
+                appliedIpo.allotedIpo.netReturn *
+                  appliedIpo.allotedIpo.allotedLot *
+                  appliedIpo.ipo.minQty
+              )}
+            </p>
+          </div>
+        </>
+      )}
+
+      <div className="flex flex-col items-center gap-3 col-span-2 lg:col-span-1 mb-2 order-last lg:order-1">
         <button
           onClick={openModal}
           className="flex w-1/2 sm:w-1/4 items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200 lg:inline-flex lg:w-auto"
@@ -159,7 +215,7 @@ const AppliedIPOdetail = ({
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
             <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-lg dark:bg-gray-900">
               <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">
-                Edit Applied IPO
+                Edit Alloted IPO
               </h3>
 
               <form className="flex flex-col gap-5">
@@ -173,19 +229,17 @@ const AppliedIPOdetail = ({
                     onChange={(e) => setLot(e.target.value)}
                   />
                 </div>
-                {appliedIpo.allotment !== AllotmentStatus.ALLOTMENT_PENDING && (
-                  <div className="flex flex-wrap items-center gap-4">
-                    {AllotmentOptions.map((option) => (
-                      <Radio
-                        key={`allotment-${option}`}
-                        id={`allotment-${option}`}
-                        name="allotment"
-                        value={option}
-                        checked={selectedAllotmentStatus === option}
-                        onChange={handleAllotmentStatusChange}
-                        label={option.replace("_", " ")}
-                      />
-                    ))}
+                {Date.now() >=
+                  new Date(appliedIpo.ipo.listingDate).getTime() && (
+                  <div>
+                    <Label>Sell Price</Label>
+                    <Input
+                      type="text"
+                      placeholder="Price"
+                      value={sellPrice}
+                      required
+                      onChange={(e) => setSellPrice(e.target.value)}
+                    />
                   </div>
                 )}
 
@@ -195,13 +249,6 @@ const AppliedIPOdetail = ({
                   </Button>
                   <Button size="sm" onClick={handleSave}>
                     Save
-                  </Button>
-                  <Button
-                    size="sm"
-                    onClick={handleNotApplied}
-                    className="bg-red-500 text-white hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700"
-                  >
-                    Not Applied
                   </Button>
                 </div>
               </form>
@@ -213,4 +260,4 @@ const AppliedIPOdetail = ({
   );
 };
 
-export default AppliedIPOdetail;
+export default AllotmentIPOdetail;
