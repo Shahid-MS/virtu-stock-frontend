@@ -1,7 +1,32 @@
 import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
-
+import { useEffect, useState } from "react";
+import apiClient from "@/API/ApiClient";
+import Loading from "@/pages/OtherPage/Loading";
+interface SummaryData {
+  month: string[];
+  applied: number[];
+  alloted: number[];
+  totalIpo: number[];
+}
 export default function IPOAlloted() {
+  const [summary, setSummary] = useState<SummaryData>({
+    month: [],
+    applied: [],
+    alloted: [],
+    totalIpo: [],
+  });
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const year = new Date().getFullYear();
+
+    apiClient.get(`/user/monthly-summary?year=${year}`).then((res) => {
+      const key = `Year-${year}`;
+
+      setSummary(res.data[key]);
+      setLoading(false);
+    });
+  }, []);
   const options: ApexOptions = {
     colors: ["#465fff", "#10B981", "#808080"],
     chart: {
@@ -29,20 +54,7 @@ export default function IPOAlloted() {
       colors: ["transparent"],
     },
     xaxis: {
-      categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ],
+      categories: summary?.month,
       axisBorder: {
         show: false,
       },
@@ -84,17 +96,20 @@ export default function IPOAlloted() {
   const series = [
     {
       name: "Alloted",
-      data: [1, 5, 2, 0, 2, 6, 1, 10, 5, 3, 0, 5],
+      data: summary?.alloted,
     },
     {
       name: "Applied",
-      data: [9, 6, 4, 4, 4, 7, 2, 12, 6, 11, 5, 10],
+      data: summary?.applied,
     },
-        {
+    {
       name: "Total IPO",
-      data: [10, 7, 5, 7, 9, 11, 5, 15, 6, 15, 10, 12],
+      data: summary?.totalIpo,
     },
   ];
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-5 pt-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6 sm:pt-6">
