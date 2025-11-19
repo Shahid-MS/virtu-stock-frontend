@@ -1,92 +1,90 @@
 import Chart from "react-apexcharts";
 import { ApexOptions } from "apexcharts";
+import { useEffect, useState } from "react";
+import apiClient from "@/API/ApiClient";
+
+interface MonthlySummaryData {
+  month: string[];
+  profit: number[];
+}
 
 export default function MonthlyProfit() {
+  const [monthlyProfit, setMonthlyProfit] = useState<MonthlySummaryData>({
+    month: [],
+    profit: [],
+  });
+
+  useEffect(() => {
+    const year = new Date().getFullYear();
+
+    apiClient.get(`/user/monthly-summary-profit?year=${year}`).then((res) => {
+      const key = `Year-${year}`;
+      setMonthlyProfit(res.data[key]);
+    });
+  }, []);
+
   const options: ApexOptions = {
-    colors: ["#465fff"],
     chart: {
       fontFamily: "Outfit, sans-serif",
       type: "bar",
       height: 180,
-      toolbar: {
-        show: false,
-      },
+      toolbar: { show: false },
     },
+
     plotOptions: {
       bar: {
         horizontal: false,
         columnWidth: "50%",
         borderRadius: 5,
         borderRadiusApplication: "end",
+        colors: {
+          ranges: [],
+          backgroundBarColors: [],
+        },
       },
     },
-    dataLabels: {
-      enabled: false,
-    },
+
+    colors: [
+      (opts: { value: number }) => (opts.value < 0 ? "#FF4D4D" : "#00C97C"),
+    ],
+
+    dataLabels: { enabled: false },
+
     stroke: {
       show: true,
       width: 4,
       colors: ["transparent"],
     },
+
     xaxis: {
-      categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ],
-      axisBorder: {
-        show: false,
-      },
-      axisTicks: {
-        show: false,
-      },
+      categories: monthlyProfit.month,
+      axisBorder: { show: false },
+      axisTicks: { show: false },
     },
+
     legend: {
       show: true,
       position: "top",
       horizontalAlign: "left",
       fontFamily: "Outfit",
     },
-    yaxis: {
-      title: {
-        text: undefined,
-      },
-    },
+
     grid: {
-      yaxis: {
-        lines: {
-          show: true,
-        },
-      },
-    },
-    fill: {
-      opacity: 1,
+      yaxis: { lines: { show: true } },
     },
 
+    fill: { opacity: 1 },
+
     tooltip: {
-      x: {
-        show: false,
-      },
-      y: {
-        formatter: (val: number) => `${val}`,
-      },
+      x: { show: false },
+      y: { formatter: (val: number) => `${val}` },
     },
   };
+
   const series = [
     {
       name: "P/L",
-      data: [
-        1680, 3850, 2000, 2981, 1876, 1959, 2911, -7110, 2215, 4390, 1280, 500,
-      ],
+      data: monthlyProfit.profit,
     },
   ];
 
