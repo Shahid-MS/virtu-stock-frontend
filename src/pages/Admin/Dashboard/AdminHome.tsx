@@ -1,6 +1,4 @@
-
 import apiClient from "../../../API/ApiClient";
-import ComponentCard from "../../../components/common/ComponentCard";
 import { IPOInterface } from "../../../Interface/IPO";
 import Loading from "../../OtherPage/Loading";
 import NotFound from "../../OtherPage/NotFound";
@@ -31,9 +29,7 @@ export default function AdminHome() {
   return (
     <>
       <div className="space-y-6">
-        <ComponentCard title="IPOs">
-          <AdminHomeIPO ipos={ipos} />
-        </ComponentCard>
+        <AdminHomeIPO ipos={ipos} />
       </div>
     </>
   );
