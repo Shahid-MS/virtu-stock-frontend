@@ -11,6 +11,7 @@ import { dateFormat } from "../../Helper/dateHelper";
 import { Link } from "react-router";
 import { IPOsProps } from "../../Interface/IPO";
 import { IPOStatusColorMap } from "../../Enum/IPOStatus";
+import Pagination from "../User/Dashboard/AppliedIPO/Pagination";
 
 const HomeIPO: React.FC<IPOsProps> = ({ ipos = [] }) => {
   return (
@@ -98,6 +99,7 @@ const HomeIPO: React.FC<IPOsProps> = ({ ipos = [] }) => {
             ))}
           </TableBody>
         </Table>
+        <Pagination />
       </div>
     </div>
   );

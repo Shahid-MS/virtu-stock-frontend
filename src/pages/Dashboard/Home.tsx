@@ -1,4 +1,3 @@
-import ComponentCard from "../../components/common/ComponentCard";
 import HomeIPO from "./HomeIPO";
 import { useEffect, useState } from "react";
 
@@ -31,9 +30,7 @@ export default function Home() {
   return (
     <>
       <div className="space-y-6">
-        <ComponentCard title="IPOs">
-          <HomeIPO ipos={ipos} />
-        </ComponentCard>
+        <HomeIPO ipos={ipos} />
       </div>
     </>
   );

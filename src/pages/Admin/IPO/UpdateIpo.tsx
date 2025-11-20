@@ -2,18 +2,15 @@ import NotFound from "../../OtherPage/NotFound";
 import { useParams } from "react-router";
 import { FormEvent, useEffect, useState } from "react";
 
-
 import { IPOInterface } from "../../../Interface/IPO";
 import Loading from "../../OtherPage/Loading";
-import ComponentCard from "../../../components/common/ComponentCard";
-
 import Button from "../../../components/ui/button/Button";
 import GMPForm from "./Update IPO Form Elements/GMPForm";
 import SubscriptionsForm from "./Update IPO Form Elements/SubscriptionsForm";
 import IssueSizeForm from "./Update IPO Form Elements/IssueSizeForm";
 import VerdictForm from "./Update IPO Form Elements/VerdictForm";
 import apiClient from "../../../API/ApiClient";
-
+import IPOHeader from "@/pages/IPO/IPOHeader";
 
 export default function UpdateIPO() {
   const { id } = useParams();
@@ -70,8 +67,9 @@ export default function UpdateIPO() {
 
   return (
     <>
-      <form className="space-y-6" onSubmit={handleSubmit}>
-        <ComponentCard title={ipo.name}>
+      <div className="space-y-6">
+        <IPOHeader ipo={ipo} />
+        <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
             <div className="space-y-6">
               <SubscriptionsForm
@@ -100,13 +98,14 @@ export default function UpdateIPO() {
               />
             </div>
           </div>
-        </ComponentCard>
-        <div className="pt-4 flex justify-center">
-          <Button className="w-1/4" variant="outline" type="submit">
-            Update IPO
-          </Button>
-        </div>
-      </form>
+
+          <div className="pt-4 flex justify-center">
+            <Button className="w-1/4" variant="outline" type="submit">
+              Update IPO
+            </Button>
+          </div>
+        </form>
+      </div>
     </>
   );
 }
