@@ -17,7 +17,7 @@ export default function VerdictForm({
   const verdictOptions: Verdict[] = [
     "STRONG_BUY",
     "BUY",
-    "HOLD",
+    "WAIT",
     "AVOID",
     "NOT_REVIEWED",
   ];
