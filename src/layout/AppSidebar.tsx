@@ -20,11 +20,22 @@ import { useSidebar } from "../context/SidebarContext";
 import SidebarWidget from "./SidebarWidget";
 import { IPOInterface } from "../Interface/IPO";
 import apiClient from "../API/ApiClient";
+import { useSelector } from "react-redux";
+import { RootState } from "@/Store";
+import { jwtDecode } from "jwt-decode";
 
 // import SidebarWidget from "./SidebarWidget";
 
 const AppSidebar: React.FC = () => {
   const [ipos, setIpos] = useState<IPOInterface[]>([]);
+  const { token } = useSelector((state: RootState) => state.auth);
+
+  let roles: string[] = [];
+  if (token) {
+    const decoded = jwtDecode<{ roles: string[] }>(token);
+    roles = decoded.roles;
+  }
+
   useEffect(() => {
     const fetchIpos = async () => {
       const res = await apiClient.get("/ipo?status=open");
@@ -389,39 +400,43 @@ const AppSidebar: React.FC = () => {
               {renderMenuItems(othersItems, "others")}
             </div> */}
 
-            <div className="">
-              <h2
-                className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${
-                  !isExpanded && !isHovered
-                    ? "lg:justify-center"
-                    : "justify-start"
-                }`}
-              >
-                {isExpanded || isHovered || isMobileOpen ? (
-                  "Admin"
-                ) : (
-                  <HorizontaLDots />
-                )}
-              </h2>
-              {renderMenuItems(Admin, "admin")}
-            </div>
+            {roles.includes("ROLE_ADMIN") && (
+              <div className="">
+                <h2
+                  className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${
+                    !isExpanded && !isHovered
+                      ? "lg:justify-center"
+                      : "justify-start"
+                  }`}
+                >
+                  {isExpanded || isHovered || isMobileOpen ? (
+                    "Admin"
+                  ) : (
+                    <HorizontaLDots />
+                  )}
+                </h2>
+                {renderMenuItems(Admin, "admin")}
+              </div>
+            )}
 
-               <div className="">
-              <h2
-                className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${
-                  !isExpanded && !isHovered
-                    ? "lg:justify-center"
-                    : "justify-start"
-                }`}
-              >
-                {isExpanded || isHovered || isMobileOpen ? (
-                  "user"
-                ) : (
-                  <HorizontaLDots />
-                )}
-              </h2>
-              {renderMenuItems(User, "user")}
-            </div>
+            {roles.includes("ROLE_USER") && (
+              <div className="">
+                <h2
+                  className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${
+                    !isExpanded && !isHovered
+                      ? "lg:justify-center"
+                      : "justify-start"
+                  }`}
+                >
+                  {isExpanded || isHovered || isMobileOpen ? (
+                    "user"
+                  ) : (
+                    <HorizontaLDots />
+                  )}
+                </h2>
+                {renderMenuItems(User, "user")}
+              </div>
+            )}
           </div>
         </nav>
         {isExpanded || isHovered || isMobileOpen ? <SidebarWidget /> : null}

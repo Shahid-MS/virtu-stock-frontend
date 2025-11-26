@@ -1,5 +1,6 @@
 import type React from "react";
 import type { FC } from "react";
+import { ChangeHandler, RefCallBack } from "react-hook-form";
 
 interface InputProps {
   type?: "text" | "number" | "email" | "password" | "date" | "time" | string;
@@ -9,14 +10,26 @@ interface InputProps {
   value?: string | number;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
-  min?: string;
-  max?: string;
-  step?: number;
+  min?: string | number;
+  max?: string | number;
+  step?: string | number;
   disabled?: boolean;
   success?: boolean;
   error?: boolean;
   hint?: string;
   required?: boolean;
+  onBlur?: ChangeHandler;
+  ref?: RefCallBack;
+  maxLength?: number;
+  inputMode?:
+    | "text"
+    | "email"
+    | "search"
+    | "tel"
+    | "url"
+    | "none"
+    | "numeric"
+    | "decimal";
 }
 
 const Input: FC<InputProps> = ({
@@ -35,6 +48,10 @@ const Input: FC<InputProps> = ({
   error = false,
   hint,
   required,
+  onBlur,
+  ref,
+  maxLength,
+  inputMode,
 }) => {
   let inputClasses = ` h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3  dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 ${className}`;
 
@@ -63,6 +80,10 @@ const Input: FC<InputProps> = ({
         disabled={disabled}
         className={inputClasses}
         required={required}
+        onBlur={onBlur}
+        ref={ref}
+        maxLength={maxLength}
+        inputMode={inputMode}
       />
 
       {hint && (

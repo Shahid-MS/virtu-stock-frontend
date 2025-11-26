@@ -14,7 +14,7 @@ import { signInSchema, signInSchemaType } from "./AuthSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-export default function SignInForm() {
+export default function ResetPasswordForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
 
