@@ -1,36 +1,60 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "../../icons";
 import Label from "../form/Label";
 import Input from "../form/input/InputField";
-import Checkbox from "../form/input/Checkbox";
+
 import Button from "../ui/button/Button";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/Store";
+import apiClient from "@/API/ApiClient";
+import { login } from "@/Store/authSlice";
+import { AxiosError } from "axios";
+import { signInSchema, signInSchemaType } from "./AuthSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
+  const [serverError, setServerError] = useState<string | null>(null);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [loader, setLoader] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<signInSchemaType>({
+    resolver: zodResolver(signInSchema),
+  });
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleLogin = async (data: signInSchemaType) => {
     try {
-      const response = await fetch("http://localhost:8080/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+      setLoader(true);
+      setServerError(null);
+      const res = await apiClient.post("/auth/login", {
+        email: data.email,
+        password: data.password,
       });
-
-      if (!response.ok) throw new Error("Invalid credentials");
-
-      const data = await response.json();
-      localStorage.setItem("token", data.token);
-      window.location.href = "/";
+      const token = res.data["virtustock-token"];
+      if (token) {
+        dispatch(login({ token: token }));
+        navigate("/");
+      }
     } catch (err) {
-      console.log(err);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const error = err as AxiosError<any>;
+      if (error?.response?.data?.message) {
+        setServerError(error.response.data.message);
+      } else {
+        setServerError("Something went wrong");
+      }
+    } finally {
+      setLoader(false);
     }
   };
+
   return (
     <div className="flex flex-col flex-1">
       <div className="w-full max-w-md pt-10 mx-auto">
@@ -53,7 +77,7 @@ export default function SignInForm() {
             </p>
           </div>
           <div>
-            <form onSubmit={handleLogin}>
+            <form onSubmit={handleSubmit(handleLogin)}>
               <div className="space-y-6">
                 <div>
                   <Label>
@@ -61,8 +85,9 @@ export default function SignInForm() {
                   </Label>
                   <Input
                     placeholder="ms2.o@gmail.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    {...register("email")}
+                    error={!!errors.email}
+                    hint={errors.email?.message}
                   />
                 </div>
                 <div>
@@ -73,8 +98,9 @@ export default function SignInForm() {
                     <Input
                       type={showPassword ? "text" : "password"}
                       placeholder="Enter your password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      {...register("password")}
+                      error={!!errors.password}
+                      hint={errors.password?.message}
                     />
                     <span
                       onClick={() => setShowPassword(!showPassword)}
@@ -87,6 +113,11 @@ export default function SignInForm() {
                       )}
                     </span>
                   </div>
+                  {serverError && (
+                    <p className="text-error-500 text-sm mb-3 mt-3">
+                      {serverError}
+                    </p>
+                  )}
                 </div>
                 <div className="flex items-center justify-between">
                   <Link
@@ -97,7 +128,12 @@ export default function SignInForm() {
                   </Link>
                 </div>
                 <div>
-                  <Button type="submit" className="w-full" size="sm">
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    size="sm"
+                    disabled={loader}
+                  >
                     Sign in
                   </Button>
                 </div>

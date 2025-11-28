@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router";
+import { BrowserRouter as Router, Routes, Route, Outlet } from "react-router";
 import SignIn from "./pages/AuthPages/SignIn";
 import SignUp from "./pages/AuthPages/SignUp";
 import NotFound from "./pages/OtherPage/NotFound";
@@ -22,82 +22,111 @@ import CompareIPO from "./pages/Comparison/CompareIPO";
 import GMPIPO from "./pages/GMP/GMPIPO";
 import AdminHome from "./pages/Admin/Dashboard/AdminHome";
 import UpdateIPO from "./pages/Admin/IPO/UpdateIpo";
-import { useEffect } from "react";
 import UserHome from "./pages/User/Dashboard/UserHome";
 import UpdateAppliedIPO from "./pages/User/Dashboard/AppliedIPO/UpdateAppliedIPO";
+import { Provider } from "react-redux";
+import { store } from "./Store";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+import PublicRoute from "./pages/AuthPages/PublicRoute";
+import ResetPassword from "./pages/AuthPages/ResetPassword";
 
 export default function App() {
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token && isTokenExpired(token)) {
-      localStorage.removeItem("token");
-      window.location.href = "/signin";
-    }
-  }, []);
   return (
     <>
-      <Router>
-        <ScrollToTop />
-        <Routes>
-          {/* Dashboard Layout */}
-          <Route element={<AppLayout />}>
-            {/* Home */}
-            <Route index path="/" element={<Home />} />
+      <Provider store={store}>
+        <Router>
+          <ScrollToTop />
+          <Routes>
+            {/* Dashboard Layout */}
+            <Route element={<AppLayout />}>
+              {/* Home */}
+              <Route index path="/" element={<Home />} />
 
-            {/* IPO */}
-            <Route path="/ipo">
-              <Route path="compare" element={<CompareIPO />} />
-              <Route path=":id" element={<IPO />} />
-              <Route path="gmp/:id" element={<GMPIPO />} />
+              <Route path="/ipo">
+                <Route path="compare" element={<CompareIPO />} />
+                <Route path=":id" element={<IPO />} />
+                <Route path="gmp/:id" element={<GMPIPO />} />
+              </Route>
+
+              {/* Admin */}
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute requiredRoles={["ROLE_ADMIN"]}>
+                    <Outlet />
+                  </ProtectedRoute>
+                }
+              >
+                <Route path="ipo" element={<AdminHome />} />
+                <Route path="ipo/:id" element={<UpdateIPO />} />
+              </Route>
+
+              {/* User */}
+              <Route
+                path="/user"
+                element={
+                  <ProtectedRoute requiredRoles={["ROLE_USER"]}>
+                    <Outlet />
+                  </ProtectedRoute>
+                }
+              >
+                <Route path="" element={<UserHome />} />
+                <Route path="applied-ipo/:id" element={<UpdateAppliedIPO />} />
+              </Route>
+
+              <Route path="/calendar" element={<Calendar />} />
+              <Route path="/blank" element={<Blank />} />
+
+              {/* Forms */}
+              <Route path="/form-elements" element={<FormElements />} />
+
+              {/* Tables */}
+              <Route path="/basic-tables" element={<BasicTables />} />
+
+              {/* Ui Elements */}
+              <Route path="/alerts" element={<Alerts />} />
+              <Route path="/avatars" element={<Avatars />} />
+              <Route path="/badge" element={<Badges />} />
+              <Route path="/buttons" element={<Buttons />} />
+              <Route path="/images" element={<Images />} />
+              <Route path="/videos" element={<Videos />} />
+
+              {/* Charts */}
+              <Route path="/line-chart" element={<LineChart />} />
+              <Route path="/bar-chart" element={<BarChart />} />
             </Route>
 
-            {/* Admin */}
-            <Route path="/admin">
-              <Route path="ipo" element={<AdminHome />} />
-              <Route path="ipo/:id" element={<UpdateIPO />} />
-            </Route>
+            {/* Auth Layout */}
+            <Route
+              path="/signin"
+              element={
+                <PublicRoute>
+                  <SignIn />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/signup"
+              element={
+                <PublicRoute>
+                  <SignUp />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/reset-password"
+              element={
+                <PublicRoute>
+                  <ResetPassword />
+                </PublicRoute>
+              }
+            />
 
-            {/* User */}
-            <Route path="/user">
-              <Route path="" element={<UserHome />} />
-              <Route path="applied-ipo/:id" element={<UpdateAppliedIPO/>} />
-            </Route>
-
-            <Route path="/calendar" element={<Calendar />} />
-            <Route path="/blank" element={<Blank />} />
-
-            {/* Forms */}
-            <Route path="/form-elements" element={<FormElements />} />
-
-            {/* Tables */}
-            <Route path="/basic-tables" element={<BasicTables />} />
-
-            {/* Ui Elements */}
-            <Route path="/alerts" element={<Alerts />} />
-            <Route path="/avatars" element={<Avatars />} />
-            <Route path="/badge" element={<Badges />} />
-            <Route path="/buttons" element={<Buttons />} />
-            <Route path="/images" element={<Images />} />
-            <Route path="/videos" element={<Videos />} />
-
-            {/* Charts */}
-            <Route path="/line-chart" element={<LineChart />} />
-            <Route path="/bar-chart" element={<BarChart />} />
-          </Route>
-
-          {/* Auth Layout */}
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
-
-          {/* Fallback Route */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </Router>
+            {/* Fallback Route */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Router>
+      </Provider>
     </>
   );
-
-  function isTokenExpired(token: string) {
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    return Date.now() > payload.exp * 1000;
-  }
 }
