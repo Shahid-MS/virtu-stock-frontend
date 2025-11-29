@@ -11,12 +11,12 @@ import Buttons from "./pages/UiElements/Buttons";
 import LineChart from "./pages/Charts/LineChart";
 import BarChart from "./pages/Charts/BarChart";
 import Calendar from "./pages/Calendar";
-import BasicTables from "./pages/Tables/BasicTables";
+
 import FormElements from "./pages/Forms/FormElements";
 import Blank from "./pages/Blank";
 import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
-import Home from "./pages/Dashboard/Home";
+
 import IPO from "./pages/IPO/IPO";
 import CompareIPO from "./pages/Comparison/CompareIPO";
 import GMPIPO from "./pages/GMP/GMPIPO";
@@ -29,6 +29,8 @@ import { store } from "./Store";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import PublicRoute from "./pages/AuthPages/PublicRoute";
 import ResetPassword from "./pages/AuthPages/ResetPassword";
+import { PaginationProvider } from "./pages/Dashboard/IpoPaginationContext";
+import { Home } from "./pages/Dashboard/Home";
 
 export default function App() {
   return (
@@ -40,7 +42,15 @@ export default function App() {
             {/* Dashboard Layout */}
             <Route element={<AppLayout />}>
               {/* Home */}
-              <Route index path="/" element={<Home />} />
+              <Route
+                index
+                path="/"
+                element={
+                  <PaginationProvider>
+                    <Home />
+                  </PaginationProvider>
+                }
+              />
 
               <Route path="/ipo">
                 <Route path="compare" element={<CompareIPO />} />
@@ -81,7 +91,7 @@ export default function App() {
               <Route path="/form-elements" element={<FormElements />} />
 
               {/* Tables */}
-              <Route path="/basic-tables" element={<BasicTables />} />
+              {/* <Route path="/basic-tables" element={<BasicTables />} /> */}
 
               {/* Ui Elements */}
               <Route path="/alerts" element={<Alerts />} />

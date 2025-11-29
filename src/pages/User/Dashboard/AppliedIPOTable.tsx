@@ -13,7 +13,7 @@ import Loading from "../../OtherPage/Loading";
 import { IPOStatusColorMap } from "../../../Enum/IPOStatus";
 import { IPOAllotmentColorMap } from "../../../Enum/AllotmentStatus";
 import { useNavigate } from "react-router";
-import Pagination from "./AppliedIPO/Pagination";
+import Pagination from "../../../Pagination/Pagination";
 
 export default function AppliedIPOTable() {
   const [appliedIpos, setAppliedIpos] = useState<AppliedIPOInterface[]>([]);

@@ -1,18 +1,43 @@
-import React from "react";
+interface PaginationProps {
+  pageNumber: number;
+  pageSize: number;
+  totalElements: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}
 
-const Pagination = () => {
+const Pagination: React.FC<PaginationProps> = ({
+  pageNumber,
+  pageSize,
+  totalElements,
+  totalPages,
+  onPageChange,
+}) => {
+  const start = pageNumber * pageSize + 1;
+  const end = Math.min(start + pageSize - 1, totalElements);
   return (
     <>
       <div className="flex items-center flex-col sm:flex-row  justify-between border-t border-gray-200 px-5 py-4 dark:border-gray-800">
         <div className="pb-3 sm:pb-0">
           <span className="block text-sm font-medium text-gray-500 dark:text-gray-400">
-            Showing <span className="text-gray-800 dark:text-white/90">1</span>{" "}
-            to <span className="text-gray-800 dark:text-white/90">5</span> of{" "}
-            <span className="text-gray-800 dark:text-white/90">10</span>
+            Showing
+            <span className="text-gray-800 dark:text-white/90 mx-1">
+              {start}
+            </span>
+            to
+            <span className="text-gray-800 dark:text-white/90 mx-1">{end}</span>
+            of
+            <span className="text-gray-800 dark:text-white/90 mx-1">
+              {totalElements}
+            </span>
           </span>
         </div>
         <div className="flex bg-gray-50 dark:sm:bg-transparent dark:bg-white/[0.03] sm:bg-transparent rounded-lg w-full sm:w-auto p-4 sm:p-0 items-center justify-between gap-2 sm:justify-normal">
-          <button className="shadow-theme-xs flex items-center gap-2 rounded-lg border border-gray-300 bg-white p-2 text-gray-700 hover:bg-gray-50 hover:text-gray-800 disabled:opacity-50 sm:p-2.5 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
+          <button
+            className="shadow-theme-xs flex items-center gap-2 rounded-lg border border-gray-300 bg-white p-2 text-gray-700 hover:bg-gray-50 hover:text-gray-800 disabled:opacity-50 sm:p-2.5 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
+            disabled={pageNumber === 0}
+            onClick={() => onPageChange(pageNumber - 1)}
+          >
             <svg
               className="fill-current"
               width="20"
@@ -29,27 +54,32 @@ const Pagination = () => {
             </svg>
           </button>
           <span className="block text-sm font-medium text-gray-700 sm:hidden dark:text-gray-400">
-            Page <span>1</span> of <span>2</span>
+            Page <span>{pageNumber + 1}</span> of <span>{totalPages}</span>
           </span>
           <ul className="hidden items-center gap-0.5 sm:flex">
-            <li>
-              <a
-                href="#"
-                className="flex h-10 w-10 items-center justify-center rounded-lg text-sm font-medium bg-brand-500 text-white"
-              >
-                1
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="flex h-10 w-10 items-center justify-center rounded-lg text-sm font-medium text-gray-700 dark:text-gray-400 hover:bg-brand-500 hover:text-white dark:hover:text-white"
-              >
-                2
-              </a>
-            </li>
+            {Array.from({ length: totalPages }, (_, i) => i).map((page) => (
+              <li key={page}>
+                <a
+                  href="#"
+                  onClick={() => onPageChange(page)}
+                  className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-medium 
+          ${
+            pageNumber === page
+              ? "bg-brand-500 text-white"
+              : "text-gray-700 dark:text-gray-400 hover:bg-brand-500 hover:text-white dark:hover:text-white"
+          }
+        `}
+                >
+                  {page + 1}
+                </a>
+              </li>
+            ))}
           </ul>
-          <button className="shadow-theme-xs flex items-center gap-2 rounded-lg border border-gray-300 bg-white p-2 text-gray-700 hover:bg-gray-50 hover:text-gray-800 disabled:opacity-50 sm:p-2.5 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
+          <button
+            className="shadow-theme-xs flex items-center gap-2 rounded-lg border border-gray-300 bg-white p-2 text-gray-700 hover:bg-gray-50 hover:text-gray-800 disabled:opacity-50 sm:p-2.5 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
+            disabled={pageNumber + 1 === totalPages}
+            onClick={() => onPageChange(pageNumber + 1)}
+          >
             <svg
               className="fill-current"
               width="20"
