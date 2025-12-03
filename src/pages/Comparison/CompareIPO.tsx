@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import {
   Table,
   TableBody,
@@ -7,31 +7,27 @@ import {
   TableRow,
 } from "../../components/ui/table";
 import Badge from "../../components/ui/badge/Badge";
-import { useEffect, useState } from "react";
 
-import { IPOInterface } from "../../Interface/IPO";
 import Loading from "../OtherPage/Loading";
 import { verdictColorMap } from "../../Enum/Verdict";
 import { INRFormat } from "../../Helper/INRHelper";
-import apiClient from "../../API/ApiClient";
+
+import NotFound from "../OtherPage/NotFound";
+import Pagination from "@/Pagination/Pagination";
+import { usePagination } from "@/Pagination/IpoPaginationContext";
+import { useEffect } from "react";
 
 export default function CompareIPO() {
-  const [ipos, setIpos] = useState<IPOInterface[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { ipos, loading, pagination, setPageNumber } = usePagination();
+  const location = useLocation();
   useEffect(() => {
-    const fetchIpos = async () => {
-      const res = await apiClient.get("/ipo");
-      setIpos(res.data);
-      setTimeout(() => {
-        setLoading(false);
-      }, 250);
-    };
-    fetchIpos();
-  }, []);
+    setPageNumber(0);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
 
-  if (loading) {
-    return <Loading />;
-  }
+  if (loading) return <Loading />;
+
+  if (!ipos.length) return <NotFound />;
   return (
     <>
       <div className="space-y-6">
@@ -189,6 +185,13 @@ export default function CompareIPO() {
               </TableBody>
             </Table>
           </div>
+          <Pagination
+            pageNumber={pagination.pageNumber}
+            pageSize={pagination.pageSize}
+            totalPages={pagination.totalPages}
+            totalElements={pagination.totalElements}
+            onPageChange={setPageNumber}
+          />
         </div>
       </div>
     </>

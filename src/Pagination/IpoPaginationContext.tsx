@@ -44,6 +44,7 @@ export const PaginationProvider = ({
     const res = await apiClient.get("/ipo", {
       params: {
         page: pagination.pageNumber,
+        size: pagination.pageSize,
       },
     });
     setIpos(res.data.content);
@@ -54,11 +55,12 @@ export const PaginationProvider = ({
       lastPage: res.data.lastPage,
     }));
 
-    setTimeout(() => setLoading(false), 500);
+    setTimeout(() => setLoading(false), 300);
   };
 
   useEffect(() => {
     fetchIpos();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination.pageNumber]);
 
   const setPageNumber = (p: number) => {
