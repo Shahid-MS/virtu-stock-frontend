@@ -117,20 +117,7 @@ export default function IPODetails({ ipo }: IPOProps) {
                   {dateFormat(ipo?.listingDate)}
                 </p>
               </div>
-              <div>
-                <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                  IPO Doc
-                </p>
-                <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                  <a
-                    href={ipo?.prospectusUrl}
-                    className="text-green-600 underline hover:text-green-700 dark:text-green-400 dark:hover:text-green-300"
-                    target="_blank"
-                  >
-                    Link
-                  </a>
-                </p>
-              </div>
+
               <div>
                 <p className="text-sm font-medium text-gray-800 dark:text-white/90">
                   GMP

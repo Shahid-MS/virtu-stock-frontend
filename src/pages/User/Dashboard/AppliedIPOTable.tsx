@@ -13,32 +13,63 @@ import Loading from "../../OtherPage/Loading";
 import { IPOStatusColorMap } from "../../../Enum/IPOStatus";
 import { IPOAllotmentColorMap } from "../../../Enum/AllotmentStatus";
 import { useNavigate } from "react-router";
-import Pagination from "./AppliedIPO/Pagination";
+import Pagination from "../../../Pagination/Pagination";
 
+
+interface PaginationState {
+  pageNumber: number;
+  pageSize: number;
+  totalPages: number;
+  totalElements: number;
+  lastPage: boolean;
+}
 export default function AppliedIPOTable() {
   const [appliedIpos, setAppliedIpos] = useState<AppliedIPOInterface[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageNumber: 0,
+    pageSize: 5,
+    totalPages: 0,
+    totalElements: 0,
+    lastPage: false,
+  });
+
+  const fetchAppliedIpos = async () => {
+    setLoading(true);
+    const res = await apiClient.get("/user/applied-ipo", {
+      params: {
+        page: pagination.pageNumber,
+        size: pagination.pageSize,
+      },
+    });
+    setAppliedIpos(res.data.content);
+    setPagination((prev) => ({
+      ...prev,
+      totalPages: res.data.totalPages,
+      totalElements: res.data.totalElements,
+      lastPage: res.data.lastPage,
+    }));
+
+    setTimeout(() => setLoading(false), 300);
+  };
+
+  const setPageNumber = (p: number) => {
+    setPagination((prev) => ({ ...prev, pageNumber: p }));
+  };
 
   useEffect(() => {
-    const fetchIpos = async () => {
-      const res = await apiClient.get("/user/applied-ipo");
-      setAppliedIpos(res.data);
-      setTimeout(() => {
-        setLoading(false);
-      }, 250);
-    };
-    fetchIpos();
-  }, []);
+    fetchAppliedIpos();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pagination.pageNumber]);
 
   const handleAppliedIpo = (appliedIpo: AppliedIPOInterface) => {
     if (!appliedIpo) return;
     navigate(`/user/applied-ipo/${appliedIpo.id}`);
   };
 
-  if (loading) {
-    return <Loading />;
-  }
+  if (loading) return <Loading />;
+  console.log(appliedIpos);
 
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6">
@@ -171,7 +202,13 @@ export default function AppliedIPOTable() {
           )}
         </Table>
 
-        <Pagination />
+        <Pagination
+          pageNumber={pagination.pageNumber}
+          pageSize={pagination.pageSize}
+          totalPages={pagination.totalPages}
+          totalElements={pagination.totalElements}
+          onPageChange={setPageNumber}
+        />
       </div>
     </div>
   );

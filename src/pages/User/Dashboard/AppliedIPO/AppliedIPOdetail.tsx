@@ -65,7 +65,6 @@ const AppliedIPOdetail = ({
         `user/applied-ipo/${appliedIpo.id}`,
         req
       );
-      console.log(res.data.allotedIpo);
       alert("Updated successfully ✅");
       setAppliedIpo((prev) => {
         if (!prev) return prev;
@@ -74,7 +73,7 @@ const AppliedIPOdetail = ({
           ...prev,
           appliedLot: Number(lot),
           allotment: selectedAllotmentStatus,
-          allotedIpo: res.data.allotedIpo,
+          allotedIpo: res.data.appliedIpo.allotedIpo,
         };
       });
     } catch (error) {
@@ -104,6 +103,7 @@ const AppliedIPOdetail = ({
     const allotmentStatus = value as AllotmentStatus;
     setSelectedAllotmentStatus(allotmentStatus);
   };
+
   return (
     <>
       <div>

@@ -17,28 +17,24 @@ export interface issueSize {
 
 export interface IPOInterface {
   id: string;
-  ipoAlertId: string;
   name: string;
   symbol: string;
   type: string;
   status: string;
-  infoUrl: string;
-  nseInfoUrl: string;
   startDate: string;
   endDate: string;
   listingDate: string;
   minPrice: number;
   maxPrice: number;
   minQty: number;
-  logo?: string;
+  logo: string;
   issueSize: issueSize;
-  prospectusUrl: string;
   about: string;
   strengths: string[];
   risks: string[];
   subscriptions: Subscription[];
   gmp: GMP[];
-  listedPrice:number;
+  listedPrice: number;
   verdict: string;
   listingReturn: number;
   listingReturnPercent: number;
