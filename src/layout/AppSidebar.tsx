@@ -9,6 +9,7 @@ import {
   GridIcon,
   HorizontaLDots,
   ListIcon,
+  TableIcon,
   UserCircleIcon,
   // PageIcon,
   // PieChartIcon,
@@ -52,7 +53,7 @@ const AppSidebar: React.FC = () => {
 
   const navItems: NavItem[] = [
     {
-      icon: <GridIcon />,
+      icon: <TableIcon />,
       name: "Open IPO",
       subItems: ipos.map((ipo) => ({
         name: ipo.name,
@@ -114,9 +115,14 @@ const AppSidebar: React.FC = () => {
 
   const User: NavItem[] = [
     {
-      icon: <UserCircleIcon />,
+      icon: <GridIcon />,
       name: "Dashboard",
       path: "/user",
+    },
+    {
+      icon: <UserCircleIcon />,
+      name: "Profile",
+      path: "/user/profile",
     },
   ];
 

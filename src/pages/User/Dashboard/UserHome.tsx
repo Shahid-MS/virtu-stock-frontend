@@ -3,7 +3,7 @@ import AppliedIPOTable from "./AppliedIPOTable";
 import IPOAlloted from "./IPOAlloted";
 import MonthlyProfit from "./MonthlyProfit";
 
-export default function UserHome() {
+export default function UserDashboard() {
   return (
     <>
       <div className="grid grid-cols-12 gap-4 md:gap-6">

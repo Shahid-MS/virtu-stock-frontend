@@ -69,3 +69,14 @@ export interface AllotedInterface {
   netReturnPercent: number;
   sellPrice: number;
 }
+
+export interface UserInterface {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  roles: string[];
+  phone: string;
+  instagramUrl: string;
+  linkedinUrl: string;
+}

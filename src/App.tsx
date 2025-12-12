@@ -22,7 +22,6 @@ import CompareIPO from "./pages/Comparison/CompareIPO";
 import GMPIPO from "./pages/GMP/GMPIPO";
 
 import UpdateIPO from "./pages/Admin/IPO/UpdateIpo";
-import UserHome from "./pages/User/Dashboard/UserHome";
 import UpdateAppliedIPO from "./pages/User/Dashboard/AppliedIPO/UpdateAppliedIPO";
 import { Provider } from "react-redux";
 import { store } from "./Store";
@@ -33,6 +32,8 @@ import { PaginationProvider } from "./Pagination/IpoPaginationContext";
 import { Home } from "./pages/Dashboard/Home";
 import AdminHome from "./pages/Admin/Dashboard/AdminHome";
 
+import UserProfile from "./pages/User/Profile/UserProfile";
+import UserDashboard from "./pages/User/Dashboard/UserHome";
 
 export default function App() {
   return (
@@ -75,11 +76,12 @@ export default function App() {
                     </ProtectedRoute>
                   }
                 >
-                  <Route path="" element={<UserHome />} />
+                  <Route path="" element={<UserDashboard />} />
                   <Route
                     path="applied-ipo/:id"
                     element={<UpdateAppliedIPO />}
                   />
+                  <Route path="profile" element={<UserProfile />} />
                 </Route>
 
                 <Route path="/calendar" element={<Calendar />} />
