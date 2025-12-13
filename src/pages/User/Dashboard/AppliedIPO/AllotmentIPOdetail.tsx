@@ -7,7 +7,9 @@ import { dateFormat } from "@/Helper/dateHelper";
 import { INRFormat } from "@/Helper/INRHelper";
 import { useModal } from "@/hooks/useModal";
 import { AppliedIPOInterface } from "@/Interface/IPO";
+import { AxiosError } from "axios";
 import { Dispatch, SetStateAction, useState } from "react";
+import { toast } from "sonner";
 
 interface AppliedIPODetailsInterface {
   appliedIpo: AppliedIPOInterface;
@@ -35,16 +37,16 @@ const AllotmentIPOdetail = ({
 
   const handleSave = async () => {
     if (!lot || isNaN(Number(lot)) || Number(lot) < 1) {
-      alert("Please enter a valid lot number");
+      toast.error("Please enter a valid lot number");
       return;
     }
     if (Number(lot) > appliedIpo.appliedLot) {
-      alert("Alloted lot can't  be greater than applied lot");
+      toast.error("Alloted lot can't  be greater than applied lot");
       return;
     }
 
     if (sellPrice !== "N/A" && (!sellPrice || isNaN(Number(sellPrice)))) {
-      alert("Please enter a valid sellPrice or N/A if not sold yet");
+      toast.error("Please enter a valid sellPrice or N/A if not sold yet");
       return;
     }
 
@@ -53,7 +55,7 @@ const AllotmentIPOdetail = ({
       Number(sellPrice) !== appliedIpo.allotedIpo.sellPrice;
 
     if (!lotChanged && !sellPriceChanged) {
-      alert("No changes made.");
+      toast.error("No changes made.");
       return;
     }
 
@@ -71,7 +73,7 @@ const AllotmentIPOdetail = ({
         `user/alloted-ipo/${appliedIpo.allotedIpo.id}`,
         req
       );
-      alert("Updated successfully ✅");
+      toast.success(res.data.message);
       setAppliedIpo((prev) => {
         if (!prev) return prev;
 
@@ -82,14 +84,17 @@ const AllotmentIPOdetail = ({
         };
       });
     } catch (error) {
-      console.error("❌ Error applying IPO:", error);
-      alert("Failed to Update ❌");
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.message);
+      } else if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        console.log(error);
+      }
     } finally {
       closeModal();
     }
   };
-
-  console.log(appliedIpo);
 
   return (
     <>

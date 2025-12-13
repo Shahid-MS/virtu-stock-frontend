@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router";
+import { Link } from "react-router";
 import {
   Table,
   TableBody,
@@ -12,21 +12,16 @@ import { dateFormat } from "../../../Helper/dateHelper";
 import { IPOStatusColorMap } from "../../../Enum/IPOStatus";
 import Loading from "@/pages/OtherPage/Loading";
 import NotFound from "@/pages/OtherPage/NotFound";
+import InternalServerError from "@/pages/OtherPage/InternalServerError";
 
 import Pagination from "@/Pagination/Pagination";
 import { usePagination } from "@/Pagination/IpoPaginationContext";
-import { useEffect } from "react";
 
 export const AdminHome = () => {
-  const { ipos, loading, pagination, setPageNumber } = usePagination();
-  const location = useLocation();
-  useEffect(() => {
-    setPageNumber(0);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname]);
+  const { ipos, loading, error, pagination, setPageNumber } = usePagination();
 
   if (loading) return <Loading />;
-
+  if (error) return <InternalServerError />;
   if (!ipos.length) return <NotFound />;
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">

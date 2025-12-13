@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router";
+import { Link } from "react-router";
 import {
   Table,
   TableBody,
@@ -13,20 +13,15 @@ import { verdictColorMap } from "../../Enum/Verdict";
 import { INRFormat } from "../../Helper/INRHelper";
 
 import NotFound from "../OtherPage/NotFound";
+import InternalServerError from "../OtherPage/InternalServerError";
 import Pagination from "@/Pagination/Pagination";
 import { usePagination } from "@/Pagination/IpoPaginationContext";
-import { useEffect } from "react";
 
 export default function CompareIPO() {
-  const { ipos, loading, pagination, setPageNumber } = usePagination();
-  const location = useLocation();
-  useEffect(() => {
-    setPageNumber(0);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname]);
+  const { ipos, loading, error, pagination, setPageNumber } = usePagination();
 
   if (loading) return <Loading />;
-
+  if (error) return <InternalServerError />;
   if (!ipos.length) return <NotFound />;
   return (
     <>

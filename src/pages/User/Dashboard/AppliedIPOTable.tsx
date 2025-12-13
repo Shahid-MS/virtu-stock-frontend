@@ -14,7 +14,9 @@ import { IPOStatusColorMap } from "../../../Enum/IPOStatus";
 import { IPOAllotmentColorMap } from "../../../Enum/AllotmentStatus";
 import { useNavigate } from "react-router";
 import Pagination from "../../../Pagination/Pagination";
-
+import { QueryFunctionContext, useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { AxiosError } from "axios";
 
 interface PaginationState {
   pageNumber: number;
@@ -23,9 +25,9 @@ interface PaginationState {
   totalElements: number;
   lastPage: boolean;
 }
+
 export default function AppliedIPOTable() {
   const [appliedIpos, setAppliedIpos] = useState<AppliedIPOInterface[]>([]);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [pagination, setPagination] = useState<PaginationState>({
     pageNumber: 0,
@@ -35,41 +37,55 @@ export default function AppliedIPOTable() {
     lastPage: false,
   });
 
-  const fetchAppliedIpos = async () => {
-    setLoading(true);
+  const fetchAppliedIpos = async ({ queryKey }: QueryFunctionContext) => {
+    const [, pageNumber, pageSize] = queryKey as [string, number, number];
+
     const res = await apiClient.get("/user/applied-ipo", {
       params: {
-        page: pagination.pageNumber,
-        size: pagination.pageSize,
+        page: pageNumber,
+        size: pageSize,
       },
     });
-    setAppliedIpos(res.data.content);
+    return res.data;
+  };
+
+  const { data, isLoading, isError, error } = useQuery({
+    queryKey: ["AppliedIpos", pagination.pageNumber, pagination.pageSize],
+    queryFn: fetchAppliedIpos,
+    placeholderData: (previousData) => previousData,
+    retry: 1,
+  });
+
+  useEffect(() => {
+    if (!data) return;
+
+    setAppliedIpos(data.content ?? []);
     setPagination((prev) => ({
       ...prev,
-      totalPages: res.data.totalPages,
-      totalElements: res.data.totalElements,
-      lastPage: res.data.lastPage,
+      totalPages: data.totalPages ?? 0,
+      totalElements: data.totalElements ?? 0,
+      lastPage: data.lastPage ?? true,
     }));
+  }, [data]);
 
-    setTimeout(() => setLoading(false), 300);
-  };
+  useEffect(() => {
+    if (isError) {
+      console.log(error);
+      if (error instanceof AxiosError) {
+        toast.error(error?.response?.data?.message);
+      } else if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("An Unknown eroor occured");
+      }
+    }
+  });
 
   const setPageNumber = (p: number) => {
     setPagination((prev) => ({ ...prev, pageNumber: p }));
   };
 
-  useEffect(() => {
-    fetchAppliedIpos();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pagination.pageNumber]);
-
-  const handleAppliedIpo = (appliedIpo: AppliedIPOInterface) => {
-    if (!appliedIpo) return;
-    navigate(`/user/applied-ipo/${appliedIpo.id}`);
-  };
-
-  if (loading) return <Loading />;
-  console.log(appliedIpos);
+  if (isLoading) return <Loading />;
 
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-4 pb-3 pt-4 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6">
@@ -156,7 +172,7 @@ export default function AppliedIPOTable() {
                     <div
                       className="cursor-pointer"
                       onClick={() => {
-                        handleAppliedIpo(appliedIpo);
+                        navigate(`/user/applied-ipo/${appliedIpo.id}`);
                       }}
                     >
                       <div className="flex items-center gap-3">

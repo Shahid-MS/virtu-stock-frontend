@@ -8,25 +8,20 @@ import {
 
 import Badge from "../../components/ui/badge/Badge";
 import { dateFormat } from "../../Helper/dateHelper";
-import { Link, useLocation } from "react-router";
+import { Link } from "react-router";
 import { IPOStatusColorMap } from "../../Enum/IPOStatus";
 import Pagination from "../../Pagination/Pagination";
 
 import Loading from "../OtherPage/Loading";
 import NotFound from "../OtherPage/NotFound";
+import InternalServerError from "../OtherPage/InternalServerError";
 import { usePagination } from "@/Pagination/IpoPaginationContext";
-import { useEffect } from "react";
 
 export const Home = () => {
-  const { ipos, loading, pagination, setPageNumber } = usePagination();
-  const location = useLocation();
-  useEffect(() => {
-    setPageNumber(0);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname]);
+  const { ipos, error, loading, pagination, setPageNumber } = usePagination();
 
   if (loading) return <Loading />;
-
+  if (error) return <InternalServerError />;
   if (!ipos.length) return <NotFound />;
   return (
     <div className="space-y-6">

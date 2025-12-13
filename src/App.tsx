@@ -22,7 +22,7 @@ import CompareIPO from "./pages/Comparison/CompareIPO";
 import GMPIPO from "./pages/GMP/GMPIPO";
 
 import UpdateIPO from "./pages/Admin/IPO/UpdateIpo";
-import UpdateAppliedIPO from "./pages/User/Dashboard/AppliedIPO/UpdateAppliedIPO";
+
 import { Provider } from "react-redux";
 import { store } from "./Store";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
@@ -34,22 +34,43 @@ import AdminHome from "./pages/Admin/Dashboard/AdminHome";
 
 import UserProfile from "./pages/User/Profile/UserProfile";
 import UserDashboard from "./pages/User/Dashboard/UserHome";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "sonner";
+import AppliedIPO from "./pages/User/Dashboard/AppliedIPO/AppliedIPO";
 
 export default function App() {
+  const queryClient = new QueryClient();
   return (
     <>
       <Provider store={store}>
+        <Toaster position="top-center" />
         <Router>
           <ScrollToTop />
-          <PaginationProvider>
+          <QueryClientProvider client={queryClient}>
             <Routes>
               {/* Dashboard Layout */}
               <Route element={<AppLayout />}>
                 {/* Home */}
-                <Route index path="/" element={<Home />} />
+
+                <Route
+                  index
+                  path="/"
+                  element={
+                    <PaginationProvider>
+                      <Home />
+                    </PaginationProvider>
+                  }
+                />
 
                 <Route path="/ipo">
-                  <Route path="compare" element={<CompareIPO />} />
+                  <Route
+                    path="compare"
+                    element={
+                      <PaginationProvider>
+                        <CompareIPO />
+                      </PaginationProvider>
+                    }
+                  />
                   <Route path=":id" element={<IPO />} />
                   <Route path="gmp/:id" element={<GMPIPO />} />
                 </Route>
@@ -63,7 +84,14 @@ export default function App() {
                     </ProtectedRoute>
                   }
                 >
-                  <Route path="ipo" element={<AdminHome />} />
+                  <Route
+                    path="ipo"
+                    element={
+                      <PaginationProvider>
+                        <AdminHome />
+                      </PaginationProvider>
+                    }
+                  />
                   <Route path="ipo/:id" element={<UpdateIPO />} />
                 </Route>
 
@@ -77,10 +105,7 @@ export default function App() {
                   }
                 >
                   <Route path="" element={<UserDashboard />} />
-                  <Route
-                    path="applied-ipo/:id"
-                    element={<UpdateAppliedIPO />}
-                  />
+                  <Route path="applied-ipo/:id" element={<AppliedIPO />} />
                   <Route path="profile" element={<UserProfile />} />
                 </Route>
 
@@ -134,8 +159,8 @@ export default function App() {
 
               {/* Fallback Route */}
               <Route path="*" element={<NotFound />} />
-            </Routes>{" "}
-          </PaginationProvider>
+            </Routes>
+          </QueryClientProvider>
         </Router>
       </Provider>
     </>

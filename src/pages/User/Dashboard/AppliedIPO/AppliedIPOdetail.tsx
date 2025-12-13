@@ -8,8 +8,10 @@ import { AllotmentStatus } from "@/Enum/AllotmentStatus";
 import { dateFormat } from "@/Helper/dateHelper";
 import { useModal } from "@/hooks/useModal";
 import { AppliedIPOInterface } from "@/Interface/IPO";
+import { AxiosError } from "axios";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useNavigate } from "react-router";
+import { toast } from "sonner";
 
 interface AppliedIPODetailsInterface {
   appliedIpo: AppliedIPOInterface;
@@ -37,7 +39,7 @@ const AppliedIPOdetail = ({
 
   const handleSave = async () => {
     if (!lot || isNaN(Number(lot)) || Number(lot) < 1) {
-      alert("Please enter a valid lot number");
+      toast.error("Please enter a valid lot number");
       return;
     }
 
@@ -47,7 +49,7 @@ const AppliedIPOdetail = ({
       selectedAllotmentStatus !== appliedIpo.allotment;
 
     if (!lotChanged && !allotmentChanged) {
-      alert("No changes made.");
+      toast.error("No changes made.");
       return;
     }
 
@@ -65,7 +67,7 @@ const AppliedIPOdetail = ({
         `user/applied-ipo/${appliedIpo.id}`,
         req
       );
-      alert("Updated successfully ✅");
+      toast.success(res.data.message);
       setAppliedIpo((prev) => {
         if (!prev) return prev;
 
@@ -77,8 +79,13 @@ const AppliedIPOdetail = ({
         };
       });
     } catch (error) {
-      console.error("❌ Error applying IPO:", error);
-      alert("Failed to Update ❌");
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.message);
+      } else if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        console.log(error);
+      }
     } finally {
       closeModal();
     }

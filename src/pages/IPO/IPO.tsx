@@ -11,7 +11,7 @@ import apiClient from "../../API/ApiClient";
 
 export default function IPO() {
   const { id } = useParams();
-  const [ipo, setIpo] = useState<IPOInterface>();
+  const [ipo, setIpo] = useState<IPOInterface | null>();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -20,7 +20,7 @@ export default function IPO() {
         const res = await apiClient.get(`/ipo/${id}`);
         setIpo(res.data);
       } catch {
-        setIpo(undefined);
+        setIpo(null);
       } finally {
         setTimeout(() => {
           setLoading(false);
@@ -34,7 +34,7 @@ export default function IPO() {
     return <Loading />;
   }
 
-  if (ipo === undefined || ipo === null) {
+  if (!ipo) {
     return <NotFound />;
   }
 
