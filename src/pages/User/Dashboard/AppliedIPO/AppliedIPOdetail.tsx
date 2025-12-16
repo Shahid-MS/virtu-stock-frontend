@@ -12,6 +12,7 @@ import { AxiosError } from "axios";
 import { Dispatch, SetStateAction, useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import { confirmDialog } from "primereact/confirmdialog";
 
 interface AppliedIPODetailsInterface {
   appliedIpo: AppliedIPOInterface;
@@ -92,18 +93,27 @@ const AppliedIPOdetail = ({
   };
 
   const handleNotApplied = async () => {
-    const confirmNotApplied = window.confirm(
-      `Are you sure you have not applied to ${appliedIpo?.ipo.name} ?`
-    );
-    if (!confirmNotApplied) return;
-    try {
-      await apiClient.delete(
-        `/user/unmark-as-applied?ipoId=${appliedIpo.ipo.id}`
-      );
-      navigate(-1);
-    } catch (error) {
-      console.error("Error unmarking applied status:", error);
-    }
+    closeModal();
+    console.log("inside not applied");
+    confirmDialog({
+      message: `Are you sure you have not applied to ${appliedIpo?.ipo.name}?`,
+      header: "Confirm Action",
+      icon: "pi pi-exclamation-triangle",
+      acceptLabel: "Yes",
+      rejectLabel: "No",
+      accept: async () => {
+        try {
+          const res = await apiClient.delete(
+            `/user/unmark-as-applied?ipoId=${appliedIpo.ipo.id}`
+          );
+          toast.success(res.data.message);
+          navigate(-1);
+        } catch (error) {
+          console.error("Error unmarking applied status:", error);
+        }
+      },
+      reject: () => {},
+    });
   };
 
   const handleAllotmentStatusChange = (value: string) => {

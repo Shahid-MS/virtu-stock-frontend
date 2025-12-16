@@ -9,10 +9,10 @@ export default function IntenalServerError() {
             INTERNAL SERVER ERROR
           </h2>
 
-          <img src="/images/error/500.svg" alt="404" className="dark:hidden" />
+          <img src="/images/error/500.svg" alt="500" className="dark:hidden" />
           <img
             src="/images/error/500-dark.svg"
-            alt="404"
+            alt="500"
             className="hidden dark:block"
           />
 

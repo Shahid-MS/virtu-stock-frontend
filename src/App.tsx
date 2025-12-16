@@ -37,6 +37,10 @@ import UserDashboard from "./pages/User/Dashboard/UserHome";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
 import AppliedIPO from "./pages/User/Dashboard/AppliedIPO/AppliedIPO";
+import "primereact/resources/themes/lara-light-blue/theme.css";
+import "primereact/resources/primereact.min.css";
+import { ConfirmDialog } from "primereact/confirmdialog";
+import AboutUs from "./pages/OtherPage/AboutUs";
 
 export default function App() {
   const queryClient = new QueryClient();
@@ -44,6 +48,7 @@ export default function App() {
     <>
       <Provider store={store}>
         <Toaster position="top-center" />
+        <ConfirmDialog />
         <Router>
           <ScrollToTop />
           <QueryClientProvider client={queryClient}>
@@ -129,6 +134,8 @@ export default function App() {
                 {/* Charts */}
                 <Route path="/line-chart" element={<LineChart />} />
                 <Route path="/bar-chart" element={<BarChart />} />
+
+                <Route path="/about-us" element={<AboutUs />} />
               </Route>
 
               {/* Auth Layout */}
