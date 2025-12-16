@@ -23,8 +23,8 @@ export default function AboutUs() {
   ];
   return (
     <>
-      {teamMember.map((member) => (
-        <AboutUsCard member={member} />
+      {teamMember.map((member, idx) => (
+        <AboutUsCard member={member} index = {idx} />
       ))}
     </>
   );

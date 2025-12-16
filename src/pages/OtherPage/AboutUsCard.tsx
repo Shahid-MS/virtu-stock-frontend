@@ -5,19 +5,19 @@ interface MemberInterface {
   linkedInUrl: string;
   details: string;
   image: string;
-  idx: number;
 }
 interface AboutUsCardProps {
   member: MemberInterface;
+  index: number;
 }
 
 //   <div
 //             className={`flex flex-col gap-5 xl:items-center xl:justify-between ${
-//               member.idx % 2 === 1 ? "xl:flex-row-reverse" : "xl:flex-row"
+//               member.index % 2 === 1 ? "xl:flex-row-reverse" : "xl:flex-row"
 //             }`}
 //           ></div>
 
-const AboutUsCard = ({ member }: AboutUsCardProps) => {
+const AboutUsCard = ({ member, index }: AboutUsCardProps) => {
   return (
     <>
       <div className="mb-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-3 w-3/4">
