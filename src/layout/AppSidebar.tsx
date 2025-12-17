@@ -3,10 +3,12 @@ import { Link, useLocation } from "react-router-dom";
 
 // Assume these icons are imported from an icon library
 import {
+  ChatIcon,
   // BoxCubeIcon,
   // CalenderIcon,
   ChevronDownIcon,
   GridIcon,
+  GroupIcon,
   HorizontaLDots,
   ListIcon,
   TableIcon,
@@ -18,7 +20,7 @@ import {
   // UserCircleIcon,
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
-import SidebarWidget from "./SidebarWidget";
+// import SidebarWidget from "./SidebarWidget";
 import { IPOInterface } from "../Interface/IPO";
 import apiClient from "../API/ApiClient";
 import { useSelector } from "react-redux";
@@ -70,6 +72,17 @@ const AppSidebar: React.FC = () => {
   ];
 
   const othersItems: NavItem[] = [
+    {
+      icon: <GroupIcon />,
+      name: "About Us",
+      path: "/about-us",
+    },
+
+    {
+      icon: <ChatIcon />,
+      name: "Support",
+      path: "/about-u",
+    },
     // {
     //   icon: <UserCircleIcon />,
     //   name: "User Profile",
@@ -389,22 +402,6 @@ const AppSidebar: React.FC = () => {
               </h2>
               {renderMenuItems(navItems, "main")}
             </div>
-            {/* <div className="">
-              <h2
-                className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${
-                  !isExpanded && !isHovered
-                    ? "lg:justify-center"
-                    : "justify-start"
-                }`}
-              >
-                {isExpanded || isHovered || isMobileOpen ? (
-                  "Others"
-                ) : (
-                  <HorizontaLDots />
-                )}
-              </h2>
-              {renderMenuItems(othersItems, "others")}
-            </div> */}
 
             {roles.includes("ROLE_ADMIN") && (
               <div className="">
@@ -443,9 +440,26 @@ const AppSidebar: React.FC = () => {
                 {renderMenuItems(User, "user")}
               </div>
             )}
+
+            <div className="">
+              <h2
+                className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${
+                  !isExpanded && !isHovered
+                    ? "lg:justify-center"
+                    : "justify-start"
+                }`}
+              >
+                {isExpanded || isHovered || isMobileOpen ? (
+                  "Others"
+                ) : (
+                  <HorizontaLDots />
+                )}
+              </h2>
+              {renderMenuItems(othersItems, "others")}
+            </div>
           </div>
         </nav>
-        {isExpanded || isHovered || isMobileOpen ? <SidebarWidget /> : null}
+        {/* {isExpanded || isHovered || isMobileOpen ? <SidebarWidget /> : null} */}
       </div>
     </aside>
   );
