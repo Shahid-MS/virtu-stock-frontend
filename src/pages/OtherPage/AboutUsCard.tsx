@@ -11,35 +11,39 @@ interface AboutUsCardProps {
   index: number;
 }
 
-//   <div
-//             className={`flex flex-col gap-5 xl:items-center xl:justify-between ${
-//               member.index % 2 === 1 ? "xl:flex-row-reverse" : "xl:flex-row"
-//             }`}
-//           ></div>
-
 const AboutUsCard = ({ member, index }: AboutUsCardProps) => {
+  const isReverse = index % 2 !== 0;
   return (
     <>
-      <div className="mb-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-3 w-3/4">
-        <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
-          <div className="flex flex-col items-center w-full gap-6 xl:flex-row">
+      <div className={`mb-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-3 lg:w-3/4 ${
+        isReverse ? "lg:ml-auto" : "lg:mr-auto"}`}>
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+          <div className={`flex flex-col items-center w-full gap-6 lg:flex-row ${
+            isReverse ? "lg:flex-row-reverse" : ""}`}>
             <div className="w-20 h-20 shrink-0 overflow-hidden border border-gray-200 rounded-full dark:border-gray-800">
               <img src="/images/user/owner.jpg" alt="user" />
             </div>
-            <div className="order-3 xl:order-2">
-              <h1 className="text-2xl font-semibold text-center text-gray-800 dark:text-white/90 xl:text-left">
+            <div className="order-3 lg:order-2">
+              <h1
+                className={`text-2xl font-semibold text-center text-gray-800 dark:text-white/90 ${
+                isReverse ? "lg:text-right" : "lg:text-left"}`}>
                 {member.name}
               </h1>
-              <div className="mb-2 flex flex-row items-center gap-2 flex-nowrap text-center xl:flex-row xl:gap-3 xl:text-left">
-                <p className="text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap">
-                  {member.role}
-                </p>
-              </div>
-              <p className="mb-2 text-sm text-center text-gray-800 dark:text-white/90 xl:text-left">
+
+              <p className={`mb-3 text-sm text-gray-500 dark:text-gray-400 whitespace-nowrap text-center ${
+                isReverse ? "lg:text-right" : "lg:text-left"}`}>
+                {member.role}
+              </p>
+
+              <p className={`mb-2 text-sm text-center text-gray-800 dark:text-white/90 ${
+                isReverse ? "lg:text-right" : "lg:text-left"}`}>
                 {member.details}
               </p>
             </div>
-            <div className="flex items-center order-2 gap-2 grow xl:order-3 xl:justify-end">
+
+            <div className={`flex items-center order-2 gap-2 grow lg:order-3 ${
+              isReverse ? "lg:justify-start" : "lg:justify-end"}`}>
+
               <a
                 href={member.linkedInUrl}
                 target="_blank"
