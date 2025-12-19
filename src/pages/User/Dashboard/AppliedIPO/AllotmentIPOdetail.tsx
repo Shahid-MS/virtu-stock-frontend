@@ -80,7 +80,7 @@ const AllotmentIPOdetail = ({
         return {
           ...prev,
           appliedLot: Number(lot),
-          allotedIpo: res.data,
+          allotedIpo: res.data.alloted,
         };
       });
     } catch (error) {

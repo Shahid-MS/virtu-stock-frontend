@@ -25,9 +25,11 @@ export const PaginationContext = createContext<PaginationContextType | null>(
 
 export const usePagination = () => useContext(PaginationContext)!;
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 const fetchIpos = async ({ queryKey }: QueryFunctionContext) => {
   const [, pageNumber, pageSize] = queryKey as [string, number, number];
-
+  await sleep(200);
   const res = await apiClient.get("/ipo", {
     params: {
       page: pageNumber,
@@ -51,7 +53,7 @@ export const PaginationProvider = ({
     lastPage: false,
   });
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isError, isFetching } = useQuery({
     queryKey: ["ipos", pagination.pageNumber, pagination.pageSize],
     queryFn: fetchIpos,
     placeholderData: (previousData) => previousData,
@@ -78,7 +80,7 @@ export const PaginationProvider = ({
     <PaginationContext.Provider
       value={{
         ipos,
-        loading: isLoading,
+        loading: isFetching,
         error: isError,
         pagination,
         setPageNumber,

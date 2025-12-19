@@ -21,7 +21,7 @@ const AboutUsCard = ({ member, index }: AboutUsCardProps) => {
           <div className={`flex flex-col items-center w-full gap-6 lg:flex-row ${
             isReverse ? "lg:flex-row-reverse" : ""}`}>
             <div className="w-20 h-20 shrink-0 overflow-hidden border border-gray-200 rounded-full dark:border-gray-800">
-              <img src="/images/user/owner.jpg" alt="user" />
+              <img src={member.image} alt="user" />
             </div>
             <div className="order-3 lg:order-2">
               <h1
