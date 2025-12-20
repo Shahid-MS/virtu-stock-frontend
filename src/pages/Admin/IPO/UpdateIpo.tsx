@@ -11,12 +11,25 @@ import IssueSizeForm from "./Update IPO Form Elements/IssueSizeForm";
 import VerdictForm from "./Update IPO Form Elements/VerdictForm";
 import apiClient from "../../../API/ApiClient";
 import IPOHeader from "@/pages/IPO/IPOHeader";
+import { updateIpoSchema, updateIpoSchemaSchemaType } from "./UpdateIpoSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { AxiosError } from "axios";
 
 export default function UpdateIPO() {
   const { id } = useParams();
   const [ipo, setIpo] = useState<IPOInterface>();
   const [loading, setLoading] = useState(true);
-  const [updatedFields, setUpdatedFields] = useState<Partial<IPOInterface>>();
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<updateIpoSchemaSchemaType>({
+    resolver: zodResolver(updateIpoSchema),
+  });
 
   useEffect(() => {
     const fetchIpo = async () => {
@@ -34,27 +47,41 @@ export default function UpdateIPO() {
     fetchIpo();
   }, [id]);
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    if (!updatedFields || Object.keys(updatedFields).length === 0) {
-      alert("No changes detected.");
-      return;
-    }
-    const confirmed = window.confirm(
-      `Are you sure you want to update the IPO"?`
-    );
-    if (!confirmed) return;
-    e.preventDefault();
-    if (!ipo) return;
-
+  const onSubmit = async (data: updateIpoSchemaSchemaType) => {
+    console.log(data);
     try {
-      console.log(updatedFields);
-      await apiClient.put(`/admin/ipo/${ipo.id}`, updatedFields);
-      alert("IPO updated successfully ✅");
-      setUpdatedFields({});
+      const res = await apiClient.put(`/admin/ipo/${ipo?.id}`, data);
+      toast.success(res.data.message);
     } catch (error) {
-      console.error("Error updating IPO:", error);
-      alert("Failed to update IPO ❌");
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.message);
+      } else if (error instanceof Error) {
+        toast.error(error?.message);
+      } else {
+        toast.error("Something went wrong");
+      }
     }
+
+    // if (!updatedFields || Object.keys(updatedFields).length === 0) {
+    //   alert("No changes detected.");
+    //   return;
+    // }
+    // const confirmed = window.confirm(
+    //   `Are you sure you want to update the IPO"?`
+    // );
+    // if (!confirmed) return;
+    // e.preventDefault();
+    // if (!ipo) return;
+
+    // try {
+    //   console.log(updatedFields);
+    //   await apiClient.put(`/admin/ipo/${ipo.id}`, updatedFields);
+    //   alert("IPO updated successfully ✅");
+    //   setUpdatedFields({});
+    // } catch (error) {
+    //   console.error("Error updating IPO:", error);
+    //   alert("Failed to update IPO ❌");
+    // }
   };
 
   if (loading) {
@@ -69,33 +96,36 @@ export default function UpdateIPO() {
     <>
       <div className="space-y-6">
         <IPOHeader ipo={ipo} />
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
             <div className="space-y-6">
               <SubscriptionsForm
                 ipo={ipo}
                 setIpo={setIpo}
-                setUpdatedFields={setUpdatedFields}
+                register={register}
+                setValue={setValue}
+                errors={errors}
               />
-              <IssueSizeForm
+
+              {/* <IssueSizeForm
                 ipo={ipo}
                 setIpo={setIpo}
                 setUpdatedFields={setUpdatedFields}
-              />
+              /> */}
             </div>
 
             <div className="space-y-6">
-              <GMPForm
+              {/* <GMPForm
                 ipo={ipo}
                 setIpo={setIpo}
                 setUpdatedFields={setUpdatedFields}
-              />
+              /> */}
 
-              <VerdictForm
+              {/* <VerdictForm
                 ipo={ipo}
                 setIpo={setIpo}
                 setUpdatedFields={setUpdatedFields}
-              />
+              /> */}
             </div>
           </div>
 

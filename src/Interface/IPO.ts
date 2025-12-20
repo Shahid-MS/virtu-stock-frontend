@@ -1,8 +1,3 @@
-export interface Subscription {
-  name: string;
-  subsvalue: number | undefined;
-}
-
 export interface GMP {
   gmp: number | undefined;
   gmpDate: string | undefined;
@@ -14,6 +9,8 @@ export interface issueSize {
   offerForSale: string;
   totalIssueSize: string;
 }
+
+type Subscriptions = Record<string, string>;
 
 export interface IPOInterface {
   id: string;
@@ -32,7 +29,7 @@ export interface IPOInterface {
   about: string;
   strengths: string[];
   risks: string[];
-  subscriptions: Subscription[];
+  subscriptions: Subscriptions;
   gmp: GMP[];
   listedPrice: number;
   verdict: string;
@@ -49,7 +46,7 @@ export interface IPOProps {
 }
 
 export interface SubscriptionProps {
-  subscription: Subscription[];
+  subscription: Subscriptions;
 }
 
 export interface AppliedIPOInterface {

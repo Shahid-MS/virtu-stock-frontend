@@ -94,7 +94,6 @@ const AppliedIPOdetail = ({
 
   const handleNotApplied = async () => {
     closeModal();
-    console.log("inside not applied");
     confirmDialog({
       message: `Are you sure you have not applied to ${appliedIpo?.ipo.name}?`,
       header: "Confirm Action",

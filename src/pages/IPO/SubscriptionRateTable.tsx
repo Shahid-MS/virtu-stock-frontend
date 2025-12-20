@@ -14,13 +14,13 @@ export default function SubscriptionRateTable({
       <div className="max-w-full overflow-x-auto">
         <Table>
           <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-            {subscription.map((subs) => (
-              <TableRow key={subs.name}>
+            {Object.entries(subscription).map(([name, value]) => (
+              <TableRow key={name}>
                 <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                  {subs.name}
+                  {name}
                 </TableCell>
                 <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                  {subs.subsvalue}x
+                  {value}x
                 </TableCell>
               </TableRow>
             ))}
