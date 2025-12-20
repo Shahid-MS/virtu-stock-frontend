@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
 import apiClient from "@/API/ApiClient";
 import { AxiosError } from "axios";
+import { toast } from "sonner";
 
 interface UserMetaCardProps {
   user: UserInterface;
@@ -70,7 +71,7 @@ export default function UserInfoCard({ user, setUser }: UserMetaCardProps) {
     try {
       setServerError(null);
       const res = await apiClient.patch("/user", changed);
-      alert(res.data.message);
+      toast.success(res.data.message);
       setUser((prev) => ({ ...prev, ...changed }));
       closeModal();
     } catch (err) {

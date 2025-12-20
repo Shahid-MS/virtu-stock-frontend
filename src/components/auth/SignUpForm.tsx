@@ -10,6 +10,7 @@ import apiClient from "@/API/ApiClient";
 import { AxiosError } from "axios";
 import { Link, useNavigate } from "react-router";
 import Button from "../ui/button/Button";
+import { toast } from "sonner";
 
 export default function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -27,13 +28,6 @@ export default function SignUpForm() {
   const [otpGenerated, setOtpGenerated] = useState(false);
 
   const navigate = useNavigate();
-  const [otpStatus, setOtpStatus] = useState<{
-    status: "success" | "error" | null;
-    message: string | null;
-  }>({
-    status: null,
-    message: null,
-  });
   const {
     register,
     handleSubmit,
@@ -73,7 +67,7 @@ export default function SignUpForm() {
           "x-otp-verify-token": isEmailVerified.token,
         },
       });
-      alert(res.data.message);
+      toast.success(res.data.message);
       navigate("/signin");
     } catch (err) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -89,20 +83,13 @@ export default function SignUpForm() {
   };
 
   const handleGenerateOtp = async () => {
-    setOtpStatus({
-      status: null,
-      message: null,
-    });
     try {
       setLoader((prev) => ({ ...prev, generateOtp: true }));
       const valid = await trigger("email");
       if (!valid) return;
       const email = watch("email");
       const res = await apiClient.post("/auth/register/send-otp", { email });
-      setOtpStatus({
-        status: "success",
-        message: res.data.message,
-      });
+      toast.success(res.data.message);
       setOtpGenerated(true);
       setCountdown(30);
     } catch (err) {
@@ -110,10 +97,7 @@ export default function SignUpForm() {
       const error = err as AxiosError<any>;
       if (error?.response?.data?.message) {
         console.log(error.response.data.message);
-        setOtpStatus({
-          status: "error",
-          message: error.response.data.message || "Failed to send OTP",
-        });
+        toast.error(error.response.data.message || "Failed to send OTP");
       }
     } finally {
       setLoader((prev) => ({ ...prev, generateOtp: false }));
@@ -134,10 +118,7 @@ export default function SignUpForm() {
         email,
         otp,
       });
-      setOtpStatus({
-        status: "success",
-        message: res.data.message,
-      });
+      toast.success(res.data.message);
       setIsEmailVerified({
         verified: true,
         token: res.data.otpToken,
@@ -146,10 +127,7 @@ export default function SignUpForm() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const error = err as AxiosError<any>;
       if (error?.response?.data?.message) {
-        setOtpStatus({
-          status: "error",
-          message: error.response.data.message || "Failed to verify OTP",
-        });
+        toast.error(error.response.data.message || "Failed to verify OTP");
       }
     } finally {
       setLoader((prev) => ({ ...prev, verifyOtp: false }));
@@ -266,18 +244,6 @@ export default function SignUpForm() {
                         : "Generate OTP"}
                     </Button>
                   </div>
-                )}
-
-                {otpStatus.message && (
-                  <p
-                    className={`text-sm mb-3 mt-3 ${
-                      otpStatus.status === "success"
-                        ? "text-success-500"
-                        : "text-error-500"
-                    }`}
-                  >
-                    {otpStatus.message}
-                  </p>
                 )}
 
                 {/* <!-- Password --> */}

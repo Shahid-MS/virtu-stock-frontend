@@ -10,6 +10,8 @@ import Input from "../../components/form/input/InputField";
 import Button from "../../components/ui/button/Button";
 import { useEffect, useState } from "react";
 import apiClient from "../../API/ApiClient";
+import { toast } from "sonner";
+import { AxiosError } from "axios";
 
 export default function IPODetails({ ipo }: IPOProps) {
   const [isApplied, setIsApplied] = useState(false);
@@ -19,7 +21,7 @@ export default function IPODetails({ ipo }: IPOProps) {
   const navigate = useNavigate();
   const handleSave = async () => {
     if (!lot || isNaN(Number(lot)) || Number(lot) < 1) {
-      alert("Please enter a valid lot number");
+      toast.error("Please enter a valid lot number");
       return;
     }
 
@@ -31,11 +33,17 @@ export default function IPODetails({ ipo }: IPOProps) {
     try {
       const res = await apiClient.post(`/user/apply`, req);
       setAppliedIpoId(res.data.appliedIpoId);
-      alert("Marked as Applied successfully ✅");
+      console.log(res);
+      toast.success(res.data.message);
       setIsApplied(true);
     } catch (error) {
-      console.error("❌ Error applying IPO:", error);
-      alert("Failed to mark as applied ❌");
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.message);
+      } else if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        console.log(error);
+      }
     } finally {
       closeModal();
     }

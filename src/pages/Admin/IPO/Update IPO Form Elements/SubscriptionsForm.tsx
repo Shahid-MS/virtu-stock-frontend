@@ -4,7 +4,7 @@ import ComponentCard from "../../../../components/common/ComponentCard";
 import Label from "../../../../components/form/Label";
 import Input from "../../../../components/form/input/InputField";
 import Button from "../../../../components/ui/button/Button";
-import { DeleteIcon } from "../../../../icons";
+import { TrashBinIcon } from "@/icons";
 
 interface SubscriptionFormInterface {
   ipo: IPOInterface | undefined;
@@ -128,7 +128,7 @@ export default function SubscriptionsForm({
               variant="outline"
               onClick={() => handleDeleteSubscription(index)}
             >
-              <DeleteIcon />
+              <TrashBinIcon />
             </Button>
           </div>
         ))}

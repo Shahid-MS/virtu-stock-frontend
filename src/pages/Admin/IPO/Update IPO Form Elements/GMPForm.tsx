@@ -4,9 +4,10 @@ import ComponentCard from "../../../../components/common/ComponentCard";
 import Label from "../../../../components/form/Label";
 import Input from "../../../../components/form/input/InputField";
 import Button from "../../../../components/ui/button/Button";
-import { DeleteIcon } from "../../../../icons";
+
 import DatePicker from "../../../../components/form/date-picker";
 import { dateFormat } from "../../../../Helper/dateHelper";
+import { TrashBinIcon } from "@/icons";
 
 interface GMPFormInterface {
   ipo: IPOInterface | undefined;
@@ -157,7 +158,7 @@ export default function GMPForm({
                 variant="outline"
                 onClick={() => handleDeleteGMP(index)}
               >
-                <DeleteIcon />
+                <TrashBinIcon />
               </Button>
             </div>
           );

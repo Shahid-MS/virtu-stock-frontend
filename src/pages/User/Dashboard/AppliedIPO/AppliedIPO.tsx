@@ -9,7 +9,7 @@ import Loading from "@/pages/OtherPage/Loading";
 import AppliedIPODetails from "./AppliedIPODetails";
 import NotFound from "@/pages/OtherPage/NotFound";
 
-const UpdateAppliedIPO = () => {
+const AppliedIPO = () => {
   const { id } = useParams();
   const [appliedIpo, setAppliedIpo] = useState<AppliedIPOInterface>();
   const [loading, setLoading] = useState(true);
@@ -51,4 +51,4 @@ const UpdateAppliedIPO = () => {
   );
 };
 
-export default UpdateAppliedIPO;
+export default AppliedIPO;
