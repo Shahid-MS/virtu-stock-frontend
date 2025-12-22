@@ -61,27 +61,6 @@ export default function UpdateIPO() {
         toast.error("Something went wrong");
       }
     }
-
-    // if (!updatedFields || Object.keys(updatedFields).length === 0) {
-    //   alert("No changes detected.");
-    //   return;
-    // }
-    // const confirmed = window.confirm(
-    //   `Are you sure you want to update the IPO"?`
-    // );
-    // if (!confirmed) return;
-    // e.preventDefault();
-    // if (!ipo) return;
-
-    // try {
-    //   console.log(updatedFields);
-    //   await apiClient.put(`/admin/ipo/${ipo.id}`, updatedFields);
-    //   alert("IPO updated successfully ✅");
-    //   setUpdatedFields({});
-    // } catch (error) {
-    //   console.error("Error updating IPO:", error);
-    //   alert("Failed to update IPO ❌");
-    // }
   };
 
   if (loading) {
@@ -107,11 +86,13 @@ export default function UpdateIPO() {
                 errors={errors}
               />
 
-              {/* <IssueSizeForm
+              <IssueSizeForm
                 ipo={ipo}
                 setIpo={setIpo}
-                setUpdatedFields={setUpdatedFields}
-              /> */}
+                register={register}
+                setValue={setValue}
+                errors={errors}
+              />
             </div>
 
             <div className="space-y-6">

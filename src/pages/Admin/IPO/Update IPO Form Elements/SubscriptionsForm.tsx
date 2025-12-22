@@ -15,7 +15,6 @@ interface SubscriptionFormInterface {
   setIpo: Dispatch<SetStateAction<IPOInterface | undefined>>;
   register: UseFormRegister<updateIpoSchemaSchemaType>;
   setValue: UseFormSetValue<updateIpoSchemaSchemaType>;
-
   errors: FieldErrors<updateIpoSchemaSchemaType>;
 }
 
