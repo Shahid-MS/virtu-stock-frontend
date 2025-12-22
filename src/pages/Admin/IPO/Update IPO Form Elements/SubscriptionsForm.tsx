@@ -8,7 +8,12 @@ import { TrashBinIcon } from "@/icons";
 import { toast } from "sonner";
 import { confirmDialog } from "primereact/confirmdialog";
 import { updateIpoSchemaSchemaType } from "../UpdateIpoSchema";
-import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
+import {
+  FieldErrors,
+  UseFormRegister,
+  UseFormSetValue,
+  UseFormWatch,
+} from "react-hook-form";
 
 interface SubscriptionFormInterface {
   ipo: IPOInterface | undefined;
@@ -16,6 +21,7 @@ interface SubscriptionFormInterface {
   register: UseFormRegister<updateIpoSchemaSchemaType>;
   setValue: UseFormSetValue<updateIpoSchemaSchemaType>;
   errors: FieldErrors<updateIpoSchemaSchemaType>;
+  watch: UseFormWatch<updateIpoSchemaSchemaType>;
 }
 
 export default function SubscriptionsForm({
@@ -24,6 +30,7 @@ export default function SubscriptionsForm({
   register,
   setValue,
   errors,
+  watch,
 }: SubscriptionFormInterface) {
   const [newSub, setNewSub] = useState({
     name: "",
@@ -58,12 +65,20 @@ export default function SubscriptionsForm({
       acceptLabel: "Yes",
       rejectLabel: "No",
       accept: () => {
-        const updatedSubs = {
-          ...ipo.subscriptions,
+        const subsFromForm = watch("subscriptions");
+
+        const updatedSubs: Record<string, string> = {
+          ...subsFromForm,
           [newSub.name]: newSub.value,
         };
 
-        setIpo({ ...ipo, subscriptions: updatedSubs });
+        setIpo((prev) => {
+          if (!prev) return;
+          return {
+            ...prev,
+            subscriptions: updatedSubs,
+          };
+        });
         setNewSub({ name: "", value: "" });
       },
       reject: () => {},
@@ -85,7 +100,7 @@ export default function SubscriptionsForm({
         setIpo((prev) =>
           prev ? { ...prev, subscriptions: updatedSubs } : prev
         );
-        setValue("subscriptions", updatedSubs, { shouldValidate: true });
+        setValue("subscriptions", updatedSubs);
         toast.success("Deleted Successfully");
       },
       reject: () => {},

@@ -1,7 +1,7 @@
 export interface GMP {
-  gmp: number | undefined;
-  gmpDate: string | undefined;
-  lastUpdated: string | undefined;
+  gmp: string;
+  gmpDate: string;
+  lastUpdated?: string;
 }
 
 export interface issueSize {

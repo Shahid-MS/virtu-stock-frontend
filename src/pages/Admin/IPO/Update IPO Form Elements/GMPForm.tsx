@@ -1,5 +1,5 @@
-import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
-import { GMP, IPOInterface } from "../../../../Interface/IPO";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { IPOInterface } from "../../../../Interface/IPO";
 import ComponentCard from "../../../../components/common/ComponentCard";
 import Label from "../../../../components/form/Label";
 import Input from "../../../../components/form/input/InputField";
@@ -7,128 +7,104 @@ import Button from "../../../../components/ui/button/Button";
 
 import DatePicker from "../../../../components/form/date-picker";
 import { dateFormat } from "../../../../Helper/dateHelper";
-import { TrashBinIcon } from "@/icons";
+import {
+  FieldErrors,
+  UseFormRegister,
+  UseFormSetValue,
+  UseFormWatch,
+} from "react-hook-form";
+import { updateIpoSchemaSchemaType } from "../UpdateIpoSchema";
+import { toast } from "sonner";
+import { confirmDialog } from "primereact/confirmdialog";
 
 interface GMPFormInterface {
   ipo: IPOInterface | undefined;
   setIpo: Dispatch<SetStateAction<IPOInterface | undefined>>;
-  setUpdatedFields: Dispatch<SetStateAction<Partial<IPOInterface> | undefined>>;
+  register: UseFormRegister<updateIpoSchemaSchemaType>;
+  setValue: UseFormSetValue<updateIpoSchemaSchemaType>;
+  errors: FieldErrors<updateIpoSchemaSchemaType>;
+  watch: UseFormWatch<updateIpoSchemaSchemaType>;
 }
 
 export default function GMPForm({
   ipo,
   setIpo,
-  setUpdatedFields,
+  register,
+  setValue,
+  errors,
+  watch,
 }: GMPFormInterface) {
-  const [newGMP, setNewGMP] = useState<GMP>({
-    gmp: undefined,
-    gmpDate: undefined,
-    lastUpdated: undefined,
+  const [newGMP, setNewGMP] = useState({
+    gmp: "",
+    gmpDate: "",
   });
 
-  const handleGMPChange = (index: number, field: keyof GMP, value: string) => {
-    setIpo((prev) => {
-      if (!prev) return prev;
+  useEffect(() => {
+    if (!ipo?.gmp) return;
 
-      const newGmp = [...prev.gmp];
-      newGmp[index] = {
-        ...newGmp[index],
-        [field]: field === "gmp" ? (value === "" ? "" : Number(value)) : value,
-      };
-
-      const updated = { ...prev, gmp: newGmp };
-      setUpdatedFields((prevUpdated) => ({
-        ...prevUpdated,
-        gmp: updated.gmp,
-      }));
-
-      return updated;
-    });
-  };
-
-  const handleNewGMPChange = (field: keyof GMP, value: string) => {
-    setNewGMP((prev) => {
-      const updated = {
-        ...prev,
-        [field]:
-          field === "gmp" ? (value === "" ? "" : parseFloat(value)) : value,
-      };
-      return updated;
-    });
-  };
+    setValue(
+      "gmp",
+      ipo.gmp.map((g) => ({
+        gmpDate: g.gmpDate,
+        gmp: String(g.gmp),
+      })),
+      { shouldDirty: false }
+    );
+  }, [ipo, setValue]);
 
   const handleNewGMPDateChange = (selectedDates: Date[]) => {
-    if (!selectedDates || selectedDates.length === 0) return;
+    if (!selectedDates?.length) return;
 
-    const selectedDate = selectedDates[0];
-    const localISO = new Date(
-      selectedDate.getTime() - selectedDate.getTimezoneOffset() * 60000
-    ).toISOString();
+    const d = selectedDates[0];
+    const dateOnly = new Date(d.getTime() - d.getTimezoneOffset() * 60000)
+      .toISOString()
+      .slice(0, 10);
 
-    setNewGMP((prev) => {
-      const updated = {
-        ...prev,
-        gmpDate: localISO,
-      };
-      return updated;
-    });
+    setNewGMP((prev) => ({
+      ...prev,
+      gmpDate: dateOnly,
+    }));
   };
 
   const handleAddGMP = () => {
-    if (newGMP.gmpDate === undefined || newGMP.gmp === undefined) {
-      alert("Please enter valid date and gmp");
+    if (!newGMP.gmpDate || newGMP.gmp === "") {
+      toast.error("Please enter a valid date and gmp");
       return;
     }
-    const confirmed = window.confirm(
-      `Are you sure you want to add the GMP "${dateFormat(newGMP.gmpDate)} : ${
-        newGMP.gmp
-      }"?`
-    );
-    if (!confirmed || !ipo) return;
 
-    const formattedDate = new Date(newGMP.gmpDate).toISOString().split("T")[0];
-    console.log(newGMP.gmpDate);
-    console.log(formattedDate);
-    const newEntry: GMP = {
-      gmp: newGMP.gmp,
-      gmpDate: formattedDate,
-      lastUpdated: new Date().toISOString(),
-    };
-
-    console.log(newEntry);
-
-    const updatedGmp = [...ipo.gmp, newEntry];
-    setUpdatedFields((prev) => ({ ...prev, gmp: updatedGmp }));
-    setIpo((prev) => (prev ? { ...prev, gmp: updatedGmp } : prev));
-
-    setNewGMP({
-      gmp: undefined,
-      gmpDate: undefined,
-      lastUpdated: undefined,
-    });
-  };
-
-  const handleDeleteGMP = (index: number) => {
     if (!ipo) return;
 
-    const GMPDate = ipo.gmp[index]?.gmpDate;
-    const confirmed = window.confirm(
-      `Are you sure you want to delete the GMP of "${dateFormat(GMPDate)}"?`
-    );
-    if (!confirmed) return;
+    confirmDialog({
+      message: `Are you sure you want to add the GMP "${dateFormat(
+        newGMP.gmpDate
+      )} : ${newGMP.gmp}"?`,
+      header: "Confirm",
+      icon: "pi pi-exclamation-triangle",
+      acceptLabel: "Yes",
+      rejectLabel: "No",
+      accept: () => {
+        const formattedDate = new Date(newGMP.gmpDate)
+          .toISOString()
+          .split("T")[0];
+        const newEntry = {
+          gmp: newGMP.gmp,
+          gmpDate: formattedDate,
+          lastUpdated: new Date().toISOString(),
+        };
 
-    setIpo((prev) => {
-      if (!prev) return prev;
+        const gmpFromForm = watch("gmp");
 
-      const updatedGmp = [...prev.gmp];
-      updatedGmp.splice(index, 1);
+        const updatedGmp = [...gmpFromForm, newEntry].sort(
+          (a, b) =>
+            new Date(a.gmpDate).getTime() - new Date(b.gmpDate).getTime()
+        );
 
-      setUpdatedFields((prevUpdated) => ({
-        ...prevUpdated,
-        gmp: updatedGmp,
-      }));
+        setIpo({ ...ipo, gmp: updatedGmp });
 
-      return { ...prev, gmp: updatedGmp };
+        setNewGMP({ gmp: "", gmpDate: "" });
+      },
+
+      reject: () => {},
     });
   };
 
@@ -142,24 +118,30 @@ export default function GMPForm({
                 <DatePicker
                   id={`date-picker-${index}`}
                   value={g.gmpDate ? new Date(g.gmpDate) : undefined}
+                  disabled={true}
                 />
                 <Input
                   id={`gmp-${index}`}
-                  type="number"
-                  step={0.01}
-                  value={g.gmp}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    handleGMPChange(index, "gmp", e.target.value)
-                  }
+                  type="text"
+                  {...register(`gmp.${index}.gmp`)}
+                  onChange={(e) => {
+                    let val = e.target.value;
+                    val = val.replace(/[^0-9.]/g, "");
+                    const firstDot = val.indexOf(".");
+                    if (firstDot !== -1) {
+                      val =
+                        val.slice(0, firstDot + 1) +
+                        val.slice(firstDot + 1).replace(/\./g, "");
+                    }
+
+                    setValue(`gmp.${index}.gmp`, val, {
+                      shouldValidate: true,
+                    });
+                  }}
+                  error={!!errors?.gmp?.[index]?.gmp}
+                  hint={errors?.gmp?.[index]?.gmp?.message}
                 />
               </div>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => handleDeleteGMP(index)}
-              >
-                <TrashBinIcon />
-              </Button>
             </div>
           );
         })}
@@ -179,18 +161,24 @@ export default function GMPForm({
           onChange={handleNewGMPDateChange}
         />
         <Input
-          type="number"
+          type="text"
           placeholder="Enter GMP"
-          step={0.01}
-          value={newGMP.gmp !== undefined ? newGMP.gmp : ""}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            handleNewGMPChange("gmp", e.target.value)
-          }
+          value={newGMP.gmp}
+          onChange={(e) => {
+            let val = e.target.value.replace(/[^0-9.]/g, "");
+            const firstDot = val.indexOf(".");
+            if (firstDot !== -1) {
+              val =
+                val.slice(0, firstDot + 1) +
+                val.slice(firstDot + 1).replace(/\./g, "");
+            }
+            setNewGMP({ ...newGMP, gmp: val });
+          }}
         />
 
         <div className="flex justify-center">
           <Button variant="outline" className="w-1/2" onClick={handleAddGMP}>
-            + Add GMP
+            + Add
           </Button>
         </div>
       </div>

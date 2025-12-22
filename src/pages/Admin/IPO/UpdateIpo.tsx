@@ -1,6 +1,6 @@
 import NotFound from "../../OtherPage/NotFound";
 import { useParams } from "react-router";
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { IPOInterface } from "../../../Interface/IPO";
 import Loading from "../../OtherPage/Loading";
@@ -26,6 +26,7 @@ export default function UpdateIPO() {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<updateIpoSchemaSchemaType>({
     resolver: zodResolver(updateIpoSchema),
@@ -84,6 +85,7 @@ export default function UpdateIPO() {
                 register={register}
                 setValue={setValue}
                 errors={errors}
+                watch={watch}
               />
 
               <IssueSizeForm
@@ -96,11 +98,14 @@ export default function UpdateIPO() {
             </div>
 
             <div className="space-y-6">
-              {/* <GMPForm
+              <GMPForm
                 ipo={ipo}
                 setIpo={setIpo}
-                setUpdatedFields={setUpdatedFields}
-              /> */}
+                register={register}
+                setValue={setValue}
+                errors={errors}
+                watch={watch}
+              />
 
               {/* <VerdictForm
                 ipo={ipo}
