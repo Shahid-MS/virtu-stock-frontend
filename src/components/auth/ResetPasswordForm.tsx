@@ -67,10 +67,11 @@ export default function ResetPasswordForm() {
   const handleGenerateOtp = async () => {
     try {
       setLoader((prev) => ({ ...prev, generateOtp: true }));
+      const email = watch("email");
       const valid = await trigger("email");
       if (!valid) return;
-      const email = watch("email");
       const res = await apiClient.post("/auth/forgot-password", { email });
+      console.log(res);
       toast.success(res.data.message);
       setOtpGenerated(true);
       setCountdown(30);
@@ -201,6 +202,7 @@ export default function ResetPasswordForm() {
 
                     <div className="sm:col-span-1">
                       <Button
+                        type="button"
                         variant="outline"
                         size="sm"
                         onClick={handleVerifyOtp}
@@ -214,6 +216,7 @@ export default function ResetPasswordForm() {
                 {!isEmailVerified.verified && (
                   <div>
                     <Button
+                      type="button"
                       variant="outline"
                       size="sm"
                       onClick={handleGenerateOtp}

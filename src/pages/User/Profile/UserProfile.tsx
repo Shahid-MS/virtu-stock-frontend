@@ -25,8 +25,6 @@ export default function UserProfile() {
     fetchUserDetails();
   }, []);
 
-  console.log(user);
-
   if (loading) {
     return <Loading />;
   }

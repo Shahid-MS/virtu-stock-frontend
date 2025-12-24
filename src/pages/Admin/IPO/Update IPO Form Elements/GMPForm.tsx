@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useState } from "react";
 import { IPOInterface } from "../../../../Interface/IPO";
 import ComponentCard from "../../../../components/common/ComponentCard";
 import Label from "../../../../components/form/Label";
@@ -9,48 +9,37 @@ import DatePicker from "../../../../components/form/date-picker";
 import { dateFormat } from "../../../../Helper/dateHelper";
 import {
   FieldErrors,
+  UseFormGetValues,
   UseFormRegister,
   UseFormSetValue,
   UseFormWatch,
 } from "react-hook-form";
-import { updateIpoSchemaSchemaType } from "../UpdateIpoSchema";
+import { UpdateIpoFormInput } from "../UpdateIpoSchema";
 import { toast } from "sonner";
 import { confirmDialog } from "primereact/confirmdialog";
 
 interface GMPFormInterface {
-  ipo: IPOInterface | undefined;
-  setIpo: Dispatch<SetStateAction<IPOInterface | undefined>>;
-  register: UseFormRegister<updateIpoSchemaSchemaType>;
-  setValue: UseFormSetValue<updateIpoSchemaSchemaType>;
-  errors: FieldErrors<updateIpoSchemaSchemaType>;
-  watch: UseFormWatch<updateIpoSchemaSchemaType>;
+  ipo: IPOInterface;
+  register: UseFormRegister<UpdateIpoFormInput>;
+  setValue: UseFormSetValue<UpdateIpoFormInput>;
+  errors: FieldErrors<UpdateIpoFormInput>;
+  watch: UseFormWatch<UpdateIpoFormInput>;
+  getValues: UseFormGetValues<UpdateIpoFormInput>;
 }
 
 export default function GMPForm({
   ipo,
-  setIpo,
   register,
   setValue,
   errors,
   watch,
+  getValues,
 }: GMPFormInterface) {
+  const gmp = watch("gmp");
   const [newGMP, setNewGMP] = useState({
     gmp: "",
     gmpDate: "",
   });
-
-  useEffect(() => {
-    if (!ipo?.gmp) return;
-
-    setValue(
-      "gmp",
-      ipo.gmp.map((g) => ({
-        gmpDate: g.gmpDate,
-        gmp: String(g.gmp),
-      })),
-      { shouldDirty: false }
-    );
-  }, [ipo, setValue]);
 
   const handleNewGMPDateChange = (selectedDates: Date[]) => {
     if (!selectedDates?.length) return;
@@ -72,8 +61,6 @@ export default function GMPForm({
       return;
     }
 
-    if (!ipo) return;
-
     confirmDialog({
       message: `Are you sure you want to add the GMP "${dateFormat(
         newGMP.gmpDate
@@ -92,14 +79,17 @@ export default function GMPForm({
           lastUpdated: new Date().toISOString(),
         };
 
-        const gmpFromForm = watch("gmp");
+        const currentGmp = getValues("gmp");
 
-        const updatedGmp = [...gmpFromForm, newEntry].sort(
+        const updatedGmp = [...currentGmp, newEntry].sort(
           (a, b) =>
-            new Date(a.gmpDate).getTime() - new Date(b.gmpDate).getTime()
+            new Date(b.gmpDate).getTime() - new Date(a.gmpDate).getTime()
         );
 
-        setIpo({ ...ipo, gmp: updatedGmp });
+        setValue("gmp", updatedGmp, {
+          shouldDirty: true,
+          shouldValidate: true,
+        });
 
         setNewGMP({ gmp: "", gmpDate: "" });
       },
@@ -111,7 +101,7 @@ export default function GMPForm({
   return (
     <ComponentCard title="GMP">
       <div className="space-y-6">
-        {ipo?.gmp?.map((g, index) => {
+        {gmp?.map((g, index) => {
           return (
             <div key={index} className="flex items-center space-x-2">
               <div className="flex-1 space-y-2">
@@ -136,6 +126,7 @@ export default function GMPForm({
 
                     setValue(`gmp.${index}.gmp`, val, {
                       shouldValidate: true,
+                      shouldDirty: true,
                     });
                   }}
                   error={!!errors?.gmp?.[index]?.gmp}

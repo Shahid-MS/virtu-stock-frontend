@@ -1,5 +1,3 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { IPOInterface } from "../../../../Interface/IPO";
 import ComponentCard from "../../../../components/common/ComponentCard";
 import Label from "../../../../components/form/Label";
 import Input from "../../../../components/form/input/InputField";
@@ -7,43 +5,37 @@ import Button from "../../../../components/ui/button/Button";
 import { TrashBinIcon } from "@/icons";
 import { toast } from "sonner";
 import { confirmDialog } from "primereact/confirmdialog";
-import { updateIpoSchemaSchemaType } from "../UpdateIpoSchema";
+import { UpdateIpoFormInput } from "../UpdateIpoSchema";
 import {
   FieldErrors,
+  UseFormGetValues,
   UseFormRegister,
   UseFormSetValue,
   UseFormWatch,
 } from "react-hook-form";
+import { useState } from "react";
 
 interface SubscriptionFormInterface {
-  ipo: IPOInterface | undefined;
-  setIpo: Dispatch<SetStateAction<IPOInterface | undefined>>;
-  register: UseFormRegister<updateIpoSchemaSchemaType>;
-  setValue: UseFormSetValue<updateIpoSchemaSchemaType>;
-  errors: FieldErrors<updateIpoSchemaSchemaType>;
-  watch: UseFormWatch<updateIpoSchemaSchemaType>;
+  register: UseFormRegister<UpdateIpoFormInput>;
+  setValue: UseFormSetValue<UpdateIpoFormInput>;
+  errors: FieldErrors<UpdateIpoFormInput>;
+  watch: UseFormWatch<UpdateIpoFormInput>;
+  getValues: UseFormGetValues<UpdateIpoFormInput>;
 }
 
 export default function SubscriptionsForm({
-  ipo,
-  setIpo,
   register,
   setValue,
   errors,
   watch,
+  getValues,
 }: SubscriptionFormInterface) {
   const [newSub, setNewSub] = useState({
     name: "",
     value: "",
   });
 
-  useEffect(() => {
-    if (!ipo?.subscriptions) return;
-
-    Object.entries(ipo.subscriptions).forEach(([key, value]) => {
-      setValue(`subscriptions.${key}`, String(value));
-    });
-  }, [ipo]);
+  const subscriptions = watch("subscriptions");
 
   const handleAddSubscription = () => {
     if (!newSub.name || newSub.value === "") {
@@ -51,9 +43,7 @@ export default function SubscriptionsForm({
       return;
     }
 
-    if (!ipo) return;
-
-    if (ipo.subscriptions[newSub.name]) {
+    if (subscriptions[newSub.name]) {
       toast.error("Subscription already exists");
       return;
     }
@@ -65,19 +55,19 @@ export default function SubscriptionsForm({
       acceptLabel: "Yes",
       rejectLabel: "No",
       accept: () => {
-        const subsFromForm = watch("subscriptions");
+        const currentSubs = getValues("subscriptions") as Record<
+          string,
+          string
+        >;
 
         const updatedSubs: Record<string, string> = {
-          ...subsFromForm,
+          ...currentSubs,
           [newSub.name]: newSub.value,
         };
 
-        setIpo((prev) => {
-          if (!prev) return;
-          return {
-            ...prev,
-            subscriptions: updatedSubs,
-          };
+        setValue("subscriptions", updatedSubs, {
+          shouldDirty: true,
+          shouldValidate: true,
         });
         setNewSub({ name: "", value: "" });
       },
@@ -86,8 +76,6 @@ export default function SubscriptionsForm({
   };
 
   const handleDeleteSubscription = (key: string) => {
-    if (!ipo) return;
-
     confirmDialog({
       message: `Are you sure you want to delete subscription "${key}"?`,
       header: "Confirm",
@@ -95,12 +83,14 @@ export default function SubscriptionsForm({
       acceptLabel: "Yes",
       rejectLabel: "No",
       accept: () => {
-        const updatedSubs = { ...ipo.subscriptions };
-        delete updatedSubs[key];
-        setIpo((prev) =>
-          prev ? { ...prev, subscriptions: updatedSubs } : prev
-        );
-        setValue("subscriptions", updatedSubs);
+        const currentSubs = getValues("subscriptions");
+        delete currentSubs[key];
+
+        setValue("subscriptions", currentSubs, {
+          shouldDirty: true,
+          shouldValidate: true,
+          shouldTouch: true,
+        });
         toast.success("Deleted Successfully");
       },
       reject: () => {},
@@ -109,8 +99,8 @@ export default function SubscriptionsForm({
   return (
     <ComponentCard title="Subscriptions">
       <div className="space-y-6">
-        {ipo &&
-          Object.entries(ipo.subscriptions).map(([key]) => (
+        {subscriptions &&
+          Object.entries(subscriptions).map(([key]) => (
             <div key={key} className="flex items-center space-x-2">
               <div className="flex-1 space-y-2">
                 <Label>{key}</Label>
@@ -130,6 +120,7 @@ export default function SubscriptionsForm({
                     }
                     setValue(`subscriptions.${key}`, val, {
                       shouldValidate: true,
+                      shouldDirty: true,
                     });
                   }}
                   error={!!errors?.subscriptions?.[key]}

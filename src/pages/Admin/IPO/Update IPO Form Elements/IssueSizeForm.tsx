@@ -1,24 +1,26 @@
-import { Dispatch, SetStateAction, useEffect } from "react";
-import { IPOInterface, issueSize } from "../../../../Interface/IPO";
+import { issueSize } from "../../../../Interface/IPO";
 import ComponentCard from "../../../../components/common/ComponentCard";
 import Label from "../../../../components/form/Label";
 import Input from "../../../../components/form/input/InputField";
-import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
-import { updateIpoSchemaSchemaType } from "../UpdateIpoSchema";
+import {
+  FieldErrors,
+  UseFormGetValues,
+  UseFormRegister,
+  UseFormSetValue,
+} from "react-hook-form";
+import { UpdateIpoFormInput } from "../UpdateIpoSchema";
 
 interface IssueSizeFormInterface {
-  ipo: IPOInterface | undefined;
-  setIpo: Dispatch<SetStateAction<IPOInterface | undefined>>;
-  register: UseFormRegister<updateIpoSchemaSchemaType>;
-  setValue: UseFormSetValue<updateIpoSchemaSchemaType>;
-  errors: FieldErrors<updateIpoSchemaSchemaType>;
+  register: UseFormRegister<UpdateIpoFormInput>;
+  setValue: UseFormSetValue<UpdateIpoFormInput>;
+  getValues: UseFormGetValues<UpdateIpoFormInput>;
+  errors: FieldErrors<UpdateIpoFormInput>;
 }
 
 export default function IssueSizeForm({
   register,
   setValue,
   errors,
-  ipo,
 }: IssueSizeFormInterface) {
   const issueSizeFields: {
     id: string;
@@ -29,14 +31,6 @@ export default function IssueSizeForm({
     { id: "ofs", label: "Offer For Sale", field: "offerForSale" },
     { id: "total", label: "Total Issue Size", field: "totalIssueSize" },
   ];
-
-  useEffect(() => {
-    if (ipo?.issueSize) {
-      setValue("issueSize.fresh", ipo.issueSize.fresh);
-      setValue("issueSize.offerForSale", ipo.issueSize.offerForSale);
-      setValue("issueSize.totalIssueSize", ipo.issueSize.totalIssueSize);
-    }
-  }, [ipo, setValue]);
 
   return (
     <ComponentCard title="Issue Size">
