@@ -7,6 +7,9 @@ const apiClient = axios.create({
   baseURL: "http://localhost:8080/api",
   timeout: 5000,
 });
+export const slowApiClient = axios.create({
+  baseURL: "http://localhost:8080/api",
+});
 
 apiClient.interceptors.request.use((config) => {
   const token = store.getState().auth.token;
@@ -28,6 +31,20 @@ apiClient.interceptors.response.use(
           "--normal-border": "var(--destructive)",
         } as React.CSSProperties,
       });
+    }
+    return Promise.reject(error);
+  }
+);
+
+slowApiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (!error.response) {
+      if (!error.response) {
+        toast.error("Network error. Please try again.");
+      } else {
+        toast.error(error.response.data?.message ?? "Something went wrong");
+      }
     }
     return Promise.reject(error);
   }

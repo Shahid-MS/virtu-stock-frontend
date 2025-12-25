@@ -12,6 +12,9 @@ import { useEffect, useState } from "react";
 import apiClient from "../../API/ApiClient";
 import { toast } from "sonner";
 import { AxiosError } from "axios";
+import { useSelector } from "react-redux";
+import { RootState } from "@/Store";
+import { jwtDecode } from "jwt-decode";
 
 export default function IPODetails({ ipo }: IPOProps) {
   const [isApplied, setIsApplied] = useState(false);
@@ -19,6 +22,15 @@ export default function IPODetails({ ipo }: IPOProps) {
   const [lot, setLot] = useState<string>("1");
   const { isOpen, openModal, closeModal } = useModal();
   const navigate = useNavigate();
+
+  const { token } = useSelector((state: RootState) => state.auth);
+
+  let roles: string[] = [];
+  if (token) {
+    const decoded = jwtDecode<{ roles: string[] }>(token);
+    roles = decoded.roles;
+  }
+
   const handleSave = async () => {
     if (!lot || isNaN(Number(lot)) || Number(lot) < 1) {
       toast.error("Please enter a valid lot number");
@@ -33,7 +45,6 @@ export default function IPODetails({ ipo }: IPOProps) {
     try {
       const res = await apiClient.post(`/user/apply`, req);
       setAppliedIpoId(res.data.appliedIpoId);
-      console.log(res);
       toast.success(res.data.message);
       setIsApplied(true);
     } catch (error) {
@@ -168,31 +179,33 @@ export default function IPODetails({ ipo }: IPOProps) {
               Apply Now
             </a>
 
-            <button
-              onClick={
-                isApplied
-                  ? () => navigate(`/user/applied-ipo/${appliedIpoId}`)
-                  : openModal
-              }
-              className="flex items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
-            >
-              <svg
-                className="fill-current"
-                width="18"
-                height="18"
-                viewBox="0 0 18 18"
-                xmlns="http://www.w3.org/2000/svg"
+            {roles.includes("ROLE_USER") && (
+              <button
+                onClick={
+                  isApplied
+                    ? () => navigate(`/user/applied-ipo/${appliedIpoId}`)
+                    : openModal
+                }
+                className="flex items-center justify-center gap-2 rounded-full border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
               >
-                <path
-                  d="M6.5 9.5L8.5 11.5L12 7.5"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              {isApplied ? "Applied" : "Mark as Applied"}
-            </button>
+                <svg
+                  className="fill-current"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 18 18"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M6.5 9.5L8.5 11.5L12 7.5"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                {isApplied ? "Applied" : "Mark as Applied"}
+              </button>
+            )}
           </div>
         </div>
         <Modal isOpen={isOpen} onClose={closeModal} showCloseButton={false}>
