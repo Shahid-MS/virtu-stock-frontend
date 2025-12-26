@@ -121,7 +121,7 @@ export default function ResetPasswordForm() {
     try {
       setLoader((prev) => ({ ...prev, reset: true }));
       setServerError(null);
-      const res = await apiClient.post(
+      const res = await slowApiClient.post(
         "/auth/reset-password",
         {
           email: data.email,
