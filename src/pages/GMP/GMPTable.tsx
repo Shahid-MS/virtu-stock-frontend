@@ -76,7 +76,7 @@ export default function GMPTable({ ipo }: IPOProps) {
                     {INRFormat(g.gmp * ipo.minQty)}
                   </TableCell>
                   <TableCell className="px-4 py-3  text-gray-500 text-theme-sm dark:text-gray-400">
-                    ₹{dateandTimeFormat(g.lastUpdated)}
+                    {dateandTimeFormat(g.lastUpdated)}
                   </TableCell>
                 </TableRow>
               ))}

@@ -6,7 +6,7 @@ import Input from "../form/input/InputField";
 import { otpSchema, signUpSchema, SignUpSchemaType } from "./AuthSchema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import apiClient from "@/API/ApiClient";
+import apiClient, { slowApiClient } from "@/API/ApiClient";
 import { AxiosError } from "axios";
 import { Link, useNavigate } from "react-router";
 import Button from "../ui/button/Button";
@@ -62,7 +62,7 @@ export default function SignUpForm() {
     try {
       setLoader((prev) => ({ ...prev, signup: true }));
       setServerError(null);
-      const res = await apiClient.post("/auth/register", data, {
+      const res = await slowApiClient.post("/auth/register", data, {
         headers: {
           "x-otp-verify-token": isEmailVerified.token,
         },
@@ -88,7 +88,9 @@ export default function SignUpForm() {
       const valid = await trigger("email");
       if (!valid) return;
       const email = watch("email");
-      const res = await apiClient.post("/auth/register/send-otp", { email });
+      const res = await slowApiClient.post("/auth/register/send-otp", {
+        email,
+      });
       toast.success(res.data.message);
       setOtpGenerated(true);
       setCountdown(30);

@@ -1,19 +1,26 @@
-import { ChangeEvent, Dispatch, SetStateAction} from "react";
-import { IPOInterface, issueSize } from "../../../../Interface/IPO";
+import { issueSize } from "../../../../Interface/IPO";
 import ComponentCard from "../../../../components/common/ComponentCard";
 import Label from "../../../../components/form/Label";
 import Input from "../../../../components/form/input/InputField";
+import {
+  FieldErrors,
+  UseFormGetValues,
+  UseFormRegister,
+  UseFormSetValue,
+} from "react-hook-form";
+import { UpdateIpoFormInput } from "../UpdateIpoSchema";
 
 interface IssueSizeFormInterface {
-  ipo: IPOInterface | undefined;
-  setIpo: Dispatch<SetStateAction<IPOInterface | undefined>>;
-  setUpdatedFields: Dispatch<SetStateAction<Partial<IPOInterface> | undefined>>;
+  register: UseFormRegister<UpdateIpoFormInput>;
+  setValue: UseFormSetValue<UpdateIpoFormInput>;
+  getValues: UseFormGetValues<UpdateIpoFormInput>;
+  errors: FieldErrors<UpdateIpoFormInput>;
 }
 
 export default function IssueSizeForm({
-  ipo,
-  setIpo,
-  setUpdatedFields,
+  register,
+  setValue,
+  errors,
 }: IssueSizeFormInterface) {
   const issueSizeFields: {
     id: string;
@@ -24,26 +31,9 @@ export default function IssueSizeForm({
     { id: "ofs", label: "Offer For Sale", field: "offerForSale" },
     { id: "total", label: "Total Issue Size", field: "totalIssueSize" },
   ];
-  const handleChangeIssueSize = (field: keyof issueSize, value: string) => {
-    setIpo((prev) => {
-      if (!prev) return prev;
-
-      const updatedIssueSize = {
-        ...prev.issueSize,
-        [field]: value,
-      };
-      const updated = { ...prev, issueSize: updatedIssueSize };
-
-      setUpdatedFields((prevUpdated) => ({
-        ...prevUpdated,
-        issueSize: updatedIssueSize,
-      }));
-      return updated;
-    });
-  };
 
   return (
-    <ComponentCard title="Issue">
+    <ComponentCard title="Issue Size">
       <div className="space-y-6">
         {issueSizeFields.map(({ id, label, field }) => (
           <div key={id} className="flex items-center space-x-2">
@@ -52,10 +42,15 @@ export default function IssueSizeForm({
               <Input
                 id={id}
                 type="string"
-                value={ipo?.issueSize[field] || ""}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  handleChangeIssueSize(field, e.target.value)
+                {...register(`issueSize.${field}`)}
+                onChange={(e) =>
+                  setValue(`issueSize.${field}`, e.target.value, {
+                    shouldDirty: true,
+                    shouldValidate: true,
+                  })
                 }
+                error={!!errors?.issueSize?.[field]}
+                hint={errors?.issueSize?.[field]?.message}
               />
             </div>
           </div>

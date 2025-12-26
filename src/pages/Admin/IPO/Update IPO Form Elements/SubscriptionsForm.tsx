@@ -1,137 +1,147 @@
-import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
-import { IPOInterface, Subscription } from "../../../../Interface/IPO";
 import ComponentCard from "../../../../components/common/ComponentCard";
 import Label from "../../../../components/form/Label";
 import Input from "../../../../components/form/input/InputField";
 import Button from "../../../../components/ui/button/Button";
 import { TrashBinIcon } from "@/icons";
+import { toast } from "sonner";
+import { confirmDialog } from "primereact/confirmdialog";
+import { UpdateIpoFormInput } from "../UpdateIpoSchema";
+import {
+  FieldErrors,
+  UseFormGetValues,
+  UseFormRegister,
+  UseFormSetValue,
+  UseFormWatch,
+} from "react-hook-form";
+import { useState } from "react";
 
 interface SubscriptionFormInterface {
-  ipo: IPOInterface | undefined;
-  setIpo: Dispatch<SetStateAction<IPOInterface | undefined>>;
-  setUpdatedFields: Dispatch<SetStateAction<Partial<IPOInterface> | undefined>>;
+  register: UseFormRegister<UpdateIpoFormInput>;
+  setValue: UseFormSetValue<UpdateIpoFormInput>;
+  errors: FieldErrors<UpdateIpoFormInput>;
+  watch: UseFormWatch<UpdateIpoFormInput>;
+  getValues: UseFormGetValues<UpdateIpoFormInput>;
 }
 
 export default function SubscriptionsForm({
-  ipo,
-  setIpo,
-  setUpdatedFields,
+  register,
+  setValue,
+  errors,
+  watch,
+  getValues,
 }: SubscriptionFormInterface) {
-  const [newSub, setNewSub] = useState<Subscription>({
+  const [newSub, setNewSub] = useState({
     name: "",
-    subsvalue: undefined,
+    value: "",
   });
 
-  const handleSubscriptionsChange = (
-    index: number,
-    field: keyof Subscription,
-    value: string
-  ) => {
-    setIpo((prev) => {
-      if (!prev) return prev;
-
-      const newSubscriptions = [...prev.subscriptions];
-      newSubscriptions[index] = {
-        ...newSubscriptions[index],
-        [field]:
-          field === "subsvalue" ? (value === "" ? "" : Number(value)) : value,
-      };
-      const updated = { ...prev, subscriptions: newSubscriptions };
-      setUpdatedFields((prevUpdated) => ({
-        ...prevUpdated,
-        subscriptions: updated.subscriptions,
-      }));
-      return updated;
-    });
-  };
-
-  const handleNewSubChange = (field: keyof Subscription, value: string) => {
-    setNewSub((prev) => ({
-      ...prev,
-      [field]:
-        field === "subsvalue" ? (value === "" ? "" : parseFloat(value)) : value,
-    }));
-  };
+  const subscriptions = watch("subscriptions");
 
   const handleAddSubscription = () => {
-    if (!newSub.name || newSub.subsvalue === undefined) {
-      alert("Please enter a valid subscription name and value");
+    if (!newSub.name || newSub.value === "") {
+      toast.error("Please enter a valid name and value");
       return;
     }
 
-    if (!ipo) return;
+    if (subscriptions[newSub.name]) {
+      toast.error("Subscription already exists");
+      return;
+    }
 
-    const confirmed = window.confirm(
-      `Are you sure you want to add the subscription "${newSub.name} : ${newSub.subsvalue}"?`
-    );
-    if (!confirmed) return;
+    confirmDialog({
+      message: `Add subscription "${newSub.name}"?`,
+      header: "Confirm Action",
+      icon: "pi pi-exclamation-triangle",
+      acceptLabel: "Yes",
+      rejectLabel: "No",
+      accept: () => {
+        const currentSubs = getValues("subscriptions") as Record<
+          string,
+          string
+        >;
 
-    setIpo((prev) =>
-      prev ? { ...prev, subscriptions: [...prev.subscriptions, newSub] } : prev
-    );
+        const updatedSubs: Record<string, string> = {
+          ...currentSubs,
+          [newSub.name]: newSub.value,
+        };
 
-    setUpdatedFields((prev) => ({
-      ...prev,
-      subscriptions: ipo ? [...ipo.subscriptions, newSub] : [newSub],
-    }));
-
-    setNewSub({
-      name: "",
-      subsvalue: undefined,
+        setValue("subscriptions", updatedSubs, {
+          shouldDirty: true,
+          shouldValidate: true,
+        });
+        setNewSub({ name: "", value: "" });
+      },
+      reject: () => {},
     });
   };
 
-  const handleDeleteSubscription = (index: number) => {
-    if (!ipo) return;
+  const handleDeleteSubscription = (key: string) => {
+    confirmDialog({
+      message: `Are you sure you want to delete subscription "${key}"?`,
+      header: "Confirm",
+      icon: "pi pi-exclamation-triangle",
+      acceptLabel: "Yes",
+      rejectLabel: "No",
+      accept: () => {
+        const currentSubs = getValues("subscriptions");
+        delete currentSubs[key];
 
-    const subscriptionName = ipo.subscriptions[index]?.name;
-    const confirmed = window.confirm(
-      `Are you sure you want to delete the subscription "${subscriptionName}"?`
-    );
-    if (!confirmed) return;
-
-    setIpo((prev) => {
-      if (!prev) return prev;
-
-      const updatedSubs = [...prev.subscriptions];
-      updatedSubs.splice(index, 1);
-
-      setUpdatedFields((prevUpdated) => ({
-        ...prevUpdated,
-        subscriptions: updatedSubs,
-      }));
-
-      return { ...prev, subscriptions: updatedSubs };
+        setValue("subscriptions", currentSubs, {
+          shouldDirty: true,
+          shouldValidate: true,
+          shouldTouch: true,
+        });
+        toast.success("Deleted Successfully");
+      },
+      reject: () => {},
     });
   };
-
   return (
     <ComponentCard title="Subscriptions">
       <div className="space-y-6">
-        {ipo?.subscriptions?.map((s, index) => (
-          <div key={index} className="flex items-center space-x-2">
-            <div className="flex-1 space-y-2">
-              <Label htmlFor={`subs-${index}`}>{s.name}</Label>
-              <Input
-                id={`subs-${index}`}
-                type="number"
-                step={0.01}
-                min="0"
-                value={s.subsvalue}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  handleSubscriptionsChange(index, "subsvalue", e.target.value)
-                }
-              />
+        {subscriptions &&
+          Object.entries(subscriptions).map(([key]) => (
+            <div key={key} className="flex items-center space-x-2">
+              <div className="flex-1 space-y-2">
+                <Label>{key}</Label>
+
+                <Input
+                  type="text"
+                  placeholder="Enter value"
+                  {...register(`subscriptions.${key}`)}
+                  onChange={(e) => {
+                    let val = e.target.value;
+                    val = val.replace(/[^0-9.]/g, "");
+                    const firstDot = val.indexOf(".");
+                    if (firstDot !== -1) {
+                      val =
+                        val.slice(0, firstDot + 1) +
+                        val.slice(firstDot + 1).replace(/\./g, "");
+                    }
+                    setValue(`subscriptions.${key}`, val, {
+                      shouldValidate: true,
+                      shouldDirty: true,
+                    });
+                  }}
+                  error={!!errors?.subscriptions?.[key]}
+                  hint={errors?.subscriptions?.[key]?.message}
+                />
+              </div>
+
+              {key !== "QIB" &&
+                key !== "Non-Institutional" &&
+                key !== "Retailer" &&
+                key !== "Total" && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => handleDeleteSubscription(key)}
+                  >
+                    <TrashBinIcon />
+                  </Button>
+                )}
             </div>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => handleDeleteSubscription(index)}
-            >
-              <TrashBinIcon />
-            </Button>
-          </div>
-        ))}
+          ))}
       </div>
 
       <div className="pt-4 border-t border-gray-300 space-y-3">
@@ -140,20 +150,23 @@ export default function SubscriptionsForm({
           type="text"
           placeholder="Enter name"
           value={newSub.name}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            handleNewSubChange("name", e.target.value)
-          }
+          onChange={(e) => setNewSub({ ...newSub, name: e.target.value })}
         />
 
         <Input
-          type="number"
+          type="text"
           placeholder="Enter value"
-          min="0"
-          step={0.01}
-          value={newSub.subsvalue || ""}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            handleNewSubChange("subsvalue", e.target.value)
-          }
+          value={newSub.value}
+          onChange={(e) => {
+            let val = e.target.value.replace(/[^0-9.]/g, "");
+            const firstDot = val.indexOf(".");
+            if (firstDot !== -1) {
+              val =
+                val.slice(0, firstDot + 1) +
+                val.slice(firstDot + 1).replace(/\./g, "");
+            }
+            setNewSub({ ...newSub, value: val });
+          }}
         />
         <div className="flex justify-center">
           <Button

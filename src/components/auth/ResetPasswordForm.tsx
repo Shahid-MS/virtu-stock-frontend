@@ -6,7 +6,7 @@ import Input from "../form/input/InputField";
 
 import Button from "../ui/button/Button";
 
-import apiClient from "@/API/ApiClient";
+import apiClient, { slowApiClient } from "@/API/ApiClient";
 import { AxiosError } from "axios";
 import {
   otpSchema,
@@ -15,6 +15,7 @@ import {
 } from "./AuthSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export default function ResetPasswordForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -30,13 +31,6 @@ export default function ResetPasswordForm() {
   const [isEmailVerified, setIsEmailVerified] = useState({
     verified: false,
     token: null,
-  });
-  const [otpStatus, setOtpStatus] = useState<{
-    status: "success" | "error" | null;
-    message: string | null;
-  }>({
-    status: null,
-    message: null,
   });
 
   const navigate = useNavigate();
@@ -71,20 +65,14 @@ export default function ResetPasswordForm() {
   }, [countdown]);
 
   const handleGenerateOtp = async () => {
-    setOtpStatus({
-      status: null,
-      message: null,
-    });
     try {
       setLoader((prev) => ({ ...prev, generateOtp: true }));
+      const email = watch("email");
       const valid = await trigger("email");
       if (!valid) return;
-      const email = watch("email");
-      const res = await apiClient.post("/auth/forgot-password", { email });
-      setOtpStatus({
-        status: "success",
-        message: res.data.message,
-      });
+      const res = await slowApiClient.post("/auth/forgot-password", { email });
+      console.log(res);
+      toast.success(res.data.message);
       setOtpGenerated(true);
       setCountdown(30);
     } catch (err) {
@@ -92,10 +80,7 @@ export default function ResetPasswordForm() {
       const error = err as AxiosError<any>;
       if (error?.response?.data?.message) {
         console.log(error.response.data.message);
-        setOtpStatus({
-          status: "error",
-          message: error.response.data.message || "Failed to send OTP",
-        });
+        toast.error(error.response.data.message || "Failed to send OTP");
       }
     } finally {
       setLoader((prev) => ({ ...prev, generateOtp: false }));
@@ -116,10 +101,7 @@ export default function ResetPasswordForm() {
         email,
         otp,
       });
-      setOtpStatus({
-        status: "success",
-        message: res.data.message,
-      });
+      toast.success(res.data.message);
       setIsEmailVerified({
         verified: true,
         token: res.data.otpToken,
@@ -128,10 +110,7 @@ export default function ResetPasswordForm() {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const error = err as AxiosError<any>;
       if (error?.response?.data?.message) {
-        setOtpStatus({
-          status: "error",
-          message: error.response.data.message || "Failed to verify OTP",
-        });
+        toast.error(error.response.data.message || "Failed to verify OTP");
       }
     } finally {
       setLoader((prev) => ({ ...prev, verifyOtp: false }));
@@ -142,7 +121,7 @@ export default function ResetPasswordForm() {
     try {
       setLoader((prev) => ({ ...prev, reset: true }));
       setServerError(null);
-      const res = await apiClient.post(
+      const res = await slowApiClient.post(
         "/auth/reset-password",
         {
           email: data.email,
@@ -154,7 +133,7 @@ export default function ResetPasswordForm() {
           },
         }
       );
-      alert(res.data.message);
+      toast.success(res.data.message);
       navigate("/signin");
       console.log(data);
     } catch (err) {
@@ -222,6 +201,7 @@ export default function ResetPasswordForm() {
 
                     <div className="sm:col-span-1">
                       <Button
+                        type="button"
                         variant="outline"
                         size="sm"
                         onClick={handleVerifyOtp}
@@ -235,6 +215,7 @@ export default function ResetPasswordForm() {
                 {!isEmailVerified.verified && (
                   <div>
                     <Button
+                      type="button"
                       variant="outline"
                       size="sm"
                       onClick={handleGenerateOtp}
@@ -247,18 +228,6 @@ export default function ResetPasswordForm() {
                         : "Generate OTP"}
                     </Button>
                   </div>
-                )}
-
-                {otpStatus.message && (
-                  <p
-                    className={`text-sm mb-3 mt-3 ${
-                      otpStatus.status === "success"
-                        ? "text-success-500"
-                        : "text-error-500"
-                    }`}
-                  >
-                    {otpStatus.message}
-                  </p>
                 )}
 
                 {isEmailVerified.verified && (

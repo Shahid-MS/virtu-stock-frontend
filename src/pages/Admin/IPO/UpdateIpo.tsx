@@ -1,6 +1,6 @@
 import NotFound from "../../OtherPage/NotFound";
 import { useParams } from "react-router";
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { IPOInterface } from "../../../Interface/IPO";
 import Loading from "../../OtherPage/Loading";
@@ -11,12 +11,32 @@ import IssueSizeForm from "./Update IPO Form Elements/IssueSizeForm";
 import VerdictForm from "./Update IPO Form Elements/VerdictForm";
 import apiClient from "../../../API/ApiClient";
 import IPOHeader from "@/pages/IPO/IPOHeader";
+import { UpdateIpoFormInput, updateIpoSchema } from "./UpdateIpoSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { AxiosError } from "axios";
+import Label from "@/components/form/Label";
+import Input from "@/components/form/input/InputField";
+import { Verdict } from "@/Enum/Verdict";
+import { pickDirtyValues } from "./pickDirtyValues";
 
 export default function UpdateIPO() {
   const { id } = useParams();
   const [ipo, setIpo] = useState<IPOInterface>();
   const [loading, setLoading] = useState(true);
-  const [updatedFields, setUpdatedFields] = useState<Partial<IPOInterface>>();
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+    getValues,
+    formState: { errors, dirtyFields },
+  } = useForm<UpdateIpoFormInput>({
+    resolver: zodResolver(updateIpoSchema),
+  });
 
   useEffect(() => {
     const fetchIpo = async () => {
@@ -34,26 +54,36 @@ export default function UpdateIPO() {
     fetchIpo();
   }, [id]);
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    if (!updatedFields || Object.keys(updatedFields).length === 0) {
-      alert("No changes detected.");
+  useEffect(() => {
+    if (ipo) {
+      reset({
+        subscriptions: ipo.subscriptions,
+        issueSize: ipo.issueSize,
+        verdict: ipo.verdict as Verdict,
+        gmp: ipo.gmp,
+        listedPrice: String(ipo.listedPrice),
+      });
+    }
+  }, [ipo, reset]);
+
+  const onSubmit = async (data: UpdateIpoFormInput) => {
+    const changedData = pickDirtyValues(dirtyFields, data);
+    if (Object.keys(changedData).length === 0) {
+      toast.info("No changes to update");
       return;
     }
-    const confirmed = window.confirm(
-      `Are you sure you want to update the IPO"?`
-    );
-    if (!confirmed) return;
-    e.preventDefault();
-    if (!ipo) return;
-
     try {
-      console.log(updatedFields);
-      await apiClient.put(`/admin/ipo/${ipo.id}`, updatedFields);
-      alert("IPO updated successfully ✅");
-      setUpdatedFields({});
+      const res = await apiClient.put(`/admin/ipo/${ipo?.id}`, changedData);
+      toast.success(res.data.message);
     } catch (error) {
-      console.error("Error updating IPO:", error);
-      alert("Failed to update IPO ❌");
+      console.log(error);
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.message);
+      } else if (error instanceof Error) {
+        toast.error(error?.message);
+      } else {
+        toast.error("Something went wrong");
+      }
     }
   };
 
@@ -69,33 +99,56 @@ export default function UpdateIPO() {
     <>
       <div className="space-y-6">
         <IPOHeader ipo={ipo} />
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
             <div className="space-y-6">
               <SubscriptionsForm
-                ipo={ipo}
-                setIpo={setIpo}
-                setUpdatedFields={setUpdatedFields}
+                register={register}
+                setValue={setValue}
+                errors={errors}
+                watch={watch}
+                getValues={getValues}
               />
+
               <IssueSizeForm
-                ipo={ipo}
-                setIpo={setIpo}
-                setUpdatedFields={setUpdatedFields}
+                register={register}
+                setValue={setValue}
+                errors={errors}
+              />
+
+              <VerdictForm
+                setValue={setValue}
+                watch={watch}
+                register={register}
               />
             </div>
 
             <div className="space-y-6">
               <GMPForm
                 ipo={ipo}
-                setIpo={setIpo}
-                setUpdatedFields={setUpdatedFields}
+                register={register}
+                setValue={setValue}
+                errors={errors}
+                watch={watch}
+                getValues={getValues}
               />
 
-              <VerdictForm
-                ipo={ipo}
-                setIpo={setIpo}
-                setUpdatedFields={setUpdatedFields}
-              />
+              <div className="space-y-6">
+                <Label htmlFor="listedPrice">Listed Price</Label>
+                <Input
+                  id={id}
+                  type="string"
+                  {...register("listedPrice")}
+                  onChange={(e) =>
+                    setValue("listedPrice", e.target.value, {
+                      shouldDirty: true,
+                      shouldValidate: true,
+                    })
+                  }
+                  error={!!errors?.listedPrice}
+                  hint={errors?.listedPrice?.message}
+                />
+              </div>
             </div>
           </div>
 

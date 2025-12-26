@@ -156,7 +156,7 @@ export default function CompareIPO() {
                       </Link>
                     </TableCell>
                     <TableCell className="px-3 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
-                      {ipo.subscriptions[2].subsvalue}x
+                      {ipo.subscriptions["Retailer"]}x
                     </TableCell>
 
                     <TableCell className="px-3 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
