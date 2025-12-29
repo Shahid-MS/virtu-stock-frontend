@@ -15,7 +15,7 @@ const AboutUsCard = ({ member, index }: AboutUsCardProps) => {
   const isReverse = index % 2 !== 0;
   return (
     <>
-      <div className={`mb-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-3 lg:w-3/4 ${
+      <div className={`mb-5 border border-gray-200 rounded-2xl dark:border-gray-800 p-4 lg:p-3 lg:w-3/4 ${
         isReverse ? "lg:ml-auto" : "lg:mr-auto"}`}>
         <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
           <div className={`flex flex-col items-center w-full gap-6 lg:flex-row ${
