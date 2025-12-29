@@ -7,6 +7,7 @@ interface AuthState {
   name?: string;
   email?: string;
   roles: string[];
+  profilePicUrl?: string;
 }
 
 interface DecodedToken {
@@ -14,6 +15,7 @@ interface DecodedToken {
   name: string;
   roles: string[];
   exp: number;
+  profilePicUrl: string;
 }
 
 let initialState: AuthState = {
@@ -22,9 +24,11 @@ let initialState: AuthState = {
   name: undefined,
   email: undefined,
   roles: [],
+  profilePicUrl: undefined,
 };
 
 const storedToken = localStorage.getItem("virtustock-token");
+
 if (storedToken) {
   try {
     const decoded: DecodedToken = jwtDecode(storedToken);
@@ -36,6 +40,7 @@ if (storedToken) {
         name: decoded.name,
         email: decoded.sub,
         roles: decoded.roles,
+        profilePicUrl: decoded.profilePicUrl,
       };
     } else {
       localStorage.removeItem("virtustock-token");
@@ -57,6 +62,7 @@ const authSlice = createSlice({
       state.name = decoded.name;
       state.email = decoded.sub;
       state.roles = decoded.roles;
+      state.profilePicUrl = decoded.profilePicUrl;
       localStorage.setItem("virtustock-token", action.payload.token);
     },
 
@@ -65,6 +71,7 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.name = undefined;
       state.email = undefined;
+      state.profilePicUrl = undefined;
       state.roles = [];
       localStorage.removeItem("virtustock-token");
     },
