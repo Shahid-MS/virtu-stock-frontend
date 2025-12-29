@@ -35,7 +35,7 @@ export default function GMPHeader({ ipo }: IPOProps) {
             </div>
             <div className="lg:flex items-center order-3 gap-2 grow justify-end">
               <div>
-                <p className="text-sm lg:text-2xl font-medium text-gray-800 dark:text-white/90">
+                <p className="text-sm text-center lg:text-2xl font-medium text-gray-800 dark:text-white/90">
                   GMP: {INRFormat(ipo?.gmp[0].gmp)}
                 </p>
                 <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
