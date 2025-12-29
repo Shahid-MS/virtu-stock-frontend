@@ -76,4 +76,5 @@ export interface UserInterface {
   phone: string;
   instagramUrl: string;
   linkedinUrl: string;
+  profilePicUrl?: string;
 }

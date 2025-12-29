@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
 import Button from "@/components/ui/button/Button";
@@ -8,16 +9,20 @@ import { userSchema, userSchemaType } from "./UserSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
-import apiClient from "@/API/ApiClient";
+import apiClient, { slowApiClient } from "@/API/ApiClient";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
+import FileInput from "@/components/form/input/FileInput";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/Store";
+import { login } from "@/Store/authSlice";
 
 interface UserMetaCardProps {
   user: UserInterface;
   setUser: React.Dispatch<React.SetStateAction<UserInterface | undefined>>;
 }
 
-export default function UserInfoCard({ user, setUser }: UserMetaCardProps) {
+export default function UserInfoCard({ user }: UserMetaCardProps) {
   const { isOpen, openModal, closeModal } = useModal();
   const initialValuesRef = useRef<{
     firstName: string | undefined;
@@ -27,8 +32,12 @@ export default function UserInfoCard({ user, setUser }: UserMetaCardProps) {
     instagramUrl: string | undefined;
     linkedinUrl: string | undefined;
   } | null>(null);
-
+  const [loader, setLoader] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [profilePic, setProfilePic] = useState<File | null>(null);
+  const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/jpg"];
+  const hasInitialized = useRef(false);
+  const dispatch = useDispatch<AppDispatch>();
 
   const {
     register,
@@ -40,7 +49,7 @@ export default function UserInfoCard({ user, setUser }: UserMetaCardProps) {
   });
 
   useEffect(() => {
-    if (user) {
+    if (user && !hasInitialized.current) {
       const initial = {
         firstName: user.firstName || undefined,
         lastName: user.lastName || undefined,
@@ -51,13 +60,14 @@ export default function UserInfoCard({ user, setUser }: UserMetaCardProps) {
       };
       initialValuesRef.current = initial;
       reset(initial);
+      hasInitialized.current = true;
     }
   }, [user, reset]);
 
   const handleSave = async (values: userSchemaType) => {
+    setLoader(true);
     const initial = initialValuesRef.current!;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const changed: any = {};
+    const changed: Partial<userSchemaType> = {};
 
     for (const key in values) {
       const typedKey = key as keyof userSchemaType;
@@ -66,23 +76,57 @@ export default function UserInfoCard({ user, setUser }: UserMetaCardProps) {
         changed[typedKey] = values[typedKey];
       }
     }
-    console.log("Changed fields:", changed);
 
     try {
       setServerError(null);
-      const res = await apiClient.patch("/user", changed);
+      const formData = new FormData();
+      formData.append(
+        "updates",
+        JSON.stringify(Object.keys(changed).length ? changed : {})
+      );
+
+      if (profilePic) {
+        formData.append("file", profilePic);
+      }
+      const res = await slowApiClient.patch("/user", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      const refreshRes = await apiClient.post("/user/refresh-token");
+      dispatch(login({ token: refreshRes.data["virtustock-token"] }));
       toast.success(res.data.message);
-      setUser((prev) => ({ ...prev, ...changed }));
       closeModal();
     } catch (err) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const error = err as AxiosError<any>;
       if (error?.response?.data?.message) {
         setServerError(error.response.data.message);
       } else {
         setServerError("Something went wrong");
       }
+    } finally {
+      setLoader(false);
     }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      toast.error("Only PNG, JPG, and JPEG files are allowed");
+      e.target.value = "";
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("File size must be under 2MB");
+      e.target.value = "";
+      return;
+    }
+    setProfilePic(file);
   };
 
   return (
@@ -168,7 +212,6 @@ export default function UserInfoCard({ user, setUser }: UserMetaCardProps) {
                   <div className="col-span-2 lg:col-span-1">
                     <Label>First Name</Label>
                     <Input
-                      type="text"
                       {...register("firstName")}
                       error={!!errors.firstName}
                       hint={errors.firstName?.message}
@@ -178,7 +221,6 @@ export default function UserInfoCard({ user, setUser }: UserMetaCardProps) {
                   <div className="col-span-2 lg:col-span-1">
                     <Label>Last Name</Label>
                     <Input
-                      type="text"
                       {...register("lastName")}
                       error={!!errors.lastName}
                       hint={errors.lastName?.message}
@@ -188,7 +230,6 @@ export default function UserInfoCard({ user, setUser }: UserMetaCardProps) {
                   <div className="col-span-2 lg:col-span-1">
                     <Label>Phone</Label>
                     <Input
-                      type="text"
                       maxLength={10}
                       {...register("phone", {
                         onChange: (e) => {
@@ -199,32 +240,39 @@ export default function UserInfoCard({ user, setUser }: UserMetaCardProps) {
                       hint={errors.phone?.message}
                     />
                   </div>
-                </div>
-              </div>
-              <div>
-                <h5 className="mt-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
-                  Social Links
-                </h5>
-
-                <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
-                  <div>
-                    <Label>Linkedin</Label>
-                    <Input
-                      type="text"
-                      {...register("linkedinUrl")}
-                      error={!!errors.linkedinUrl}
-                      hint={errors.linkedinUrl?.message}
+                  <div className="col-span-2 lg:col-span-1">
+                    <Label>Profile Pic</Label>
+                    <FileInput
+                      onChange={handleFileChange}
+                      className="custom-class"
                     />
                   </div>
+                </div>
+                <div>
+                  <h5 className="mt-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
+                    Social Links
+                  </h5>
 
-                  <div>
-                    <Label>Instagram</Label>
-                    <Input
-                      type="text"
-                      {...register("instagramUrl")}
-                      error={!!errors.instagramUrl}
-                      hint={errors.instagramUrl?.message}
-                    />
+                  <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
+                    <div>
+                      <Label>Linkedin</Label>
+                      <Input
+                        type="text"
+                        {...register("linkedinUrl")}
+                        error={!!errors.linkedinUrl}
+                        hint={errors.linkedinUrl?.message}
+                      />
+                    </div>
+
+                    <div>
+                      <Label>Instagram</Label>
+                      <Input
+                        type="text"
+                        {...register("instagramUrl")}
+                        error={!!errors.instagramUrl}
+                        hint={errors.instagramUrl?.message}
+                      />
+                    </div>
                   </div>
                 </div>
                 {serverError && (
@@ -235,11 +283,16 @@ export default function UserInfoCard({ user, setUser }: UserMetaCardProps) {
               </div>
             </div>
             <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
-              <Button size="sm" variant="outline" onClick={closeModal}>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={closeModal}
+                disabled={loader}
+              >
                 Close
               </Button>
               <Button size="sm" type="submit">
-                Save Changes
+                {loader ? "Updating..." : "Save Changes"}
               </Button>
             </div>
           </form>

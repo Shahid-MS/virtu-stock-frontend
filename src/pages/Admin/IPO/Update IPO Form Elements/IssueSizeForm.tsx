@@ -2,18 +2,12 @@ import { issueSize } from "../../../../Interface/IPO";
 import ComponentCard from "../../../../components/common/ComponentCard";
 import Label from "../../../../components/form/Label";
 import Input from "../../../../components/form/input/InputField";
-import {
-  FieldErrors,
-  UseFormGetValues,
-  UseFormRegister,
-  UseFormSetValue,
-} from "react-hook-form";
+import { FieldErrors, UseFormRegister, UseFormSetValue } from "react-hook-form";
 import { UpdateIpoFormInput } from "../UpdateIpoSchema";
 
 interface IssueSizeFormInterface {
   register: UseFormRegister<UpdateIpoFormInput>;
   setValue: UseFormSetValue<UpdateIpoFormInput>;
-  getValues: UseFormGetValues<UpdateIpoFormInput>;
   errors: FieldErrors<UpdateIpoFormInput>;
 }
 

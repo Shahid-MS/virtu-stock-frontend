@@ -10,7 +10,9 @@ export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { name, email } = useSelector((state: RootState) => state.auth);
+  const { name, email, profilePicUrl } = useSelector(
+    (state: RootState) => state.auth
+  );
 
   function toggleDropdown() {
     setIsOpen(!isOpen);
@@ -26,8 +28,12 @@ export default function UserDropdown() {
         onClick={toggleDropdown}
         className="flex items-center text-gray-700 dropdown-toggle dark:text-gray-400"
       >
-        <span className="mr-3 overflow-hidden rounded-full h-11 w-11">
-          <img src="/images/user/owner.jpg" alt="User" />
+        <span className="mr-3 overflow-hidden rounded-full h-11 w-11 inline-block">
+          <img
+            src={!profilePicUrl ? "/images/user/user.png" : profilePicUrl}
+            alt="User"
+            className="w-full h-full object-cover"
+          />
         </span>
 
         {/* <span className="block mr-2 text-4xl text-theme-lg">
@@ -96,7 +102,7 @@ export default function UserDropdown() {
               Edit profile
             </DropdownItem>
           </li>
-          <li>
+          {/* <li>
             <DropdownItem
               onItemClick={closeDropdown}
               tag="a"
@@ -120,8 +126,8 @@ export default function UserDropdown() {
               </svg>
               Account settings
             </DropdownItem>
-          </li>
-          <li>
+          </li> */}
+          {/* <li>
             <DropdownItem
               onItemClick={closeDropdown}
               tag="a"
@@ -145,7 +151,7 @@ export default function UserDropdown() {
               </svg>
               Support
             </DropdownItem>
-          </li>
+          </li> */}
         </ul>
         <Link
           to="/signin"
