@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Link } from "react-router";
 import {
   Table,
@@ -16,9 +17,43 @@ import InternalServerError from "@/pages/OtherPage/InternalServerError";
 
 import Pagination from "@/Pagination/Pagination";
 import { usePagination } from "@/Pagination/IpoPaginationContext";
+import { TrashBinIcon } from "@/icons";
+import { confirmDialog } from "primereact/confirmdialog";
+import apiClient from "@/API/ApiClient";
+import { toast } from "sonner";
+import { AxiosError } from "axios";
+import { useQueryClient } from "@tanstack/react-query";
 
-export const AdminHome = () => {
+export const AdminIpo = () => {
   const { ipos, loading, error, pagination, setPageNumber } = usePagination();
+
+  const queryClient = useQueryClient();
+  const handleDeleteIpo = (ipoId: string, name: string) => {
+    confirmDialog({
+      message: `Are you sure you want to delete ${name}?`,
+      header: "Confirm Action",
+      icon: "pi pi-exclamation-triangle",
+      acceptLabel: "Yes",
+      rejectLabel: "No",
+
+      accept: async () => {
+        try {
+          const res = await apiClient.delete(`/admin/ipo/${ipoId}`);
+          toast.success(res.data.message);
+          if (ipos.length === 1 && pagination.pageNumber > 0) {
+            setPageNumber(pagination.pageNumber - 1);
+          } else {
+            queryClient.invalidateQueries({ queryKey: ["ipos"] });
+          }
+        } catch (err) {
+          const error = err as AxiosError<any>;
+          if (error?.response?.data?.message) {
+            toast.error(error.response.data.message || "Failed to fetch");
+          }
+        }
+      },
+    });
+  };
 
   if (loading) return <Loading />;
   if (error) return <InternalServerError />;
@@ -58,6 +93,12 @@ export const AdminHome = () => {
                 className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
               >
                 Status
+              </TableCell>
+              <TableCell
+                isHeader
+                className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
+                Delete
               </TableCell>
             </TableRow>
           </TableHeader>
@@ -104,6 +145,11 @@ export const AdminHome = () => {
                     {ipo.status}
                   </Badge>
                 </TableCell>
+                <TableCell className="px-4 py-3 text-gray-500 text-theme-lg dark:text-gray-400 ">
+                  <button onClick={() => handleDeleteIpo(ipo.id, ipo.name)}>
+                    <TrashBinIcon />
+                  </button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -120,4 +166,4 @@ export const AdminHome = () => {
   );
 };
 
-export default AdminHome;
+export default AdminIpo;

@@ -30,7 +30,6 @@ import PublicRoute from "./pages/AuthPages/PublicRoute";
 import ResetPassword from "./pages/AuthPages/ResetPassword";
 import { PaginationProvider } from "./Pagination/IpoPaginationContext";
 import { Home } from "./pages/Dashboard/Home";
-import AdminHome from "./pages/Admin/Dashboard/AdminHome";
 
 import UserProfile from "./pages/User/Profile/UserProfile";
 import UserDashboard from "./pages/User/Dashboard/UserHome";
@@ -41,6 +40,8 @@ import "primereact/resources/themes/lara-light-blue/theme.css";
 import "primereact/resources/primereact.min.css";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import AboutUs from "./pages/OtherPage/AboutUs";
+import AdminIpo from "./pages/Admin/Dashboard/AdminIpo";
+import AdminDashboard from "./pages/Admin/Dashboard/AdminDashboard";
 
 export default function App() {
   const queryClient = new QueryClient();
@@ -89,14 +90,16 @@ export default function App() {
                     </ProtectedRoute>
                   }
                 >
+                  <Route path="" element={<AdminDashboard />} />
                   <Route
                     path="ipo"
                     element={
                       <PaginationProvider>
-                        <AdminHome />
+                        <AdminIpo />
                       </PaginationProvider>
                     }
                   />
+
                   <Route path="ipo/:id" element={<UpdateIPO />} />
                 </Route>
 

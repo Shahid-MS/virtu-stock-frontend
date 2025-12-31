@@ -71,7 +71,6 @@ export default function ResetPasswordForm() {
       const valid = await trigger("email");
       if (!valid) return;
       const res = await slowApiClient.post("/auth/forgot-password", { email });
-      console.log(res);
       toast.success(res.data.message);
       setOtpGenerated(true);
       setCountdown(30);

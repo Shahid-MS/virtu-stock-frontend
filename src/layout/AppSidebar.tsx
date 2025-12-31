@@ -121,6 +121,11 @@ const AppSidebar: React.FC = () => {
 
   const Admin: NavItem[] = [
     {
+      icon: <GridIcon />,
+      name: "Dashboard",
+      path: "/admin",
+    },
+    {
       icon: <UserCircleIcon />,
       name: "Update IPO",
       path: "/admin/ipo",
