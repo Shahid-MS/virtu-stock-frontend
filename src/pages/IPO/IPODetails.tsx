@@ -1,4 +1,4 @@
-import { dateFormat } from "../../Helper/dateHelper";
+import { dateandTimeFormat, dateFormat } from "../../Helper/dateHelper";
 import SubscriptionRateTable from "./SubscriptionRateTable";
 import { IPOProps } from "../../Interface/IPO";
 import { Link, useNavigate } from "react-router";
@@ -152,9 +152,19 @@ export default function IPODetails({ ipo }: IPOProps) {
               </div>
 
               <div className="col-span-2 lg:col-span-4">
-                <p className="text-sm font-medium text-gray-800 dark:text-white/90 mb-2">
-                  Subscription Rate
-                </p>
+                <div className="flex justify-between">
+                  <p className="text-sm font-medium text-gray-800 dark:text-white/90 mb-2">
+                    Subscription Rate
+                  </p>
+                  <div className="">
+                    <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+                      Last updated:
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                      {dateandTimeFormat(ipo.subscriptionLastUpdated)}
+                    </p>
+                  </div>
+                </div>
                 <SubscriptionRateTable subscription={ipo.subscriptions} />
               </div>
 

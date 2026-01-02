@@ -35,6 +35,7 @@ export interface IPOInterface {
   verdict: string;
   listingReturn: number;
   listingReturnPercent: number;
+  subscriptionLastUpdated: string;
 }
 
 export interface IPOsProps {

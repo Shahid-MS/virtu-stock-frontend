@@ -13,6 +13,32 @@ const Pagination: React.FC<PaginationProps> = ({
   totalPages,
   onPageChange,
 }) => {
+  const MAX_VISIBLE_PAGES = 3;
+  const getPageNumbers = () => {
+    const pages: (number | "...")[] = [];
+
+    if (totalPages <= MAX_VISIBLE_PAGES + 1) {
+      return Array.from({ length: totalPages }, (_, i) => i);
+    }
+
+    const startPage = Math.max(1, pageNumber - 2);
+    const endPage = Math.min(totalPages - 2, pageNumber + 2);
+
+    pages.push(0);
+
+    if (startPage > 1) pages.push("...");
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+
+    if (endPage < totalPages - 2) pages.push("...");
+
+    pages.push(totalPages - 1);
+
+    return pages;
+  };
+
   const start = pageNumber * pageSize + 1;
   const end = Math.min(start + pageSize - 1, totalElements);
   return (
@@ -53,25 +79,29 @@ const Pagination: React.FC<PaginationProps> = ({
               ></path>
             </svg>
           </button>
-          <span className="block text-sm font-medium text-gray-700 sm:hidden dark:text-gray-400">
+          {/* <span className="block text-sm font-medium text-gray-700 sm:hidden dark:text-gray-400">
             Page <span>{pageNumber + 1}</span> of <span>{totalPages}</span>
-          </span>
-          <ul className="hidden items-center gap-0.5 sm:flex">
-            {Array.from({ length: totalPages }, (_, i) => i).map((page) => (
-              <li key={page}>
-                <a
-                  href="#"
-                  onClick={() => onPageChange(page)}
-                  className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-medium 
+          </span> */}
+          <ul className="flex items-center gap-0.5 overflow-x-auto no-scrollbar">
+            {getPageNumbers().map((page, index) => (
+              <li key={index}>
+                {page === "..." ? (
+                  <span className="flex h-10 w-10 items-center justify-center text-gray-400">
+                    ...
+                  </span>
+                ) : (
+                  <button
+                    onClick={() => onPageChange(page)}
+                    className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-medium 
           ${
             pageNumber === page
               ? "bg-brand-500 text-white"
-              : "text-gray-700 dark:text-gray-400 hover:bg-brand-500 hover:text-white dark:hover:text-white"
-          }
-        `}
-                >
-                  {page + 1}
-                </a>
+              : "text-gray-700 dark:text-gray-400 hover:bg-brand-500 hover:text-white"
+          }`}
+                  >
+                    {page + 1}
+                  </button>
+                )}
               </li>
             ))}
           </ul>
