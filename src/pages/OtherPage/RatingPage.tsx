@@ -98,7 +98,7 @@ const RatingPage = () => {
 
         {roles.includes("ROLE_USER") && (
           <div className="space-y-6 flex flex-col">
-            <Label className="text-bold">Rate</Label>
+            <Label className="text-bold">My Rating</Label>
             <Rating
               value={myRating}
               onChange={(e) => setMyRating(e.value)}
@@ -111,7 +111,11 @@ const RatingPage = () => {
                 onClick={async () => rate(myRating)}
                 disabled={isPending}
               >
-                {isPending ? "Submitting..." : "Rate Now"}
+                {isPending
+                  ? "Submitting..."
+                  : myRating != 0
+                  ? "Update Rate"
+                  : "Rate Now"}
               </Button>
             </div>
           </div>
