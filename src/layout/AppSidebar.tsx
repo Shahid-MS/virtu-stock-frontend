@@ -82,7 +82,7 @@ const AppSidebar: React.FC = () => {
     {
       icon: <ChatIcon />,
       name: "Support",
-      path: "/about-u",
+      path: "/support",
     },
     // {
     //   icon: <UserCircleIcon />,
