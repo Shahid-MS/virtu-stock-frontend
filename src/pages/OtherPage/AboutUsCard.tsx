@@ -2,7 +2,7 @@ interface MemberInterface {
   name: string;
   role: string;
   instagramUrl: string;
-  linkedInUrl: string;
+  linkedInUrl?: string;
   details: string;
   image: string;
 }
@@ -44,7 +44,7 @@ const AboutUsCard = ({ member, index }: AboutUsCardProps) => {
             <div className={`flex items-center order-2 gap-2 grow lg:order-3 ${
               isReverse ? "lg:justify-start" : "lg:justify-end"}`}>
 
-              <a
+              {member.linkedInUrl && <a
                 href={member.linkedInUrl}
                 target="_blank"
                 rel="noopener"
@@ -63,7 +63,7 @@ const AboutUsCard = ({ member, index }: AboutUsCardProps) => {
                     fill=""
                   />
                 </svg>
-              </a>
+              </a>}
 
               <a
                 href={member.instagramUrl}
