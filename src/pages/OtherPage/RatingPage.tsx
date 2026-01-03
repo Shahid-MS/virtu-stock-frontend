@@ -20,6 +20,7 @@ interface RatingInterface {
 
 const RatingPage = () => {
   const [myRating, setMyRating] = useState<number>(0);
+  const [newRating, setNewRating] = useState<number>(0);
   const { token } = useSelector((state: RootState) => state.auth);
   const queryClient = useQueryClient();
   let roles: string[] = [];
@@ -70,7 +71,8 @@ const RatingPage = () => {
 
   useEffect(() => {
     setMyRating(!myRate ? 0 : myRate.rating);
-  }, [myRate]);
+    setNewRating(myRating);
+  }, [myRate, myRating]);
 
   return (
     <ComponentCard title="Rating">
@@ -100,16 +102,15 @@ const RatingPage = () => {
           <div className="space-y-6 flex flex-col">
             <Label className="text-bold">My Rating</Label>
             <Rating
-              value={myRating}
-              onChange={(e) => setMyRating(e.value)}
+              value={newRating}
+              onChange={(e) => setNewRating(e.value)}
               cancel={false}
             />
-
             <div className="flex justify-center">
               <Button
                 variant="outline"
-                onClick={async () => rate(myRating)}
-                disabled={isPending}
+                onClick={async () => rate(newRating)}
+                disabled={isPending || myRating === newRating}
               >
                 {isPending
                   ? "Submitting..."
