@@ -8,7 +8,7 @@ export default function AboutUs() {
       instagramUrl: "https://www.instagram.com/being_ms_2.o",
       linkedInUrl: "https://www.linkedin.com/in/ms20",
       details: "As a founder-led, engineer-built company, VirtuStock is driven by a mission to simplify investing through transparent, data-driven technology. I believe great products are created where strong technology meets thoughtful design.",
-      image: "/images/team-member/shahid.jpeg",
+      image: "/images/team-member/shahid.png",
     },
     {
       name: "Ashish Kumar",
@@ -26,7 +26,7 @@ export default function AboutUs() {
       image: "/images/team-member/asif.png",
     },
     {
-      name: "Kuldeep Shaw",
+      name: "Kuldip Shaw",
       role: "Co-Founder | AI/ML Engineer",
       instagramUrl: "https://www.instagram.com/kuldip.shaw",
       linkedInUrl:  "https://www.linkedin.com/in/kuldip-shaw-a13461200",
@@ -42,8 +42,8 @@ export default function AboutUs() {
       image: "/images/team-member/saif.png",
     },
     {
-      name: "Aman Ahmed",
-      role: "Business Analyst | Media Lead",
+      name: "Aman Ahamad",
+      role: "Media Lead |Business Analyst ",
       instagramUrl: "https://www.instagram.com/dashing_aman2.0",
       details: "Enjoys turning business insights into clear strategies while leading media efforts that strengthen brand identity and audience engagement.",
       image: "/images/team-member/aman.png",
