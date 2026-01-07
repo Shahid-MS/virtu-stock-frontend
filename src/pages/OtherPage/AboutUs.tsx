@@ -14,7 +14,6 @@ export default function AboutUs() {
       name: "Ashish Kumar",
       role: "Co-Founder | Business Analyst",
       instagramUrl: "https://www.instagram.com/",
-      linkedInUrl: "https://www.linkedin.com/",
       details: "A strategic Business Analyst and Co-Founder with expertise in translating business goals into clear requirements and actionable insights. Skilled in stakeholder collaboration, process optimization, and data-driven decision-making to drive scalable and sustainable growth.",
       image: "/images/team-member/ashish.png",
     },
@@ -43,7 +42,7 @@ export default function AboutUs() {
     },
     {
       name: "Aman Ahamad",
-      role: "Media Lead |Business Analyst ",
+      role: "Media Lead | Business Analyst ",
       instagramUrl: "https://www.instagram.com/dashing_aman2.0",
       details: "Enjoys turning business insights into clear strategies while leading media efforts that strengthen brand identity and audience engagement.",
       image: "/images/team-member/aman.png",
