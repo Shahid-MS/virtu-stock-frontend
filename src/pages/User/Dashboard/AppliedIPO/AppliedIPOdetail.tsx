@@ -36,6 +36,7 @@ const AppliedIPOdetail = ({
 
   const { isOpen, openModal, closeModal } = useModal();
   const [lot, setLot] = useState<string>(String(appliedIpo.appliedLot));
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSave = async () => {
@@ -62,7 +63,7 @@ const AppliedIPOdetail = ({
     if (allotmentChanged) {
       req.allotment = selectedAllotmentStatus;
     }
-
+    setLoading(true);
     try {
       const res = await apiClient.patch(
         `user/applied-ipo/${appliedIpo.id}`,
@@ -88,6 +89,7 @@ const AppliedIPOdetail = ({
         console.log(error);
       }
     } finally {
+      setLoading(false);
       closeModal();
     }
   };
@@ -209,8 +211,8 @@ const AppliedIPOdetail = ({
                   <Button size="sm" variant="outline" onClick={closeModal}>
                     Cancel
                   </Button>
-                  <Button size="sm" onClick={handleSave}>
-                    Save
+                  <Button size="sm" onClick={handleSave} disabled={loading}>
+                    {loading ? "Saving..." : "Save"}
                   </Button>
                   <Button
                     size="sm"
