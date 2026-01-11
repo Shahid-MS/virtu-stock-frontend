@@ -109,16 +109,17 @@ export const AdminIpo = () => {
                 <TableCell className="px-5 py-4 sm:px-6 text-start">
                   <Link to={`/admin/ipo/${ipo.id}`}>
                     <div className="flex items-center gap-3">
-                      <div className="w-15 h-10 overflow-hidden">
-                        <img src={ipo.logo} alt={ipo.name} />
+                      <div className="h-[40px] w-[40px] shrink-0 overflow-hidden rounded-md">
+                        <img
+                          src={ipo.logo}
+                          className="h-[40px] w-[40px] object-contain"
+                          alt={ipo.name}
+                        />
                       </div>
                       <div>
-                        <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
+                        <p className="font-medium text-gray-800 text-theme-sm dark:text-white/90">
                           {ipo.name}
-                        </span>
-                        <span className="block text-gray-500 text-theme-xs dark:text-gray-400">
-                          {ipo.symbol}
-                        </span>
+                        </p>
                       </div>
                     </div>
                   </Link>

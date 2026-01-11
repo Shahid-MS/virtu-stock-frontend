@@ -81,7 +81,7 @@ const RatingPage = () => {
           .sort(([a], [b]) => Number(b) - Number(a))
           .map(([star, count]) => (
             <div key={star} className="flex justify-between items-center">
-              <Rating value={Number(star)} disabled cancel={false} />
+              <Rating value={Number(star)} readOnly cancel={false} />
               <p>{count}</p>
             </div>
           ))}
@@ -91,7 +91,7 @@ const RatingPage = () => {
           <div className="flex justify-between items-center">
             <Rating
               value={rating?.averageRating ?? 0}
-              disabled
+              readOnly
               cancel={false}
             />
             <p>{rating?.totalUsers ?? 0}</p>

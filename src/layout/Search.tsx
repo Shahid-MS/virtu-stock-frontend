@@ -151,8 +151,8 @@ const Search = () => {
                 setActiveIndex(-1);
               }}
             >
-              <p className="font-medium">{item.name}</p>
-              <p className="text-xs text-gray-500">{item.symbol}</p>
+              <p className="font-medium dark:text-white/90">{item.name}</p>
+              <p className="text-xs text-gray-800 dark:text-white/50">{item.symbol}</p>
             </div>
           ))}
         </div>

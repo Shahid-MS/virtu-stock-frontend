@@ -24,6 +24,7 @@ const AllotmentIPOdetail = ({
   setAppliedIpo,
 }: AppliedIPODetailsInterface) => {
   const { isOpen, openModal, closeModal } = useModal();
+  const [loading, setLoading] = useState(false);
   const [lot, setLot] = useState<string>(
     String(appliedIpo.allotedIpo.allotedLot)
   );
@@ -67,7 +68,7 @@ const AllotmentIPOdetail = ({
     if (sellPriceChanged) {
       req.sellPrice = sellPrice == "N/A" ? null : Number(sellPrice);
     }
-
+    setLoading(true);
     try {
       const res = await apiClient.patch(
         `user/alloted-ipo/${appliedIpo.allotedIpo.id}`,
@@ -92,6 +93,7 @@ const AllotmentIPOdetail = ({
         console.log(error);
       }
     } finally {
+      setLoading(false);
       closeModal();
     }
   };
@@ -253,7 +255,7 @@ const AllotmentIPOdetail = ({
                     Cancel
                   </Button>
                   <Button size="sm" onClick={handleSave}>
-                    Save
+                    {loading ? "Saving..." : "Save"}
                   </Button>
                 </div>
               </form>

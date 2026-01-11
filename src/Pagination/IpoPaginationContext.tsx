@@ -47,7 +47,7 @@ export const PaginationProvider = ({
   const [ipos, setIpos] = useState<IPOInterface[]>([]);
   const [pagination, setPagination] = useState<PaginationState>({
     pageNumber: 0,
-    pageSize: 7,
+    pageSize: 10,
     totalPages: 0,
     totalElements: 0,
     lastPage: false,
