@@ -4,11 +4,12 @@ import axios from "axios";
 import { toast } from "sonner";
 
 const apiClient = axios.create({
-  baseURL: "http://localhost:8080/api",
+  // baseURL: "http://localhost:8081/api",
+  baseURL: "https://virtustock-latest.onrender.com",
   timeout: 5000,
 });
 export const slowApiClient = axios.create({
-  baseURL: "http://localhost:8080/api",
+  baseURL: "https://virtustock-latest.onrender.com",
 });
 
 apiClient.interceptors.request.use((config) => {
