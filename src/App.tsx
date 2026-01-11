@@ -31,6 +31,8 @@ import { ConfirmDialog } from "primereact/confirmdialog";
 
 import AdminIpo from "./pages/Admin/Dashboard/AdminIpo";
 import AdminDashboard from "./pages/Admin/Dashboard/AdminDashboard";
+import AboutUs from "./pages/OtherPage/AboutUs";
+import Support from "./pages/OtherPage/Support";
 
 export default function App() {
   const queryClient = new QueryClient();
@@ -104,6 +106,8 @@ export default function App() {
                   <Route path="applied-ipo/:id" element={<AppliedIPO />} />
                   <Route path="profile" element={<UserProfile />} />
                 </Route>
+                <Route path="/about-us" element={<AboutUs />} />
+                <Route path="/support" element={<Support />} />
               </Route>
 
               {/* Auth Layout */}
