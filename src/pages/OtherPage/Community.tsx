@@ -1,6 +1,7 @@
 const Community = () => {
-  const WHATSAPP_LINK = "https://chat.whatsapp.com/ICFTLGVS6gS8XFvYhlVYDx";
-  const INSTAGRAM_URL = "https://www.instagram.com/virtustock_official";
+  const WHATSAPP_LINK = "https://chat.whatsapp.com/FlK8sMxzeg2E1PUYd5rbt1";
+  const INSTAGRAM_URL = "https://www.instagram.com/virtustock.in";
+  const YOUTUBE_LINK = "https://youtube.com/@virtustock";
   return (
     <>
       <div className="rounded-xl border bg-white dark:bg-gray-900 p-6 shadow-sm">
@@ -103,6 +104,38 @@ const Community = () => {
                   <path
                     fill="url(#instagramGradient)"
                     d="M10 1.8c2.3 0 2.6 0 3.5.05.85.04 1.31.18 1.62.3.42.16.72.36 1.04.68.32.32.52.62.68 1.04.12.31.26.77.3 1.62.05.9.05 1.2.05 3.5s0 2.6-.05 3.5c-.04.85-.18 1.31-.3 1.62-.16.42-.36.72-.68 1.04-.32.32-.62.52-1.04.68-.31.12-.77.26-1.62.3-.9.05-1.2.05-3.5.05s-2.6 0-3.5-.05c-.85-.04-1.31-.18-1.62-.3a2.73 2.73 0 0 1-1.04-.68 2.73 2.73 0 0 1-.68-1.04c-.12-.31-.26-.77-.3-1.62C1.8 12.6 1.8 12.3 1.8 10s0-2.6.05-3.5c.04-.85.18-1.31.3-1.62.16-.42.36-.72.68-1.04.32-.32.62-.52 1.04-.68.31-.12.77-.26 1.62-.3C7.4 1.8 7.7 1.8 10 1.8ZM10 6.5A3.5 3.5 0 1 0 10 13.5A3.5 3.5 0 0 0 10 6.5Zm0 5.8A2.3 2.3 0 1 1 10 7.7a2.3 2.3 0 0 1 0 4.6Zm3.65-6.2a.82.82 0 1 1 0-1.65.82.82 0 0 1 0 1.65Z"
+                  />
+                </svg>
+              </a>
+
+              <a
+                href={YOUTUBE_LINK}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex h-14 w-14 items-center justify-center rounded-full border border-gray-300 bg-white shadow-theme-xs select-none dark:border-gray-700 dark:bg-gray-800"
+              >
+                <svg
+                  width="38"
+                  height="38"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <defs>
+                    <linearGradient
+                      id="youtubeGradient"
+                      x1="0%"
+                      y1="0%"
+                      x2="100%"
+                      y2="100%"
+                    >
+                      <stop offset="0%" stopColor="#ff4d4d" />
+                      <stop offset="100%" stopColor="#cc0000" />
+                    </linearGradient>
+                  </defs>
+
+                  <path
+                    fill="url(#youtubeGradient)"
+                    d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.6 3.6 12 3.6 12 3.6s-7.6 0-9.4.5A3 3 0 0 0 .5 6.2 31.2 31.2 0 0 0 0 12a31.2 31.2 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.8.5 9.4.5 9.4.5s7.6 0 9.4-.5a3 3 0 0 0 2.1-2.1A31.2 31.2 0 0 0 24 12a31.2 31.2 0 0 0-.5-5.8ZM9.6 15.5v-7l6.1 3.5-6.1 3.5Z"
                   />
                 </svg>
               </a>
