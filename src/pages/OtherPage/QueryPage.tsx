@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { slowApiClient } from "@/API/ApiClient";
+import apiClient from "@/API/ApiClient";
 import ComponentCard from "@/components/common/ComponentCard";
 import Input from "@/components/form/input/InputField";
 import TextArea from "@/components/form/input/TextArea";
@@ -29,7 +29,7 @@ const QueryPage = () => {
 
   const isLoggedin = roles.includes("ROLE_USER");
   const submitQuery = async (payload: QueryPayload) => {
-    const res = await slowApiClient.post("/feedback/query", payload);
+    const res = await apiClient.post("/feedback/query", payload);
     return res.data;
   };
 

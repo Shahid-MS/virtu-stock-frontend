@@ -13,16 +13,13 @@ import { IPOStatusColorMap } from "../../Enum/IPOStatus";
 import Pagination from "../../Pagination/Pagination";
 
 import Loading from "../OtherPage/Loading";
-import NotFound from "../OtherPage/NotFound";
 import InternalServerError from "../OtherPage/InternalServerError";
 import { usePagination } from "@/Pagination/IpoPaginationContext";
 
 export const Home = () => {
   const { ipos, error, loading, pagination, setPageNumber } = usePagination();
-
   if (loading) return <Loading />;
-  if (error) return <InternalServerError />;
-  if (!ipos.length) return <NotFound />;
+  if (error && !ipos.length) return <InternalServerError />;
   return (
     <div className="space-y-6">
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">

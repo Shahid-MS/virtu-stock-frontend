@@ -6,7 +6,7 @@ import Input from "../form/input/InputField";
 
 import Button from "../ui/button/Button";
 
-import apiClient, { slowApiClient } from "@/API/ApiClient";
+import apiClient from "@/API/ApiClient";
 import { AxiosError } from "axios";
 import {
   otpSchema,
@@ -70,7 +70,7 @@ export default function ResetPasswordForm() {
       const email = watch("email");
       const valid = await trigger("email");
       if (!valid) return;
-      const res = await slowApiClient.post("/auth/forgot-password", { email });
+      const res = await apiClient.post("/auth/forgot-password", { email });
       toast.success(res.data.message);
       setOtpGenerated(true);
       setCountdown(30);
@@ -120,7 +120,7 @@ export default function ResetPasswordForm() {
     try {
       setLoader((prev) => ({ ...prev, reset: true }));
       setServerError(null);
-      const res = await slowApiClient.post(
+      const res = await apiClient.post(
         "/auth/reset-password",
         {
           email: data.email,

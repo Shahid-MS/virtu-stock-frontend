@@ -9,7 +9,7 @@ import { userSchema, userSchemaType } from "./UserSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useEffect, useRef, useState } from "react";
-import apiClient, { slowApiClient } from "@/API/ApiClient";
+import apiClient from "@/API/ApiClient";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
 import FileInput from "@/components/form/input/FileInput";
@@ -22,7 +22,7 @@ interface UserMetaCardProps {
   setUser: React.Dispatch<React.SetStateAction<UserInterface | undefined>>;
 }
 
-export default function UserInfoCard({ user }: UserMetaCardProps) {
+export default function UserInfoCard({ user, setUser }: UserMetaCardProps) {
   const { isOpen, openModal, closeModal } = useModal();
   const initialValuesRef = useRef<{
     firstName: string | undefined;
@@ -88,13 +88,14 @@ export default function UserInfoCard({ user }: UserMetaCardProps) {
       if (profilePic) {
         formData.append("file", profilePic);
       }
-      const res = await slowApiClient.patch("/user", formData, {
+      const res = await apiClient.patch("/user", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
       const refreshRes = await apiClient.post("/user/refresh-token");
       dispatch(login({ token: refreshRes.data["virtustock-token"] }));
+      setUser((prev) => ({ ...prev, ...res.data.user }));
       toast.success(res.data.message);
       closeModal();
     } catch (err) {
@@ -121,7 +122,7 @@ export default function UserInfoCard({ user }: UserMetaCardProps) {
       e.target.value = "";
       return;
     }
-    if (file.size > 2 * 1024 * 1024) {
+    if (file.size > 10 * 1024 * 1024) {
       toast.error("File size must be under 2MB");
       e.target.value = "";
       return;

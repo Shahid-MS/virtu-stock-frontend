@@ -23,7 +23,7 @@ export default function UserProfile() {
       }
     };
     fetchUserDetails();
-  }, [user]);
+  }, []);
 
   if (loading) {
     return <Loading />;
