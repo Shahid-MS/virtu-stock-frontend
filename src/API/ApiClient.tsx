@@ -19,12 +19,8 @@ apiClient.interceptors.request.use((config) => {
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (!error.response) {
-      if (!error.response) {
-        toast.error("Network error. Please try again.");
-      } else {
-        toast.error(error.response.data?.message ?? "Something went wrong");
-      }
+    if (error.response) {
+      toast.error(error.response.data?.message || "Something went wrong");
     }
     return Promise.reject(error);
   }
