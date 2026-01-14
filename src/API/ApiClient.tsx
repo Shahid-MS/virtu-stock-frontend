@@ -19,9 +19,12 @@ apiClient.interceptors.request.use((config) => {
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response) {
-      toast.error(error.response.data?.message || "Something went wrong");
+    const message = error?.response?.data?.message;
+
+    if (message) {
+      toast.error(message);
     }
+
     return Promise.reject(error);
   }
 );

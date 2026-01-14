@@ -92,7 +92,9 @@ export default function UserInfoCard({ user, setUser }: UserMetaCardProps) {
         headers: {
           "Content-Type": "multipart/form-data",
         },
+        timeout: 0,
       });
+
       const refreshRes = await apiClient.post("/user/refresh-token");
       dispatch(login({ token: refreshRes.data["virtustock-token"] }));
       setUser((prev) => ({ ...prev, ...res.data.user }));
