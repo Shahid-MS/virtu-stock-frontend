@@ -11,6 +11,7 @@ interface AuthState {
   email?: string;
   roles: string[];
   profilePicUrl?: string;
+  authInitialized: boolean;
 }
 
 interface DecodedToken {
@@ -28,6 +29,7 @@ const initialState: AuthState = {
   email: undefined,
   roles: [],
   profilePicUrl: undefined,
+  authInitialized: false,
 };
 
 export const useAuthInit = () => {
@@ -47,6 +49,8 @@ export const useAuthInit = () => {
       } catch {
         localStorage.removeItem("virtustock-token");
         dispatch(logout());
+      } finally {
+        dispatch(authInitialized());
       }
     };
     init();
@@ -65,6 +69,7 @@ const authSlice = createSlice({
       state.email = decoded.sub;
       state.roles = decoded.roles;
       state.profilePicUrl = decoded.profilePicUrl;
+      state.authInitialized = true;
       localStorage.setItem("virtustock-token", action.payload.token);
     },
 
@@ -75,10 +80,15 @@ const authSlice = createSlice({
       state.email = undefined;
       state.profilePicUrl = undefined;
       state.roles = [];
+      state.authInitialized = true;
       localStorage.removeItem("virtustock-token");
+    },
+
+    authInitialized: (state) => {
+      state.authInitialized = true;
     },
   },
 });
 
-export const { login, logout } = authSlice.actions;
+export const { login, logout, authInitialized } = authSlice.actions;
 export default authSlice.reducer;
