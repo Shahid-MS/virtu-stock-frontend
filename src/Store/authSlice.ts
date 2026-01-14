@@ -1,5 +1,8 @@
+import apiClient from "@/API/ApiClient";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { jwtDecode } from "jwt-decode";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 interface AuthState {
   token: string | null;
@@ -18,7 +21,7 @@ interface DecodedToken {
   profilePicUrl: string;
 }
 
-let initialState: AuthState = {
+const initialState: AuthState = {
   token: null,
   isAuthenticated: false,
   name: undefined,
@@ -27,29 +30,28 @@ let initialState: AuthState = {
   profilePicUrl: undefined,
 };
 
-const storedToken = localStorage.getItem("virtustock-token");
-
-if (storedToken) {
-  try {
-    const decoded: DecodedToken = jwtDecode(storedToken);
-    const now = Date.now() / 1000;
-    if (decoded.exp && decoded.exp > now) {
-      initialState = {
-        token: storedToken,
-        isAuthenticated: true,
-        name: decoded.name,
-        email: decoded.sub,
-        roles: decoded.roles,
-        profilePicUrl: decoded.profilePicUrl,
-      };
-    } else {
-      localStorage.removeItem("virtustock-token");
-    }
-  } catch (err) {
-    console.error("Invalid token:", err);
-    localStorage.removeItem("virtustock-token");
-  }
-}
+export const useAuthInit = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const init = async () => {
+      const token = localStorage.getItem("virtustock-token");
+      if (!token) return;
+      try {
+        const refreshRes = await apiClient.post("/user/refresh-token", null, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const newToken = refreshRes.data["virtustock-token"];
+        dispatch(login({ token: newToken }));
+      } catch {
+        localStorage.removeItem("virtustock-token");
+        dispatch(logout());
+      }
+    };
+    init();
+  }, []);
+};
 
 const authSlice = createSlice({
   name: "auth",

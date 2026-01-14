@@ -29,6 +29,8 @@ const RatingPage = () => {
     roles = decoded.roles;
   }
 
+  const isUser = roles.includes("ROLE_USER");
+
   const fetchRating = async (): Promise<RatingInterface> => {
     const res = await apiClient.get("/feedback/rating");
     return res.data;
@@ -54,6 +56,7 @@ const RatingPage = () => {
     queryKey: ["my-rating"],
     queryFn: fetchMyRating,
     retry: false,
+    enabled: isUser,
   });
 
   const { mutate: rate, isPending } = useMutation({
@@ -98,7 +101,7 @@ const RatingPage = () => {
           </div>
         </div>
 
-        {roles.includes("ROLE_USER") && (
+        {isUser && (
           <div className="space-y-6 flex flex-col">
             <Label className="text-bold">My Rating</Label>
             <Rating

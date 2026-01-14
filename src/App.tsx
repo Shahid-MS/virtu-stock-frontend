@@ -12,8 +12,6 @@ import GMPIPO from "./pages/GMP/GMPIPO";
 
 import UpdateIPO from "./pages/Admin/IPO/UpdateIpo";
 
-import { Provider } from "react-redux";
-import { store } from "./Store";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import PublicRoute from "./pages/AuthPages/PublicRoute";
 import ResetPassword from "./pages/AuthPages/ResetPassword";
@@ -33,114 +31,114 @@ import AdminIpo from "./pages/Admin/Dashboard/AdminIpo";
 import AdminDashboard from "./pages/Admin/Dashboard/AdminDashboard";
 import AboutUs from "./pages/OtherPage/AboutUs";
 import Support from "./pages/OtherPage/Support";
+import { useAuthInit } from "./Store/authSlice";
 
 export default function App() {
+  useAuthInit();
   const queryClient = new QueryClient();
   return (
     <>
-      <Provider store={store}>
-        <Toaster position="top-center" />
-        <ConfirmDialog />
-        <Router>
-          <ScrollToTop />
-          <QueryClientProvider client={queryClient}>
-            <Routes>
-              {/* Dashboard Layout */}
-              <Route element={<AppLayout />}>
-                {/* Home */}
+      <Toaster position="top-center" />
+      <ConfirmDialog />
+      <Router>
+        <ScrollToTop />
+        <QueryClientProvider client={queryClient}>
+          <Routes>
+            {/* Dashboard Layout */}
+            <Route element={<AppLayout />}>
+              {/* Home */}
+              <Route
+                index
+                path="/"
+                element={
+                  <PaginationProvider>
+                    <Home />
+                  </PaginationProvider>
+                }
+              />
+
+              <Route path="/ipo">
                 <Route
-                  index
-                  path="/"
+                  path="compare"
                   element={
                     <PaginationProvider>
-                      <Home />
+                      <CompareIPO />
+                    </PaginationProvider>
+                  }
+                />
+                <Route path=":id" element={<IPO />} />
+                <Route path="gmp/:id" element={<GMPIPO />} />
+              </Route>
+
+              {/* Admin */}
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute requiredRoles={["ROLE_ADMIN"]}>
+                    <Outlet />
+                  </ProtectedRoute>
+                }
+              >
+                <Route path="" element={<AdminDashboard />} />
+                <Route
+                  path="ipo"
+                  element={
+                    <PaginationProvider>
+                      <AdminIpo />
                     </PaginationProvider>
                   }
                 />
 
-                <Route path="/ipo">
-                  <Route
-                    path="compare"
-                    element={
-                      <PaginationProvider>
-                        <CompareIPO />
-                      </PaginationProvider>
-                    }
-                  />
-                  <Route path=":id" element={<IPO />} />
-                  <Route path="gmp/:id" element={<GMPIPO />} />
-                </Route>
-
-                {/* Admin */}
-                <Route
-                  path="/admin"
-                  element={
-                    <ProtectedRoute requiredRoles={["ROLE_ADMIN"]}>
-                      <Outlet />
-                    </ProtectedRoute>
-                  }
-                >
-                  <Route path="" element={<AdminDashboard />} />
-                  <Route
-                    path="ipo"
-                    element={
-                      <PaginationProvider>
-                        <AdminIpo />
-                      </PaginationProvider>
-                    }
-                  />
-
-                  <Route path="ipo/:id" element={<UpdateIPO />} />
-                </Route>
-
-                {/* User */}
-                <Route
-                  path="/user"
-                  element={
-                    <ProtectedRoute requiredRoles={["ROLE_USER"]}>
-                      <Outlet />
-                    </ProtectedRoute>
-                  }
-                >
-                  <Route path="" element={<UserDashboard />} />
-                  <Route path="applied-ipo/:id" element={<AppliedIPO />} />
-                  <Route path="profile" element={<UserProfile />} />
-                </Route>
-                <Route path="/about-us" element={<AboutUs />} />
-                <Route path="/support" element={<Support />} />
+                <Route path="ipo/:id" element={<UpdateIPO />} />
               </Route>
 
-              {/* Auth Layout */}
+              {/* User */}
               <Route
-                path="/signin"
+                path="/user"
                 element={
-                  <PublicRoute>
-                    <SignIn />
-                  </PublicRoute>
+                  <ProtectedRoute requiredRoles={["ROLE_USER"]}>
+                    <Outlet />
+                  </ProtectedRoute>
                 }
-              />
-              <Route
-                path="/signup"
-                element={
-                  <PublicRoute>
-                    <SignUp />
-                  </PublicRoute>
-                }
-              />
-              <Route
-                path="/reset-password"
-                element={
-                  <PublicRoute>
-                    <ResetPassword />
-                  </PublicRoute>
-                }
-              />
+              >
+                <Route path="" element={<UserDashboard />} />
+                <Route path="applied-ipo/:id" element={<AppliedIPO />} />
+                <Route path="profile" element={<UserProfile />} />
+              </Route>
+              <Route path="/about-us" element={<AboutUs />} />
+              <Route path="/support" element={<Support />} />
+            </Route>
 
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </QueryClientProvider>
-        </Router>
-      </Provider>
+            {/* Auth Layout */}
+            <Route
+              path="/signin"
+              element={
+                <PublicRoute>
+                  <SignIn />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/signup"
+              element={
+                <PublicRoute>
+                  <SignUp />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/reset-password"
+              element={
+                <PublicRoute>
+                  <ResetPassword />
+                </PublicRoute>
+              }
+            />
+
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </QueryClientProvider>
+      </Router>
     </>
   );
 }

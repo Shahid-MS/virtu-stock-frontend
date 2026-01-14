@@ -62,6 +62,7 @@ export default function IPODetails({ ipo }: IPOProps) {
 
   useEffect(() => {
     const checkApplied = async () => {
+      if (!roles.includes("ROLE_USER")) return;
       try {
         const res = await apiClient.get(
           `/user/check-applied-ipo?ipoId=${ipo.id}`

@@ -4,7 +4,7 @@ import UserMetaCard from "./UserMetaCard";
 import { UserInterface } from "@/Interface/IPO";
 import apiClient from "@/API/ApiClient";
 import Loading from "@/pages/OtherPage/Loading";
-import NotFound from "@/pages/OtherPage/NotFound";
+import InternalServerError from "@/pages/OtherPage/InternalServerError";
 
 export default function UserProfile() {
   const [user, setUser] = useState<UserInterface>();
@@ -30,7 +30,7 @@ export default function UserProfile() {
   }
 
   if (user === undefined || user === null) {
-    return <NotFound />;
+    return <InternalServerError />;
   }
   return (
     <>

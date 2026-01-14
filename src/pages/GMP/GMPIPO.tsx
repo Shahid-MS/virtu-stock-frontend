@@ -32,8 +32,6 @@ export default function GMPIPO() {
     return <NotFound />;
   }
 
-  console.log(ipo.gmp);
-
   return (
     <>
       <div className="space-y-6">
