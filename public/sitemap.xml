@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+    <!-- Main pages -->
+    <url>
+        <loc>https://virtustock.in/</loc>
+        <priority>1.0</priority>
+    </url>
+
+    <url>
+        <loc>https://virtustock.in/signin</loc>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://virtustock.in/signup</loc>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://virtustock.in/reset-password</loc>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
+        <loc>https://virtustock.in/about-us</loc>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
+        <loc>https://virtustock.in/support</loc>
+        <priority>0.7</priority>
+    </url>
+
+    <url>
+        <loc>https://virtustock.in/ipo/compare</loc>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Sample dynamic IPO pages -->
+    <url>
+        <loc>https://virtustock.in/ipo/d4835523-9e24-4f22-bdef-b82ed92dcc16</loc>
+    </url>
+
+    <url>
+        <loc>https://virtustock.in/ipo/gmp/d4835523-9e24-4f22-bdef-b82ed92dcc16</loc>
+    </url>
+
+    <url>
+        <loc>https://virtustock.in/ipo/8ab0bee3-f8e4-4829-97f1-ffcc816cfc41</loc>
+    </url>
+
+    <url>
+        <loc>https://virtustock.in/ipo/gmp/8ab0bee3-f8e4-4829-97f1-ffcc816cfc41</loc>
+    </url>
+
+</urlset>
